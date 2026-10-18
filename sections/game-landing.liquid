@@ -174,6 +174,21 @@
   #shopify-section-{{ section.id }} .gl-title em {
     color: var(--gl-accent); font-style: normal; display: block;
   }
+  /* OS X liquid-gloss 3D: specular highlight top-left, extruded depth below.
+     currentColor keeps each rainbow letter's own color as the gloss base. */
+  #shopify-section-{{ section.id }} .gl-title em span {
+    font-weight: 700;
+    background-color: currentColor;
+    background-image:
+      radial-gradient(135% 105% at 28% -4%, rgba(255,255,255,.95) 0%, rgba(255,255,255,.4) 30%, rgba(255,255,255,0) 56%),
+      linear-gradient(to bottom, rgba(255,255,255,.45) 0%, rgba(255,255,255,0) 42%, rgba(0,0,0,.22) 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter:
+      drop-shadow(0 1px 0 rgba(0,0,0,.28))
+      drop-shadow(0 3px 0 rgba(0,0,0,.16))
+      drop-shadow(0 10px 14px rgba(0,0,0,.24));
+  }
   #shopify-section-{{ section.id }} .gl-lede { color: var(--gl-muted); max-width: 460px; margin: 0 0 22px; font-size: 17px; }
   #shopify-section-{{ section.id }} .gl-cta-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
   #shopify-section-{{ section.id }} .gl-btn { padding: 14px 20px; font-size: 15px; }
