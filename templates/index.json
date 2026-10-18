@@ -1,1 +1,182 @@
-{"sections":{"game_home":{"type":"game-home","blocks":{"listing_koro":{"type":"listing","settings":{"item_no":"CGB-KORO-ENG","platform":"Complete In Box","cover":"shopify:\/\/shop_images\/koro.jpg","title":"Meet KORO","desc":"A bright, quick and endlessly replayable marble puzzle. Assembly, no engines, real hardware.","product":"shopify:\/\/products\/koro","price_text":"","order_label":"Order now","demo_url":"https:\/\/cdn.cyfrowynomada.com\/games\/koro\/","demo_label":"Play demo","accent":"gold","featured":true,"coming_soon":true,"coming_soon_label":"Coming soon","stamp_text":"PRINTING & PACKAGING"}},"listing_ffdx":{"type":"listing","settings":{"item_no":"CGB-FFDX-ENG","platform":"Complete In Box","cover":"shopify:\/\/shop_images\/fungus-foray_box_render1.jpg","title":"Fungus Foray DX","desc":"A tiny forest adventure: collect mushrooms, push boulders, dodge crawlers. 1–2 players.","product":"shopify:\/\/products\/fungus-foray-dx","price_text":"","order_label":"Order now","demo_url":"https:\/\/cyfrowynomada.com\/products\/fungus-foray-dx","demo_label":"Play demo","accent":"green","featured":false,"coming_soon":true,"coming_soon_label":"Coming soon","stamp_text":"IN DEVELOPMENT"}},"listing_cortex":{"type":"listing","settings":{"item_no":"PC-CL-ENG","platform":"Complete In Box","cover":"shopify:\/\/shop_images\/game-box-visualization.jpg","title":"Cortex Labs","desc":"A new experiment for retro PCs. Hand-written assembly, dark rooms, and things best left offline.","product":"","price_text":"TBA","order_label":"Order now","demo_url":"","demo_label":"Play demo","accent":"sky","featured":false,"coming_soon":true,"coming_soon_label":"Coming soon","stamp_text":"In development"}},"shop_catalog":{"type":"shopcard","settings":{"chip":"Catalog","title":"Every game, one shelf","text":"Cartridges, floppy disks, and everything in between.","link":"shopify:\/\/collections\/games","link_label":"Browse"}},"shop_p1xel":{"type":"shopcard","settings":{"chip":"Tool","title":"P1Xel Editor","text":"Professional indexed pixel-art editor — the tool our games are drawn in.","link":"shopify:\/\/products\/p1xel-editor","link_label":"See it in the shop"}},"shop_porting":{"type":"shopcard","settings":{"chip":"Custom work","title":"Porting & commissions","text":"Legacy games on new platforms, or a custom game for your brand. No engines.","link":"shopify:\/\/pages\/contact","link_label":"Get in touch"}},"partner_pmkc":{"type":"partner","settings":{"logo":"shopify:\/\/shop_images\/logo-pmkc.png","name":"PMKC","role":"Testing & promotion","url":"https:\/\/pmkc.pl\/","new_tab":true}},"partner_ccs":{"type":"partner","settings":{"logo":"shopify:\/\/shop_images\/logo-ccs-druk.png","name":"CCS Druk","role":"Printing","url":"https:\/\/ccsdruk.pl\/","new_tab":true}},"legal_notice":{"type":"legal","settings":{"text":"Game Boy and Game Boy Color are trademarks of Nintendo.\nKORO and Fungus Foray DX are independently developed and published games and are not affiliated with, endorsed by, or licensed by Nintendo Co., Ltd.\nAll other trademarks are the property of their respective owners."}}},"block_order":["listing_koro","listing_ffdx","listing_cortex","shop_catalog","shop_p1xel","shop_porting","partner_pmkc","partner_ccs","legal_notice"],"settings":{"ticker_text":"New games for old machines · Handmade in Poland · Small batches · Tested on real hardware","cover_image":"shopify:\/\/shop_images\/koro-grass.jpg","cover_chip":"Coming soon","cover_title":"Meet KORO","cover_product":"shopify:\/\/products\/koro","cover_cta_link":"","cover_cta_label":"Order now","cover_demo_link":"https:\/\/cdn.cyfrowynomada.com\/games\/koro\/","cover_demo_label":"Play the demo","cover_stamp":"Small\nBatch\nPoland","band_heading":"New games for old machines.\nHandmade in Poland.","band_text":"Game Boy Color cartridges and MS-DOS floppy disks, written in assembly, tested on real hardware, and shipped in small batches.","band_cta1_label":"Browse the catalog","band_cta1_link":"","band_cta2_label":"Read the devlog","band_cta2_link":"","brand_name":"Cyfrowy Nomada","brand_line":"Mail-order catalogue · Vol. 3 · Handmade in Poland","listing_heading":"Games — in stock","featured_label":"Featured product","shop_heading":"Also from the workbench","shop_link":"shopify:\/\/collections\/all","news_heading":"Get release news","news_button":"Subscribe","news_fine":"* No spam. A few emails a year. Unsubscribe anytime.","devlog_heading":"From the workbench","devlog_button":"Read the devlog","devlog_link":"shopify:\/\/blogs\/devlog","partners_heading":"People we work with","footer_text":"Cyfrowy Nomada · handmade homebrew · prices in PLN · ships worldwide","color_paper":"#f6f1e3","color_red":"#d6453d"}}},"order":["game_home"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "game_home": {
+      "type": "game-home",
+      "blocks": {
+        "listing_koro": {
+          "type": "listing",
+          "settings": {
+            "item_no": "CGB-KORO-ENG",
+            "platform": "Complete In Box",
+            "cover": "shopify://shop_images/koro.jpg",
+            "title": "Meet KORO",
+            "desc": "A bright, quick and endlessly replayable marble puzzle. Assembly, no engines, real hardware.",
+            "product": "shopify://products/koro",
+            "price_text": "",
+            "order_label": "Order now",
+            "demo_url": "https://cdn.cyfrowynomada.com/games/koro/",
+            "demo_label": "Play demo",
+            "accent": "gold",
+            "featured": true,
+            "coming_soon": false,
+            "coming_soon_label": "Coming soon",
+            "stamp_text": "PRINTING & PACKAGING"
+          }
+        },
+        "listing_ffdx": {
+          "type": "listing",
+          "settings": {
+            "item_no": "CGB-FFDX-ENG",
+            "platform": "Complete In Box",
+            "cover": "shopify://shop_images/fungus-foray_box_render1.jpg",
+            "title": "Fungus Foray DX",
+            "desc": "A tiny forest adventure: collect mushrooms, push boulders, dodge crawlers. 1–2 players.",
+            "product": "shopify://products/fungus-foray-dx",
+            "price_text": "",
+            "order_label": "Order now",
+            "demo_url": "https://cyfrowynomada.com/products/fungus-foray-dx",
+            "demo_label": "Play demo",
+            "accent": "green",
+            "featured": false,
+            "coming_soon": true,
+            "coming_soon_label": "Coming soon",
+            "stamp_text": "IN DEVELOPMENT"
+          }
+        },
+        "listing_cortex": {
+          "type": "listing",
+          "settings": {
+            "item_no": "PC-CL-ENG",
+            "platform": "Complete In Box",
+            "cover": "shopify://shop_images/game-box-visualization.jpg",
+            "title": "Cortex Labs",
+            "desc": "A new experiment for retro PCs. Hand-written assembly, dark rooms, and things best left offline.",
+            "product": "",
+            "price_text": "TBA",
+            "order_label": "Order now",
+            "demo_url": "",
+            "demo_label": "Play demo",
+            "accent": "sky",
+            "featured": false,
+            "coming_soon": true,
+            "coming_soon_label": "Coming soon",
+            "stamp_text": "In development"
+          }
+        },
+        "shop_catalog": {
+          "type": "shopcard",
+          "settings": {
+            "chip": "Catalog",
+            "title": "Every game, one shelf",
+            "text": "Cartridges, floppy disks, and everything in between.",
+            "link": "shopify://collections/games",
+            "link_label": "Browse"
+          }
+        },
+        "shop_p1xel": {
+          "type": "shopcard",
+          "settings": {
+            "chip": "Tool",
+            "title": "P1Xel Editor",
+            "text": "Professional indexed pixel-art editor — the tool our games are drawn in.",
+            "link": "shopify://products/p1xel-editor",
+            "link_label": "See it in the shop"
+          }
+        },
+        "shop_porting": {
+          "type": "shopcard",
+          "settings": {
+            "chip": "Custom work",
+            "title": "Porting & commissions",
+            "text": "Legacy games on new platforms, or a custom game for your brand. No engines.",
+            "link": "shopify://pages/contact",
+            "link_label": "Get in touch"
+          }
+        },
+        "partner_pmkc": {
+          "type": "partner",
+          "settings": {
+            "logo": "shopify://shop_images/logo-pmkc.png",
+            "name": "PMKC",
+            "role": "Testing & promotion",
+            "url": "https://pmkc.pl/",
+            "new_tab": true
+          }
+        },
+        "partner_ccs": {
+          "type": "partner",
+          "settings": {
+            "logo": "shopify://shop_images/logo-ccs-druk.png",
+            "name": "CCS Druk",
+            "role": "Printing",
+            "url": "https://ccsdruk.pl/",
+            "new_tab": true
+          }
+        },
+        "legal_notice": {
+          "type": "legal",
+          "settings": {
+            "text": "Game Boy and Game Boy Color are trademarks of Nintendo.\nKORO and Fungus Foray DX are independently developed and published games and are not affiliated with, endorsed by, or licensed by Nintendo Co., Ltd.\nAll other trademarks are the property of their respective owners."
+          }
+        }
+      },
+      "block_order": [
+        "listing_koro",
+        "listing_ffdx",
+        "listing_cortex",
+        "shop_catalog",
+        "shop_p1xel",
+        "shop_porting",
+        "partner_pmkc",
+        "partner_ccs",
+        "legal_notice"
+      ],
+      "settings": {
+        "ticker_text": "New games for old machines · Handmade in Poland · Small batches · Tested on real hardware",
+        "cover_image": "shopify://shop_images/koro-grass.jpg",
+        "cover_chip": "Coming soon",
+        "cover_title": "Meet KORO",
+        "cover_product": "shopify://products/koro",
+        "cover_cta_link": "shopify://products/koro",
+        "cover_cta_label": "Order now",
+        "cover_demo_link": "https://cdn.cyfrowynomada.com/games/koro/",
+        "cover_demo_label": "Play the demo",
+        "cover_stamp": "Small\nBatch\nPoland",
+        "band_heading": "New games for old machines.\nHandmade in Poland.",
+        "band_text": "Game Boy Color cartridges and MS-DOS floppy disks, written in assembly, tested on real hardware, and shipped in small batches.",
+        "band_cta1_label": "Browse the catalog",
+        "band_cta1_link": "",
+        "band_cta2_label": "Read the devlog",
+        "band_cta2_link": "",
+        "brand_name": "Cyfrowy Nomada",
+        "brand_line": "Mail-order catalogue · Vol. 3 · Handmade in Poland",
+        "listing_heading": "Games — in stock",
+        "featured_label": "Featured product",
+        "shop_heading": "Also from the workbench",
+        "shop_link": "shopify://collections/all",
+        "news_heading": "Get release news",
+        "news_button": "Subscribe",
+        "news_fine": "* No spam. A few emails a year. Unsubscribe anytime.",
+        "devlog_heading": "From the workbench",
+        "devlog_button": "Read the devlog",
+        "devlog_link": "shopify://blogs/devlog",
+        "partners_heading": "People we work with",
+        "footer_text": "Cyfrowy Nomada · handmade homebrew · prices in PLN · ships worldwide",
+        "color_paper": "#f6f1e3",
+        "color_red": "#d6453d"
+      }
+    }
+  },
+  "order": [
+    "game_home"
+  ]
+}
