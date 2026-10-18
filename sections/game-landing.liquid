@@ -130,6 +130,16 @@
     letter-spacing: -0.02em;
   }
   #shopify-section-{{ section.id }} .gl-logo img { height: 28px; width: auto; }
+  /* Glass 3D logo text: aqua specular top-left, gloss falloff, extruded edge */
+  #shopify-section-{{ section.id }} .gl-logo span {
+    background-color: currentColor;
+    background-image:
+      radial-gradient(135% 105% at 28% -4%, rgba(255,255,255,.9) 0%, rgba(255,255,255,.35) 30%, rgba(255,255,255,0) 56%),
+      linear-gradient(to bottom, rgba(255,255,255,.4) 0%, rgba(255,255,255,0) 42%, rgba(0,0,0,.28) 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 1px 0 rgba(0,0,0,.3)) drop-shadow(0 3px 4px rgba(0,0,0,.22));
+  }
   #shopify-section-{{ section.id }} .gl-links { display: flex; gap: 4px; flex-wrap: wrap; }
   #shopify-section-{{ section.id }} .gl-links a {
     padding: 8px 12px; border-radius: 999px; font-size: 13px; color: var(--gl-muted);
@@ -243,6 +253,17 @@
   #shopify-section-{{ section.id }} .gl-story-fallback {
     width: 88px; height: 88px; border-radius: 50%; object-fit: cover; background: var(--gl-blob);
   }
+  /* Glass marble: top-left specular dot, bottom reflected light, sphere shading */
+  #shopify-section-{{ section.id }} .gl-story-fallback {
+    background:
+      radial-gradient(circle at 30% 24%, rgba(255,255,255,.95) 0%, rgba(255,255,255,.45) 14%, rgba(255,255,255,0) 40%),
+      radial-gradient(circle at 70% 85%, rgba(255,255,255,.4) 0%, rgba(255,255,255,0) 32%),
+      radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--gl-blob) 45%, #fff) 0%, var(--gl-blob) 58%, color-mix(in srgb, var(--gl-blob) 55%, #000) 100%);
+    box-shadow:
+      inset -6px -8px 14px rgba(0,0,0,.28),
+      inset 4px 6px 10px rgba(255,255,255,.4),
+      0 10px 16px rgba(0,0,0,.25);
+  }
   #shopify-section-{{ section.id }} .gl h3 { font-size: clamp(30px, 3.6vw, 44px); margin: 0 0 10px; }
   #shopify-section-{{ section.id }} .gl-sub { color: var(--gl-muted); margin: 0; }
   #shopify-section-{{ section.id }} .gl-grid {
@@ -253,7 +274,15 @@
   #shopify-section-{{ section.id }} .gl-num {
     width: 36px; height: 36px; border-radius: 12px;
     display: grid; place-items: center; font-weight: 800; color: var(--gl-cta-ink);
-    background: var(--gl-accent); margin-bottom: 12px;
+    background: linear-gradient(150deg, color-mix(in srgb, var(--gl-accent) 70%, #fff) 0%, var(--gl-accent) 55%, color-mix(in srgb, var(--gl-accent) 70%, #000) 100%);
+    text-shadow: 0 -1px 0 rgba(0,0,0,.3), 0 1px 1px rgba(255,255,255,.35);
+    box-shadow:
+      inset 0 1px 1px rgba(255,255,255,.85),
+      inset 2px 3px 5px rgba(255,255,255,.28),
+      inset -2px -3px 5px rgba(0,0,0,.28),
+      0 3px 0 color-mix(in srgb, var(--gl-accent) 55%, #000),
+      0 6px 10px rgba(0,0,0,.22);
+    margin-bottom: 12px;
   }
   #shopify-section-{{ section.id }} .gl-card h4 {
     margin: 0 0 6px;
