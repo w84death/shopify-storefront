@@ -469,7 +469,7 @@
   }
 {%- endstyle -%}
 
-<div class="gl">
+<div class="gl" id="gl-{{ section.id }}">
   {% if section.settings.show_nav %}
     <header class="gl-nav">
       <a class="gl-logo" href="#gl-top-{{ section.id }}">
@@ -503,10 +503,11 @@
               <em>
                 {%- if section.settings.rainbow_accent -%}
                   {%- assign rainbow = '#1a9e4b,#f2a007,#e0393e,#2b6cd4' | split: ',' -%}
+                  {%- assign rainbow_light = '#e7f6ec,#fdf1d9,#fdeaea,#e9effb' | split: ',' -%}
                   {%- assign letters = section.settings.heading_accent | split: '' -%}
                   {%- for letter in letters -%}
                     {%- assign ci = forloop.index0 | modulo: 4 -%}
-                    <span style="color:{{ rainbow[ci] }}">{{ letter }}</span>
+                    <span style="color:{{ rainbow[ci] }}" data-bg="{{ rainbow_light[ci] }}" role="button" tabindex="0" aria-label="Background color {{ rainbow_light[ci] }}">{{ letter }}</span>
                   {%- endfor -%}
                 {%- else -%}
                   {{ section.settings.heading_accent }}
@@ -691,6 +692,28 @@
     </section>
   {% endif %}
 </div>
+<script>
+  (function () {
+    var gl = document.getElementById('gl-{{ section.id }}');
+    if (!gl) return;
+    function pick(letter) {
+      var isReset = letter.dataset.bg === gl.dataset.pickedBg;
+      gl.dataset.pickedBg = isReset ? '' : letter.dataset.bg;
+      if (isReset) {
+        gl.style.removeProperty('--gl-bg');
+      } else {
+        gl.style.setProperty('--gl-bg', letter.dataset.bg);
+      }
+    }
+    gl.querySelectorAll('.gl-title em span[data-bg]').forEach(function (s) {
+      s.style.cursor = 'pointer';
+      s.addEventListener('click', function () { pick(s); });
+      s.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(s); }
+      });
+    });
+  })();
+</script>
 
 {% schema %}
 {
