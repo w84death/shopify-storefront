@@ -20,7 +20,7 @@
             "cover": "shopify://shop_images/koro.jpg",
             "title": "Meet KORO",
             "desc": "A bright, quick and endlessly replayable marble puzzle. Assembly, no engines, real hardware.",
-            "product": "shopify://products/koro",
+            "product": "koro",
             "price_text": "",
             "order_label": "Order now",
             "demo_url": "https://cdn.cyfrowynomada.com/games/koro/",
