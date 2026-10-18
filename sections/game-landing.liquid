@@ -234,19 +234,25 @@
   }
   #shopify-section-{{ section.id }} .gl-btn-primary,
   #shopify-section-{{ section.id }} .gl-chip {
-    background: linear-gradient(150deg, color-mix(in srgb, var(--gl-cta) 70%, #fff) 0%, var(--gl-cta) 55%, color-mix(in srgb, var(--gl-cta) 70%, #000) 100%);
-    color: var(--gl-cta-ink);
-    text-shadow: 0 -1px 0 rgba(0,0,0,.25), 0 1px 1px rgba(255,255,255,.3);
+    background:
+      radial-gradient(120% 150% at 30% 16%, rgba(255,255,255,.85) 0%, rgba(255,255,255,.3) 32%, rgba(255,255,255,0) 54%),
+      radial-gradient(80% 110% at 80% 92%, rgba(255,255,255,.45) 0%, rgba(255,255,255,0) 42%),
+      linear-gradient(150deg, color-mix(in srgb, var(--gl-cta) 50%, #fff) 0%, color-mix(in srgb, var(--gl-cta) 85%, #fff) 38%, var(--gl-cta) 82%, color-mix(in srgb, var(--gl-cta) 88%, #000) 100%);
+    color: #000;
+    text-shadow: 0 1px 0 rgba(255,255,255,.5);
     box-shadow:
-      inset 0 1px 1px rgba(255,255,255,.75),
-      inset 2px 3px 6px rgba(255,255,255,.25),
-      inset -2px -3px 6px rgba(0,0,0,.25),
+      inset 0 1px 1px rgba(255,255,255,.85),
+      inset 2px 3px 6px rgba(255,255,255,.35),
+      inset -2px -3px 6px rgba(0,0,0,.2),
       0 3px 0 color-mix(in srgb, var(--gl-cta) 55%, #000),
       0 7px 12px rgba(0,0,0,.22);
   }
   #shopify-section-{{ section.id }} .gl-btn-ghost {
-    background: linear-gradient(150deg, color-mix(in srgb, var(--gl-surface) 55%, #fff) 0%, var(--gl-surface) 55%, color-mix(in srgb, var(--gl-surface) 82%, #000) 100%);
+    background:
+      radial-gradient(120% 150% at 30% 16%, rgba(255,255,255,.95) 0%, rgba(255,255,255,.45) 32%, rgba(255,255,255,0) 54%),
+      linear-gradient(150deg, #fff 0%, color-mix(in srgb, var(--gl-surface) 75%, #fff) 45%, var(--gl-surface) 100%);
     color: var(--gl-ink);
+    text-shadow: 0 1px 0 rgba(255,255,255,.6);
     box-shadow:
       inset 0 1px 1px rgba(255,255,255,.9),
       inset 2px 3px 6px rgba(255,255,255,.5),
