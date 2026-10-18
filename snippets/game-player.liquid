@@ -1,0 +1,35 @@
+{% comment %}
+  Embedded game player: console shell + iframe + keyboard keys row.
+
+  @param {string} url - player URL (required)
+  @param {string} [platform] - 'gb' (160:144) or 'dos' (4:3), default 'gb'
+  @param {string} [brand] - label in the shell top bar
+  @param {string} [title] - accessible iframe title
+{% endcomment %}
+
+{%- liquid
+  case platform
+    when 'dos'
+      assign platform_label = 'MS-DOS'
+    else
+      assign platform_label = 'GAME BOY'
+  endcase
+-%}
+<div class="gl-player-shell">
+  <div class="gl-player-bar"><span>{{ brand }}</span><span>{{ platform_label }}</span></div>
+  <iframe
+    class="gl-player-screen gl-player-screen--{{ platform | default: 'gb' }}"
+    src="{{ url | escape }}"
+    title="{{ title | default: 'Play the game demo' | escape }}"
+    loading="lazy"
+    allow="autoplay; fullscreen; gamepad"
+    allowfullscreen
+  ></iframe>
+</div>
+<p class="gl-keys">
+  {% if platform == 'dos' %}
+    Keyboard: <kbd>Arrows</kbd> Move &nbsp; <kbd>Z</kbd>/<kbd>X</kbd> Action &nbsp; <kbd>Enter</kbd> Start
+  {% else %}
+    Keyboard: <kbd>Arrows</kbd> D-Pad &nbsp; <kbd>X</kbd> A &nbsp; <kbd>Z</kbd> B &nbsp; <kbd>Enter</kbd> Start &nbsp; <kbd>Tab</kbd> Select
+  {% endif %}
+</p>

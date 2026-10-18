@@ -5,6 +5,14 @@
 
 {%- liquid
   assign landing_product = section.settings.product | default: product
+  comment
+    Player URL: the product metafield wins (URL-type settings never render
+    embedded Liquid, so a Liquid value in the demo_url setting stays dead code)
+  endcomment
+  assign demo_url = section.settings.demo_url
+  if landing_product.metafields.custom.iframe_game_url != blank
+    assign demo_url = landing_product.metafields.custom.iframe_game_url.value | default: landing_product.metafields.custom.iframe_game_url
+  endif
   assign accent = section.settings.color_accent
   assign bg = section.settings.color_bg
   assign surface = section.settings.color_surface
@@ -254,7 +262,7 @@
     background: #111; display: grid; place-items: center;
   }
   #shopify-section-{{ section.id }} .gl-play-frame img { width: 100%; height: 100%; object-fit: cover; }
-  #shopify-section-{{ section.id }} .gl-play--player { grid-template-columns: minmax(300px, 480px) 1fr; }
+  #shopify-section-{{ section.id }} .gl-art .gl-player-shell { width: min(560px, 100%); }
   #shopify-section-{{ section.id }} .gl-player-shell {
     width: 100%; border-radius: 16px; overflow: hidden;
     border: 1px solid var(--gl-line); background: #111; box-shadow: var(--gl-shadow);
@@ -362,6 +370,9 @@
           </div>
         </div>
         <div class="gl-art">
+          {% if demo_url != blank %}
+            {% render 'game-player', url: demo_url, platform: section.settings.demo_platform, brand: section.settings.logo_text, title: section.settings.heading %}
+          {% else %}
           <div class="gl-blob">
             {% if section.settings.hero_image %}
               <img src="{{ section.settings.hero_image | image_url: width: 900 }}" width="900" height="{{ 900 | divided_by: section.settings.hero_image.aspect_ratio | round }}" alt="{{ section.settings.hero_image.alt | default: section.settings.heading | escape }}">
@@ -369,6 +380,7 @@
           </div>
           {% if section.settings.speech != blank %}<div class="gl-speech">{{ section.settings.speech }}</div>{% endif %}
           {% if section.settings.sticker != blank %}<div class="gl-sticker">{{ section.settings.sticker }}</div>{% endif %}
+          {% endif %}
         </div>
       </div>
     </section>
@@ -415,34 +427,10 @@
   {% endif %}
 
   {% if section.settings.show_play %}
-    {% liquid
-      assign has_player = false
-      if section.settings.demo_url != blank and section.settings.demo_embed == blank
-        assign has_player = true
-      endif
-      case section.settings.demo_platform
-        when 'dos'
-          assign platform_label = 'MS-DOS'
-        else
-          assign platform_label = 'GAME BOY'
-      endcase
-    %}
     <section class="gl-block gl-wrap" id="gl-play-{{ section.id }}">
-      <div class="gl-play{% if has_player %} gl-play--player{% endif %}">
+      <div class="gl-play">
         <div class="gl-play-frame">
-          {% if has_player %}
-            <div class="gl-player-shell">
-              <div class="gl-player-bar"><span>{{ section.settings.logo_text }}</span><span>{{ platform_label }}</span></div>
-              <iframe
-                class="gl-player-screen gl-player-screen--{{ section.settings.demo_platform }}"
-                src="{{ section.settings.demo_url | escape }}"
-                title="Play the {{ section.settings.logo_text | default: 'game' }} demo"
-                loading="lazy"
-                allow="autoplay; fullscreen; gamepad"
-                allowfullscreen
-              ></iframe>
-            </div>
-          {% elsif section.settings.play_image %}
+          {% if section.settings.play_image %}
             <img src="{{ section.settings.play_image | image_url: width: 800 }}" width="800" height="{{ 800 | divided_by: section.settings.play_image.aspect_ratio | round }}" alt="">
           {% elsif section.settings.demo_embed != blank %}
             <div style="width:100%">{{ section.settings.demo_embed }}</div>
@@ -454,20 +442,11 @@
           <p class="gl-eyebrow">{{ section.settings.play_eyebrow }}</p>
           <h3>{{ section.settings.play_heading }}</h3>
           <p class="gl-sub" style="margin:10px 0 16px">{{ section.settings.play_text }}</p>
-          {% if section.settings.demo_url != blank %}
-            <a class="gl-btn gl-btn-primary" href="{{ section.settings.demo_url }}" target="_blank" rel="noopener">{{ section.settings.play_button }}</a>
+          {% if demo_url != blank %}
+            <a class="gl-btn gl-btn-primary" href="{{ demo_url }}" target="_blank" rel="noopener">{{ section.settings.play_button }}</a>
           {% endif %}
         </div>
       </div>
-      {% if has_player %}
-        <p class="gl-keys">
-          {% if section.settings.demo_platform == 'dos' %}
-            Keyboard: <kbd>Arrows</kbd> Move &nbsp; <kbd>Z</kbd>/<kbd>X</kbd> Action &nbsp; <kbd>Enter</kbd> Start
-          {% else %}
-            Keyboard: <kbd>Arrows</kbd> D-Pad &nbsp; <kbd>X</kbd> A &nbsp; <kbd>Z</kbd> B &nbsp; <kbd>Enter</kbd> Start &nbsp; <kbd>Tab</kbd> Select
-          {% endif %}
-        </p>
-      {% endif %}
     </section>
   {% endif %}
 
