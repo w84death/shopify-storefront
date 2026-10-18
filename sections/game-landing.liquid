@@ -420,7 +420,13 @@
     background: var(--gl-surface); color: var(--gl-ink); font-family: inherit; font-size: 12px;
   }
   #shopify-section-{{ section.id }} .gl-box { display: grid; gap: 12px; grid-template-columns: repeat(4, 1fr); }
-  #shopify-section-{{ section.id }} .gl-box .gl-card { text-align: center; }
+  #shopify-section-{{ section.id }} .gl-box .gl-card { text-align: center; padding: 0; overflow: hidden; }
+  #shopify-section-{{ section.id }} .gl-box .gl-card img {
+    width: 100%; height: auto; aspect-ratio: 1 / 1; object-fit: cover;
+    display: block; margin: 0;
+  }
+  #shopify-section-{{ section.id }} .gl-box .gl-card h4 { margin: 14px 14px 4px; }
+  #shopify-section-{{ section.id }} .gl-box .gl-card p { margin: 0 14px 16px; }
   #shopify-section-{{ section.id }} .gl-buy { display: grid; grid-template-columns: 1.2fr .8fr; gap: 18px; }
   #shopify-section-{{ section.id }} .gl-shot {
     border-radius: var(--gl-radius); min-height: 300px; overflow: hidden;
@@ -612,7 +618,7 @@
           {% if block.type == 'box_item' %}
             <article class="gl-card" {{ block.shopify_attributes }}>
               {% if block.settings.image %}
-                <img src="{{ block.settings.image | image_url: width: 240 }}" width="240" height="{{ 240 | divided_by: block.settings.image.aspect_ratio | round }}" alt="{{ block.settings.title | escape }}">
+                <img src="{{ block.settings.image | image_url: width: 800 }}" width="800" height="{{ 800 | divided_by: block.settings.image.aspect_ratio | round }}" alt="{{ block.settings.title | escape }}">
               {% endif %}
               <h4>{{ block.settings.title }}</h4>
               <p>{{ block.settings.text }}</p>
