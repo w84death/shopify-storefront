@@ -1,0 +1,569 @@
+{% doc %}
+  @prompt
+    Recreate the "Company milestones" timeline block with these fixes: 1) The vertical connecting line must be perfectly centered on the dots using left: 50% and transform: translateX(-50%). 2) The timeline wrapper must use width: 100% and must NOT use margin: 0 auto or any centering flex/grid on the outer container — it should fill the full available width and respect the parent section's alignment (left/center/right), not force-center itself. Keep all existing settings: up to 5 milestones each with year, title, description, and enable/disable toggle; plus settings for dot size, line width, line color, dot color, card background, font sizes, and desktop layout., in vertival mode the line connecting dots is in the center of the section not where the dots are, now align the dots with date line. also add check for each milestone to mark it done (done icon, crossed milestone title)
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-milestones-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+  }
+
+  .ai-milestones-wrapper-{{ ai_gen_id }} {
+    width: 100%;
+    position: relative;
+  }
+
+  .ai-milestones-layout-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: {{ block.settings.spacing_between_items }}px;
+    position: relative;
+  }
+
+  .ai-milestones-layout-{{ ai_gen_id }}--horizontal {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .ai-milestones-line-{{ ai_gen_id }} {
+    position: absolute;
+    background-color: {{ block.settings.line_color }};
+    width: {{ block.settings.line_width }}px;
+    left: {{ block.settings.dot_size | divided_by: 2 }}px;
+    top: 0;
+    bottom: 0;
+    z-index: 0;
+  }
+
+  .ai-milestones-layout-{{ ai_gen_id }}--horizontal .ai-milestones-line-{{ ai_gen_id }} {
+    width: 100%;
+    height: {{ block.settings.line_width }}px;
+    left: 0;
+    top: calc({{ block.settings.year_font_size }}px + 16px + {{ block.settings.dot_size | divided_by: 2 }}px);
+  }
+
+  .ai-milestones-item-{{ ai_gen_id }} {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .ai-milestones-layout-{{ ai_gen_id }}--horizontal .ai-milestones-item-{{ ai_gen_id }} {
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    text-align: center;
+  }
+
+  .ai-milestones-dot-wrapper-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .ai-milestones-layout-{{ ai_gen_id }}--horizontal .ai-milestones-dot-wrapper-{{ ai_gen_id }} {
+    order: 2;
+  }
+
+  .ai-milestones-year-top-{{ ai_gen_id }} {
+    font-size: {{ block.settings.year_font_size }}px;
+    font-weight: 700;
+    color: {{ block.settings.text_color }};
+    margin: 0;
+  }
+
+  .ai-milestones-dot-{{ ai_gen_id }} {
+    width: {{ block.settings.dot_size }}px;
+    height: {{ block.settings.dot_size }}px;
+    border-radius: 50%;
+    background-color: {{ block.settings.dot_color }};
+    flex-shrink: 0;
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-milestones-dot-{{ ai_gen_id }}--completed {
+    background-color: {{ block.settings.completed_dot_color }};
+  }
+
+  .ai-milestones-dot-icon-{{ ai_gen_id }} {
+    width: calc({{ block.settings.dot_size }}px * 0.6);
+    height: calc({{ block.settings.dot_size }}px * 0.6);
+    stroke: {{ block.settings.completed_icon_color }};
+    stroke-width: 2;
+    fill: none;
+  }
+
+  .ai-milestones-content-{{ ai_gen_id }} {
+    flex: 1;
+    background-color: {{ block.settings.card_background }};
+    padding: 20px;
+    border-radius: 8px;
+  }
+
+  .ai-milestones-layout-{{ ai_gen_id }}--horizontal .ai-milestones-content-{{ ai_gen_id }} {
+    width: 100%;
+    order: 3;
+  }
+
+  .ai-milestones-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.title_font_size }}px;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+    color: {{ block.settings.text_color }};
+  }
+
+  .ai-milestones-title-{{ ai_gen_id }}--completed {
+    text-decoration: line-through;
+    opacity: 0.7;
+  }
+
+  .ai-milestones-description-{{ ai_gen_id }} {
+    font-size: {{ block.settings.description_font_size }}px;
+    margin: 0;
+    color: {{ block.settings.text_color }};
+    line-height: 1.5;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-milestones-layout-{{ ai_gen_id }}--horizontal {
+      flex-direction: column;
+    }
+
+    .ai-milestones-layout-{{ ai_gen_id }}--horizontal .ai-milestones-line-{{ ai_gen_id }} {
+      width: {{ block.settings.line_width }}px;
+      height: auto;
+      left: {{ block.settings.dot_size | divided_by: 2 }}px;
+      top: 0;
+      bottom: 0;
+    }
+
+    .ai-milestones-layout-{{ ai_gen_id }}--horizontal .ai-milestones-item-{{ ai_gen_id }} {
+      flex-direction: row;
+      align-items: flex-start;
+      text-align: left;
+    }
+
+    .ai-milestones-layout-{{ ai_gen_id }}--horizontal .ai-milestones-dot-wrapper-{{ ai_gen_id }} {
+      order: 0;
+    }
+
+    .ai-milestones-layout-{{ ai_gen_id }}--horizontal .ai-milestones-content-{{ ai_gen_id }} {
+      order: 0;
+    }
+  }
+{% endstyle %}
+
+<company-milestones-{{ ai_gen_id }} class="ai-milestones-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-milestones-wrapper-{{ ai_gen_id }}">
+    <div class="ai-milestones-layout-{{ ai_gen_id }} {% if block.settings.desktop_layout == 'horizontal' %}ai-milestones-layout-{{ ai_gen_id }}--horizontal{% endif %}">
+      <div class="ai-milestones-line-{{ ai_gen_id }}"></div>
+
+      {% for i in (1..5) %}
+        {% liquid
+          assign enabled_key = 'milestone_' | append: i | append: '_enabled'
+          assign year_key = 'milestone_' | append: i | append: '_year'
+          assign title_key = 'milestone_' | append: i | append: '_title'
+          assign description_key = 'milestone_' | append: i | append: '_description'
+          assign completed_key = 'milestone_' | append: i | append: '_completed'
+
+          assign enabled = block.settings[enabled_key]
+          assign year = block.settings[year_key]
+          assign title = block.settings[title_key]
+          assign description = block.settings[description_key]
+          assign completed = block.settings[completed_key]
+        %}
+
+        {% if enabled %}
+          <div class="ai-milestones-item-{{ ai_gen_id }}">
+            <div class="ai-milestones-dot-wrapper-{{ ai_gen_id }}">
+              {% if year != blank %}
+                <div class="ai-milestones-year-top-{{ ai_gen_id }}">{{ year }}</div>
+              {% endif %}
+              <div class="ai-milestones-dot-{{ ai_gen_id }} {% if completed %}ai-milestones-dot-{{ ai_gen_id }}--completed{% endif %}">
+                {% if completed %}
+                  <svg class="ai-milestones-dot-icon-{{ ai_gen_id }}" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                {% endif %}
+              </div>
+            </div>
+            <div class="ai-milestones-content-{{ ai_gen_id }}">
+              {% if title != blank %}
+                <h3 class="ai-milestones-title-{{ ai_gen_id }} {% if completed %}ai-milestones-title-{{ ai_gen_id }}--completed{% endif %}">{{ title }}</h3>
+              {% endif %}
+              {% if description != blank %}
+                <div class="ai-milestones-description-{{ ai_gen_id }}">{{ description }}</div>
+              {% endif %}
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</company-milestones-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class CompanyMilestones{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.updateLinePosition();
+        window.addEventListener('resize', () => this.updateLinePosition());
+      }
+
+      updateLinePosition() {
+        const line = this.querySelector('.ai-milestones-line-{{ ai_gen_id }}');
+        const items = this.querySelectorAll('.ai-milestones-item-{{ ai_gen_id }}');
+        
+        if (!line || items.length === 0) return;
+
+        const layout = this.querySelector('.ai-milestones-layout-{{ ai_gen_id }}');
+        const isHorizontal = layout.classList.contains('ai-milestones-layout-{{ ai_gen_id }}--horizontal');
+        const isMobile = window.innerWidth < 750;
+
+        if (isHorizontal && !isMobile) {
+          const firstDot = items[0].querySelector('.ai-milestones-dot-{{ ai_gen_id }}');
+          const lastDot = items[items.length - 1].querySelector('.ai-milestones-dot-{{ ai_gen_id }}');
+          
+          if (firstDot && lastDot) {
+            const firstRect = firstDot.getBoundingClientRect();
+            const lastRect = lastDot.getBoundingClientRect();
+            const containerRect = layout.getBoundingClientRect();
+            
+            const leftOffset = firstRect.left - containerRect.left + (firstRect.width / 2);
+            const rightOffset = containerRect.right - lastRect.right + (lastRect.width / 2);
+            
+            line.style.left = leftOffset + 'px';
+            line.style.right = rightOffset + 'px';
+            line.style.width = 'auto';
+          }
+        } else {
+          line.style.left = '';
+          line.style.right = 'auto';
+          line.style.width = '';
+        }
+      }
+    }
+
+    customElements.define('company-milestones-{{ ai_gen_id }}', CompanyMilestones{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Company milestones",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "desktop_layout",
+      "label": "Desktop layout",
+      "options": [
+        {
+          "value": "vertical",
+          "label": "Vertical"
+        },
+        {
+          "value": "horizontal",
+          "label": "Horizontal"
+        }
+      ],
+      "default": "vertical"
+    },
+    {
+      "type": "range",
+      "id": "spacing_between_items",
+      "label": "Spacing between items",
+      "min": 20,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Timeline style"
+    },
+    {
+      "type": "range",
+      "id": "dot_size",
+      "label": "Dot size",
+      "min": 10,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "dot_color",
+      "label": "Dot color",
+      "default": "#e6e6e6"
+    },
+    {
+      "type": "color",
+      "id": "completed_dot_color",
+      "label": "Completed dot color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "completed_icon_color",
+      "label": "Completed icon color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "line_width",
+      "label": "Line width",
+      "min": 1,
+      "max": 6,
+      "step": 1,
+      "unit": "px",
+      "default": 2
+    },
+    {
+      "type": "color",
+      "id": "line_color",
+      "label": "Line color",
+      "default": "#e6e6e6"
+    },
+    {
+      "type": "header",
+      "content": "Card style"
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Card background",
+      "default": "#f5f5f5"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#1f1f1f"
+    },
+    {
+      "type": "range",
+      "id": "year_font_size",
+      "label": "Year font size",
+      "min": 12,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "title_font_size",
+      "label": "Title font size",
+      "min": 14,
+      "max": 36,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "description_font_size",
+      "label": "Description font size",
+      "min": 12,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "header",
+      "content": "Milestone 1"
+    },
+    {
+      "type": "checkbox",
+      "id": "milestone_1_enabled",
+      "label": "Enable milestone 1",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "milestone_1_completed",
+      "label": "Mark as completed",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "milestone_1_year",
+      "label": "Year",
+      "default": "2020"
+    },
+    {
+      "type": "text",
+      "id": "milestone_1_title",
+      "label": "Title",
+      "default": "Company founded"
+    },
+    {
+      "type": "textarea",
+      "id": "milestone_1_description",
+      "label": "Description",
+      "default": "Started our journey with a vision to create something meaningful."
+    },
+    {
+      "type": "header",
+      "content": "Milestone 2"
+    },
+    {
+      "type": "checkbox",
+      "id": "milestone_2_enabled",
+      "label": "Enable milestone 2",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "milestone_2_completed",
+      "label": "Mark as completed",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "milestone_2_year",
+      "label": "Year",
+      "default": "2021"
+    },
+    {
+      "type": "text",
+      "id": "milestone_2_title",
+      "label": "Title",
+      "default": "First product launch"
+    },
+    {
+      "type": "textarea",
+      "id": "milestone_2_description",
+      "label": "Description",
+      "default": "Launched our flagship product to enthusiastic customers."
+    },
+    {
+      "type": "header",
+      "content": "Milestone 3"
+    },
+    {
+      "type": "checkbox",
+      "id": "milestone_3_enabled",
+      "label": "Enable milestone 3",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "milestone_3_completed",
+      "label": "Mark as completed",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "milestone_3_year",
+      "label": "Year",
+      "default": "2022"
+    },
+    {
+      "type": "text",
+      "id": "milestone_3_title",
+      "label": "Title",
+      "default": "Expanded globally"
+    },
+    {
+      "type": "textarea",
+      "id": "milestone_3_description",
+      "label": "Description",
+      "default": "Opened offices in three new countries and grew our team."
+    },
+    {
+      "type": "header",
+      "content": "Milestone 4"
+    },
+    {
+      "type": "checkbox",
+      "id": "milestone_4_enabled",
+      "label": "Enable milestone 4",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "milestone_4_completed",
+      "label": "Mark as completed",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "milestone_4_year",
+      "label": "Year",
+      "default": "2023"
+    },
+    {
+      "type": "text",
+      "id": "milestone_4_title",
+      "label": "Title",
+      "default": "Award recognition"
+    },
+    {
+      "type": "textarea",
+      "id": "milestone_4_description",
+      "label": "Description",
+      "default": "Received industry awards for innovation and customer service."
+    },
+    {
+      "type": "header",
+      "content": "Milestone 5"
+    },
+    {
+      "type": "checkbox",
+      "id": "milestone_5_enabled",
+      "label": "Enable milestone 5",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "milestone_5_completed",
+      "label": "Mark as completed",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "milestone_5_year",
+      "label": "Year",
+      "default": "2024"
+    },
+    {
+      "type": "text",
+      "id": "milestone_5_title",
+      "label": "Title",
+      "default": "Sustainability milestone"
+    },
+    {
+      "type": "textarea",
+      "id": "milestone_5_description",
+      "label": "Description",
+      "default": "Achieved carbon neutrality and launched eco-friendly initiatives."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Company milestones"
+    }
+  ]
+}
+{% endschema %}

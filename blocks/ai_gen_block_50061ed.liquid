@@ -1,0 +1,319 @@
+{% doc %}
+  @prompt
+    Simplified iframe embed block. Reads iframe URL from a metafield
+    (namespace + key entered separately) on page, product, article, blog,
+    or collection. Supports URL, single-line text, and list.url metafield types.
+    Also shows a metaobject-backed caption below the iframe.
+{% enddoc %}
+
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% comment %} ===== Resolve iframe URL from metafield ===== {% endcomment %}
+{% assign iframe_url = '' %}
+{% assign ns = block.settings.mf_namespace | strip %}
+{% assign key = block.settings.mf_key | strip %}
+
+{% if ns != '' and key != '' %}
+  {% assign raw = nil %}
+
+  {% if page.metafields[ns][key] != blank %}
+    {% assign raw = page.metafields[ns][key] %}
+  {% elsif product.metafields[ns][key] != blank %}
+    {% assign raw = product.metafields[ns][key] %}
+  {% elsif article.metafields[ns][key] != blank %}
+    {% assign raw = article.metafields[ns][key] %}
+  {% elsif blog.metafields[ns][key] != blank %}
+    {% assign raw = blog.metafields[ns][key] %}
+  {% elsif collection.metafields[ns][key] != blank %}
+    {% assign raw = collection.metafields[ns][key] %}
+  {% endif %}
+
+  {% if raw != blank %}
+    {% comment %} Handle list metafields (take first item) {% endcomment %}
+    {% if raw.first != blank and raw.url != blank %}
+      {% comment %} List of URL drops {% endcomment %}
+      {% capture iframe_url %}{{ raw.first }}{% endcapture %}
+    {% elsif raw.first != blank %}
+      {% comment %} Generic list - take first {% endcomment %}
+      {% capture iframe_url %}{{ raw.first }}{% endcapture %}
+    {% else %}
+      {% comment %} Single value (URL drop or string) {% endcomment %}
+      {% capture iframe_url %}{{ raw }}{% endcapture %}
+    {% endif %}
+    {% assign iframe_url = iframe_url | strip %}
+  {% endif %}
+{% endif %}
+
+{% comment %} ===== Resolve bottom text from metaobject metafield ===== {% endcomment %}
+{% assign bottom_text_value = '' %}
+{% assign bo_ns = block.settings.bo_namespace | strip %}
+{% assign bo_key = block.settings.bo_key | strip %}
+
+{% if bo_ns != '' and bo_key != '' %}
+  {% assign bo_meta = nil %}
+
+  {% if page.metafields[bo_ns][bo_key] != blank %}
+    {% assign bo_meta = page.metafields[bo_ns][bo_key] %}
+  {% elsif product.metafields[bo_ns][bo_key] != blank %}
+    {% assign bo_meta = product.metafields[bo_ns][bo_key] %}
+  {% elsif article.metafields[bo_ns][bo_key] != blank %}
+    {% assign bo_meta = article.metafields[bo_ns][bo_key] %}
+  {% elsif blog.metafields[bo_ns][bo_key] != blank %}
+    {% assign bo_meta = blog.metafields[bo_ns][bo_key] %}
+  {% elsif collection.metafields[bo_ns][bo_key] != blank %}
+    {% assign bo_meta = collection.metafields[bo_ns][bo_key] %}
+  {% endif %}
+
+  {% if bo_meta != blank %}
+    {% if block.settings.bo_field != blank %}
+      {% assign bottom_text_value = bo_meta[block.settings.bo_field] %}
+    {% else %}
+      {% assign bottom_text_value = bo_meta.text %}
+    {% endif %}
+  {% endif %}
+{% endif %}
+
+{% comment %} ===== Styles ===== {% endcomment %}
+{% style %}
+  .ai-iframe-embed-{{ ai_gen_id }} {
+    display: block;
+    width: {{ block.settings.desktop_width_percent }}%;
+    max-width: 100%;
+  }
+
+  .ai-iframe-embed-{{ ai_gen_id }} iframe {
+    width: 100%;
+    height: {{ block.settings.iframe_height }}px;
+    border: {{ block.settings.border_width }}px solid {{ block.settings.border_color }};
+    border-radius: {{ block.settings.border_radius }}px;
+    padding: {{ block.settings.padding }}px;
+    display: block;
+    background-color: {{ block.settings.background_color }};
+  }
+
+  .ai-iframe-embed-bottom-{{ ai_gen_id }} {
+    margin-top: {{ block.settings.bottom_text_spacing }}px;
+    text-align: {{ block.settings.bottom_text_align }};
+    color: {{ block.settings.bottom_text_color }};
+    font-size: {{ block.settings.bottom_text_size }}px;
+    line-height: 1.5;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-iframe-embed-{{ ai_gen_id }} { width: 100%; }
+    .ai-iframe-embed-{{ ai_gen_id }} iframe { height: {{ block.settings.iframe_height_mobile }}px; }
+  }
+{% endstyle %}
+
+{% comment %} ===== Markup ===== {% endcomment %}
+<div class="ai-iframe-embed-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  {% if iframe_url != '' %}
+    <iframe
+      src="{{ iframe_url }}"
+      title="{{ page.title | default: product.title | default: article.title | default: blog.title }}"
+      {% if block.settings.allow_fullscreen %}allowfullscreen{% endif %}
+      loading="lazy"
+    ></iframe>
+  {% else %}
+    <div style="padding: 40px; text-align: center; background-color: #f4f4f4; border-radius: {{ block.settings.border_radius }}px;">
+      <p style="color: #666; margin: 0;">
+        Set a URL (or text) metafield on this resource, then enter its namespace and key in the block settings.
+      </p>
+    </div>
+  {% endif %}
+
+  {% if bottom_text_value != blank %}
+    <div class="ai-iframe-embed-bottom-{{ ai_gen_id }}">
+      {{ bottom_text_value }}
+    </div>
+  {% endif %}
+</div>
+
+{% schema %}
+{
+  "name": "Iframe embed",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Iframe URL metafield"
+    },
+    {
+      "type": "paragraph",
+      "content": "Enter the namespace and key of the metafield holding the iframe URL. Works on pages, products, articles, blogs, and collections. Supports URL, single-line text, and list.url metafield types."
+    },
+    {
+      "type": "text",
+      "id": "mf_namespace",
+      "label": "Metafield namespace",
+      "default": "custom",
+      "info": "e.g. custom"
+    },
+    {
+      "type": "text",
+      "id": "mf_key",
+      "label": "Metafield key",
+      "default": "iframe_game_url",
+      "info": "e.g. iframe_game_url"
+    },
+    {
+      "type": "header",
+      "content": "Bottom text from metaobject"
+    },
+    {
+      "type": "paragraph",
+      "content": "Optional. Reference a metafield that points to a metaobject; the chosen field's value is shown below the iframe."
+    },
+    {
+      "type": "text",
+      "id": "bo_namespace",
+      "label": "Metaobject metafield namespace",
+      "info": "e.g. custom"
+    },
+    {
+      "type": "text",
+      "id": "bo_key",
+      "label": "Metaobject metafield key",
+      "info": "e.g. game_description"
+    },
+    {
+      "type": "text",
+      "id": "bo_field",
+      "label": "Metaobject field key",
+      "info": "Which field on the metaobject holds the text. Leave blank to use 'text'.",
+      "default": "text"
+    },
+    {
+      "type": "header",
+      "content": "Iframe settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "allow_fullscreen",
+      "label": "Allow fullscreen",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "iframe_height",
+      "label": "Desktop height",
+      "min": 200,
+      "max": 1000,
+      "step": 50,
+      "unit": "px",
+      "default": 500
+    },
+    {
+      "type": "range",
+      "id": "iframe_height_mobile",
+      "label": "Mobile height",
+      "min": 200,
+      "max": 800,
+      "step": 50,
+      "unit": "px",
+      "default": 400
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "header",
+      "content": "Screen style"
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "label": "Border width",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "default": 4
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color",
+      "default": "#8bac0f"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "padding",
+      "label": "Screen padding",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#0f380f"
+    },
+    {
+      "type": "header",
+      "content": "Bottom text style"
+    },
+    {
+      "type": "color",
+      "id": "bottom_text_color",
+      "label": "Text color",
+      "default": "#333333"
+    },
+    {
+      "type": "range",
+      "id": "bottom_text_size",
+      "label": "Text size",
+      "min": 10,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "bottom_text_spacing",
+      "label": "Spacing above",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "bottom_text_align",
+      "label": "Text alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "center"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Iframe embed"
+    }
+  ]
+}
+{% endschema %}

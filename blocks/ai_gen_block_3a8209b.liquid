@@ -1,0 +1,433 @@
+{% doc %}
+  @prompt
+    Fix the vertical timeline line alignment in the "Company milestones" block (file: ai_gen_block_b0867eb.liquid or similar in the blocks/ or sections/ folder). The vertical connecting line between dots is not horizontally centered with the dots. Fix the CSS so the line is perfectly centered — set `left: 50%` and `transform: translateX(-50%)` on the vertical line element, or adjust its positioning so it aligns with the horizontal center of the dot/circle elements. Do not change any other styles.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-timeline-container-{{ ai_gen_id }} {
+    width: {{ block.settings.desktop_width_percent }}%;
+    max-width: 100%;
+    padding: 40px 20px;
+  }
+
+  .ai-timeline-{{ ai_gen_id }} {
+    position: relative;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .ai-timeline-line-{{ ai_gen_id }} {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 0;
+    bottom: 0;
+    width: {{ block.settings.line_width }}px;
+    background-color: {{ block.settings.line_color }};
+  }
+
+  .ai-timeline-item-{{ ai_gen_id }} {
+    position: relative;
+    margin-bottom: {{ block.settings.item_spacing }}px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .ai-timeline-item-{{ ai_gen_id }}:last-child {
+    margin-bottom: 0;
+  }
+
+  .ai-timeline-content-{{ ai_gen_id }} {
+    flex: 1;
+    text-align: right;
+    padding-right: 20px;
+  }
+
+  .ai-timeline-dot-{{ ai_gen_id }} {
+    position: relative;
+    width: {{ block.settings.dot_size }}px;
+    height: {{ block.settings.dot_size }}px;
+    background-color: {{ block.settings.dot_color }};
+    border-radius: 50%;
+    flex-shrink: 0;
+    z-index: 2;
+    border: {{ block.settings.dot_border_width }}px solid {{ block.settings.dot_border_color }};
+  }
+
+  .ai-timeline-content-right-{{ ai_gen_id }} {
+    flex: 1;
+    text-align: left;
+    padding-left: 20px;
+  }
+
+  .ai-timeline-year-{{ ai_gen_id }} {
+    font-size: {{ block.settings.year_font_size }}px;
+    font-weight: bold;
+    color: {{ block.settings.year_color }};
+    margin-bottom: 8px;
+  }
+
+  .ai-timeline-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.title_font_size }}px;
+    font-weight: 600;
+    color: {{ block.settings.title_color }};
+    margin-bottom: 8px;
+  }
+
+  .ai-timeline-description-{{ ai_gen_id }} {
+    font-size: {{ block.settings.description_font_size }}px;
+    color: {{ block.settings.description_color }};
+    line-height: 1.6;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-timeline-{{ ai_gen_id }} {
+      padding-left: 30px;
+    }
+
+    .ai-timeline-line-{{ ai_gen_id }} {
+      left: 0;
+      transform: translateX(0);
+    }
+
+    .ai-timeline-item-{{ ai_gen_id }} {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .ai-timeline-content-{{ ai_gen_id }} {
+      text-align: left;
+      padding-right: 0;
+      order: 2;
+    }
+
+    .ai-timeline-dot-{{ ai_gen_id }} {
+      position: absolute;
+      left: calc(-30px + ({{ block.settings.dot_size }}px / 2) * -1);
+      order: 1;
+    }
+
+    .ai-timeline-content-right-{{ ai_gen_id }} {
+      display: none;
+    }
+  }
+{% endstyle %}
+
+<div class="ai-timeline-container-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-timeline-{{ ai_gen_id }}">
+    <div class="ai-timeline-line-{{ ai_gen_id }}"></div>
+
+    {% for i in (1..5) %}
+      {% liquid
+        assign year_key = 'milestone_' | append: i | append: '_year'
+        assign title_key = 'milestone_' | append: i | append: '_title'
+        assign description_key = 'milestone_' | append: i | append: '_description'
+        assign enabled_key = 'milestone_' | append: i | append: '_enabled'
+
+        assign year = block.settings[year_key]
+        assign title = block.settings[title_key]
+        assign description = block.settings[description_key]
+        assign enabled = block.settings[enabled_key]
+      %}
+
+      {% if enabled %}
+        <div class="ai-timeline-item-{{ ai_gen_id }}">
+          <div class="ai-timeline-content-{{ ai_gen_id }}">
+            {% if year != blank %}
+              <div class="ai-timeline-year-{{ ai_gen_id }}">{{ year }}</div>
+            {% endif %}
+            {% if title != blank %}
+              <div class="ai-timeline-title-{{ ai_gen_id }}">{{ title }}</div>
+            {% endif %}
+            {% if description != blank %}
+              <div class="ai-timeline-description-{{ ai_gen_id }}">{{ description }}</div>
+            {% endif %}
+          </div>
+
+          <div class="ai-timeline-dot-{{ ai_gen_id }}"></div>
+
+          <div class="ai-timeline-content-right-{{ ai_gen_id }}"></div>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Company milestones",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Timeline style"
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "line_width",
+      "label": "Line width",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "default": 2
+    },
+    {
+      "type": "color",
+      "id": "line_color",
+      "label": "Line color",
+      "default": "#e0e0e0"
+    },
+    {
+      "type": "range",
+      "id": "dot_size",
+      "label": "Dot size",
+      "min": 10,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "dot_color",
+      "label": "Dot color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "dot_border_width",
+      "label": "Dot border width",
+      "min": 0,
+      "max": 5,
+      "step": 1,
+      "unit": "px",
+      "default": 3
+    },
+    {
+      "type": "color",
+      "id": "dot_border_color",
+      "label": "Dot border color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "item_spacing",
+      "label": "Item spacing",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "year_font_size",
+      "label": "Year font size",
+      "min": 12,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "color",
+      "id": "year_color",
+      "label": "Year color",
+      "default": "#666666"
+    },
+    {
+      "type": "range",
+      "id": "title_font_size",
+      "label": "Title font size",
+      "min": 14,
+      "max": 36,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "description_font_size",
+      "label": "Description font size",
+      "min": 12,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "description_color",
+      "label": "Description color",
+      "default": "#333333"
+    },
+    {
+      "type": "header",
+      "content": "Milestone 1"
+    },
+    {
+      "type": "checkbox",
+      "id": "milestone_1_enabled",
+      "label": "Enable milestone 1",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "milestone_1_year",
+      "label": "Year",
+      "default": "2020"
+    },
+    {
+      "type": "text",
+      "id": "milestone_1_title",
+      "label": "Title",
+      "default": "Company founded"
+    },
+    {
+      "type": "textarea",
+      "id": "milestone_1_description",
+      "label": "Description",
+      "default": "Started our journey with a vision to change the industry."
+    },
+    {
+      "type": "header",
+      "content": "Milestone 2"
+    },
+    {
+      "type": "checkbox",
+      "id": "milestone_2_enabled",
+      "label": "Enable milestone 2",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "milestone_2_year",
+      "label": "Year",
+      "default": "2021"
+    },
+    {
+      "type": "text",
+      "id": "milestone_2_title",
+      "label": "Title",
+      "default": "First product launch"
+    },
+    {
+      "type": "textarea",
+      "id": "milestone_2_description",
+      "label": "Description",
+      "default": "Introduced our flagship product to the market."
+    },
+    {
+      "type": "header",
+      "content": "Milestone 3"
+    },
+    {
+      "type": "checkbox",
+      "id": "milestone_3_enabled",
+      "label": "Enable milestone 3",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "milestone_3_year",
+      "label": "Year",
+      "default": "2022"
+    },
+    {
+      "type": "text",
+      "id": "milestone_3_title",
+      "label": "Title",
+      "default": "Expanded globally"
+    },
+    {
+      "type": "textarea",
+      "id": "milestone_3_description",
+      "label": "Description",
+      "default": "Opened offices in 10 countries worldwide."
+    },
+    {
+      "type": "header",
+      "content": "Milestone 4"
+    },
+    {
+      "type": "checkbox",
+      "id": "milestone_4_enabled",
+      "label": "Enable milestone 4",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "milestone_4_year",
+      "label": "Year",
+      "default": "2023"
+    },
+    {
+      "type": "text",
+      "id": "milestone_4_title",
+      "label": "Title",
+      "default": "Award winning"
+    },
+    {
+      "type": "textarea",
+      "id": "milestone_4_description",
+      "label": "Description",
+      "default": "Received industry recognition for innovation."
+    },
+    {
+      "type": "header",
+      "content": "Milestone 5"
+    },
+    {
+      "type": "checkbox",
+      "id": "milestone_5_enabled",
+      "label": "Enable milestone 5",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "milestone_5_year",
+      "label": "Year",
+      "default": "2024"
+    },
+    {
+      "type": "text",
+      "id": "milestone_5_title",
+      "label": "Title",
+      "default": "Sustainable future"
+    },
+    {
+      "type": "textarea",
+      "id": "milestone_5_description",
+      "label": "Description",
+      "default": "Committed to carbon-neutral operations."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Company milestones"
+    }
+  ]
+}
+{% endschema %}

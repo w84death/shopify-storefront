@@ -1,0 +1,327 @@
+{% comment %}
+  Game article — devlog post page, "Mail-order catalogue" edition.
+  Matches the catalog homepage (paper/navy/red, mono kickers, coupon form).
+  Fonts are self-hosted from theme assets.
+{% endcomment %}
+
+{%- style -%}
+  @font-face {
+    font-family: "WDXL Lubrifont JP N";
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url({{ "wdxl-lubrifont-jp-n-latin-ext.woff2" | asset_url }}) format("woff2");
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+  }
+  @font-face {
+    font-family: "WDXL Lubrifont JP N";
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url({{ "wdxl-lubrifont-jp-n-latin.woff2" | asset_url }}) format("woff2");
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+  @font-face {
+    font-family: "Nunito";
+    font-style: normal;
+    font-weight: 200 1000;
+    font-display: swap;
+    src: url({{ "nunito-latin-ext.woff2" | asset_url }}) format("woff2");
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+  }
+  @font-face {
+    font-family: "Nunito";
+    font-style: normal;
+    font-weight: 200 1000;
+    font-display: swap;
+    src: url({{ "nunito-latin.woff2" | asset_url }}) format("woff2");
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+
+  #shopify-section-{{ section.id }} .cna {
+    --paper: {{ section.settings.color_bg }};
+    --navy: {{ section.settings.color_ink }};
+    --red: {{ section.settings.color_accent }};
+    --dim: {{ section.settings.color_muted }};
+    --rule: {{ section.settings.color_line }};
+    --paper2: {{ section.settings.color_card }};
+    --mono: ui-monospace, "Cascadia Mono", "JetBrains Mono", Consolas, monospace;
+    --display: "WDXL Lubrifont JP N", "Fredoka", "Nunito", sans-serif;
+    background: var(--paper);
+    color: var(--navy);
+    font-family: "Nunito", "Trebuchet MS", "Avenir Next", "Segoe UI", sans-serif;
+    line-height: 1.55;
+    padding-bottom: 60px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  #shopify-section-{{ section.id }} .cna * { box-sizing: border-box; }
+  #shopify-section-{{ section.id }} .cna a:not(.cna-btn) { color: inherit; text-decoration: none; }
+  #shopify-section-{{ section.id }} .cna :focus-visible { outline: 3px solid var(--red); outline-offset: 2px; }
+  #shopify-section-{{ section.id }} .cna-wrap { width: min(760px, calc(100% - 40px)); margin: 0 auto; }
+  #shopify-section-{{ section.id }} .cna h1,
+  #shopify-section-{{ section.id }} .cna h2,
+  #shopify-section-{{ section.id }} .cna h3 {
+    font-family: var(--display); font-weight: 650; letter-spacing: -.02em;
+    text-wrap: balance; margin: 0;
+  }
+
+  #shopify-section-{{ section.id }} .cna-kicker {
+    font-family: var(--mono); font-size: 12px; font-weight: 700;
+    letter-spacing: .1em; text-transform: uppercase; color: var(--red);
+  }
+  #shopify-section-{{ section.id }} .cna-kicker a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+  #shopify-section-{{ section.id }} .cna-btn {
+    display: inline-flex; align-items: center; height: 44px; padding: 0 20px;
+    border: 2px solid var(--navy); border-radius: 6px; background: transparent;
+    color: var(--navy); font-weight: 800; font-size: 13px; text-transform: uppercase;
+    letter-spacing: .04em; text-decoration: none;
+    transition: background .12s ease, color .12s ease;
+  }
+  #shopify-section-{{ section.id }} .cna-btn:hover { background: var(--navy); color: var(--paper); }
+  #shopify-section-{{ section.id }} .cna-btn-solid { background: var(--red); border-color: var(--red); color: #FFFFFF; }
+  #shopify-section-{{ section.id }} .cna-btn-solid:hover { background: #B93A33; border-color: #B93A33; }
+
+  #shopify-section-{{ section.id }} .cna-head {
+    text-align: center; padding: 52px 0 34px; border-bottom: 3px double var(--navy);
+    margin-bottom: 36px;
+  }
+  #shopify-section-{{ section.id }} .cna-title {
+    font-size: clamp(34px, 5vw, 60px); line-height: .95; margin: 14px 0 12px;
+  }
+  #shopify-section-{{ section.id }} .cna-meta {
+    font-family: var(--mono); font-size: 12px; font-weight: 700;
+    letter-spacing: .1em; text-transform: uppercase; color: var(--dim);
+  }
+
+  #shopify-section-{{ section.id }} .cna-cover {
+    width: 100%; height: auto; border: 2px solid var(--navy);
+    border-radius: 8px; display: block; margin-bottom: 34px;
+  }
+
+  /* rich text */
+  #shopify-section-{{ section.id }} .cna-rte { font-size: 17px; }
+  #shopify-section-{{ section.id }} .cna-rte h2 {
+    font-size: clamp(28px, 3.4vw, 38px); line-height: 1.05; margin: 36px 0 12px;
+  }
+  #shopify-section-{{ section.id }} .cna-rte h3 {
+    font-size: clamp(22px, 2.6vw, 28px); line-height: 1.1; margin: 28px 0 10px;
+  }
+  #shopify-section-{{ section.id }} .cna-rte h4 { font-family: var(--display); font-size: 20px; margin: 24px 0 8px; }
+  #shopify-section-{{ section.id }} .cna-rte p { margin: 0 0 18px; }
+  #shopify-section-{{ section.id }} .cna-rte a {
+    color: var(--red); font-weight: 700;
+    text-decoration: underline; text-underline-offset: 3px;
+  }
+  #shopify-section-{{ section.id }} .cna-rte ul,
+  #shopify-section-{{ section.id }} .cna-rte ol { margin: 0 0 18px; padding-left: 24px; }
+  #shopify-section-{{ section.id }} .cna-rte li { margin-bottom: 8px; }
+  #shopify-section-{{ section.id }} .cna-rte li::marker { color: var(--red); }
+  #shopify-section-{{ section.id }} .cna-rte img,
+  #shopify-section-{{ section.id }} .cna-rte iframe,
+  #shopify-section-{{ section.id }} .cna-rte video {
+    max-width: 100%; border-radius: 8px; border: 2px solid var(--navy);
+  }
+  #shopify-section-{{ section.id }} .cna-rte blockquote {
+    margin: 24px 0; padding: 4px 0 4px 18px;
+    border-left: 4px solid var(--red); color: var(--dim); font-style: italic;
+  }
+  #shopify-section-{{ section.id }} .cna-rte pre {
+    background: var(--navy); color: #F6F1E3;
+    border-radius: 8px; padding: 16px 20px; overflow-x: auto;
+    font-family: var(--mono); font-size: 13.5px; line-height: 1.6; margin: 0 0 18px;
+  }
+  #shopify-section-{{ section.id }} .cna-rte code {
+    font-family: var(--mono); font-size: 0.9em;
+    background: color-mix(in srgb, var(--red) 12%, transparent);
+    border-radius: 4px; padding: 2px 6px;
+  }
+  #shopify-section-{{ section.id }} .cna-rte pre code { background: transparent; padding: 0; }
+  #shopify-section-{{ section.id }} .cna-rte hr { border: 0; border-top: 1px solid var(--rule); margin: 32px 0; }
+  #shopify-section-{{ section.id }} .cna-rte table {
+    width: 100%; border-collapse: collapse; margin: 0 0 22px;
+    font-size: 15px; border: 2px solid var(--navy);
+  }
+  #shopify-section-{{ section.id }} .cna-rte th,
+  #shopify-section-{{ section.id }} .cna-rte td {
+    border: 1px solid var(--rule); padding: 10px 14px; text-align: left; vertical-align: top;
+  }
+  #shopify-section-{{ section.id }} .cna-rte tr:first-child th,
+  #shopify-section-{{ section.id }} .cna-rte tr:first-child td {
+    background: var(--navy); color: var(--paper);
+    font-family: var(--mono); font-size: 12px; font-weight: 700;
+    letter-spacing: .08em; text-transform: uppercase;
+  }
+  #shopify-section-{{ section.id }} .cna-rte tr:nth-child(even) td { background: var(--paper2); }
+  #shopify-section-{{ section.id }} .cna-rte figcaption { color: var(--dim); font-size: 13px; text-align: center; }
+
+  /* tags */
+  #shopify-section-{{ section.id }} .cna-tags { display: flex; gap: 8px; flex-wrap: wrap; margin: 30px 0 0; }
+  #shopify-section-{{ section.id }} .cna-tagchip {
+    font-family: var(--mono); font-size: 11px; font-weight: 700;
+    letter-spacing: .1em; text-transform: uppercase;
+    border: 1.5px solid var(--navy); border-radius: 4px; padding: 3px 10px;
+    color: var(--red); background: var(--paper2);
+  }
+
+  /* back + comments */
+  #shopify-section-{{ section.id }} .cna-foot { margin-top: 36px; }
+  #shopify-section-{{ section.id }} .cna-comments { margin-top: 52px; }
+  #shopify-section-{{ section.id }} .cna-comments-h {
+    display: flex; align-items: baseline; gap: 14px;
+    border-bottom: 2px solid var(--navy); padding-bottom: 10px; margin-bottom: 22px;
+  }
+  #shopify-section-{{ section.id }} .cna-comments-h .num {
+    font-family: var(--mono); font-size: 13px; font-weight: 700;
+    color: var(--red); letter-spacing: .1em;
+  }
+  #shopify-section-{{ section.id }} .cna-comments-h h2 { font-size: clamp(26px, 3vw, 36px); line-height: 1; }
+  #shopify-section-{{ section.id }} .cna-comment {
+    background: var(--paper2); border: 2px solid var(--navy); border-radius: 8px;
+    padding: 16px 20px; margin-bottom: 12px;
+  }
+  #shopify-section-{{ section.id }} .cna-comment-meta {
+    margin: 0 0 8px; font-family: var(--mono); font-size: 11.5px; font-weight: 700;
+    letter-spacing: .08em; text-transform: uppercase; color: var(--dim);
+  }
+  #shopify-section-{{ section.id }} .cna-comment-meta strong { color: var(--navy); }
+  #shopify-section-{{ section.id }} .cna-comment .cna-rte { font-size: 15px; }
+  #shopify-section-{{ section.id }} .cna-comment .cna-rte p { margin: 0 0 8px; }
+
+  /* coupon comment form */
+  #shopify-section-{{ section.id }} .cna-form {
+    background: var(--paper2); border: 3px dashed var(--navy); border-radius: 10px;
+    padding: 28px; margin-top: 28px; position: relative;
+  }
+  #shopify-section-{{ section.id }} .cna-form::before {
+    content: "✂"; position: absolute; left: -14px; top: 50%; transform: translateY(-50%);
+    font-size: 20px; color: var(--navy); background: var(--paper); padding: 4px 2px;
+  }
+  #shopify-section-{{ section.id }} .cna-form h3 { font-size: 22px; margin: 0 0 14px; }
+  #shopify-section-{{ section.id }} .cna-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  #shopify-section-{{ section.id }} .cna-form input[type="text"],
+  #shopify-section-{{ section.id }} .cna-form input[type="email"],
+  #shopify-section-{{ section.id }} .cna-form textarea {
+    width: 100%; margin: 0 0 12px; padding: 12px 14px;
+    border-radius: 6px; border: 2px solid var(--navy);
+    background: #FFFFFF; color: var(--navy); font: inherit; font-size: 14.5px;
+  }
+  #shopify-section-{{ section.id }} .cna-form textarea { min-height: 120px; resize: vertical; }
+  #shopify-section-{{ section.id }} .cna-form .cna-errors {
+    border: 1.5px solid var(--red); border-radius: 6px;
+    padding: 12px 16px; margin: 0 0 14px; font-size: 14px; color: var(--red);
+  }
+  #shopify-section-{{ section.id }} .cna-form .cna-errors ul { margin: 0; padding-left: 18px; list-style: disc; }
+  #shopify-section-{{ section.id }} .cna-ok { font-weight: 800; }
+
+  @media (max-width: 640px) {
+    #shopify-section-{{ section.id }} .cna-form-grid { grid-template-columns: 1fr; }
+  }
+{%- endstyle -%}
+
+<div class="cna">
+  <article class="cna-wrap">
+    <header class="cna-head">
+      <p class="cna-kicker"><a href="{{ blog.url }}">{{ blog.title }}</a></p>
+      <h1 class="cna-title">{{ article.title }}</h1>
+      <p class="cna-meta">
+        <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">{{ article.published_at | date: "%B %-d, %Y" }}</time>
+        {%- if article.comments_count > 0 %} · {{ article.comments_count }} comment{% if article.comments_count != 1 %}s{% endif %}{% endif -%}
+      </p>
+    </header>
+
+    {% if article.image %}
+      <img class="cna-cover"
+        src="{{ article.image | image_url: width: 1200 }}"
+        width="1200"
+        height="{{ 1200 | divided_by: article.image.aspect_ratio | round }}"
+        alt="{{ article.image.alt | default: article.title | escape }}">
+    {% endif %}
+
+    <div class="cna-rte">
+      {{ article.content }}
+    </div>
+
+    {% if article.tags.size > 0 %}
+      <div class="cna-tags">
+        {% for tag in article.tags %}
+          <span class="cna-tagchip">{{ tag }}</span>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <div class="cna-foot">
+      <a class="cna-btn" href="{{ blog.url }}">← {{ section.settings.back_label }}</a>
+    </div>
+
+    {% if blog.comments_enabled? %}
+      <section class="cna-comments" id="comments">
+        <div class="cna-comments-h">
+          <span class="num">No. 02</span>
+          <h2>{{ section.settings.comments_heading }} ({{ article.comments_count }})</h2>
+        </div>
+
+        {% paginate article.comments by 20 %}
+          {% for comment in article.comments %}
+            <div class="cna-comment" id="{{ comment.id }}">
+              <p class="cna-comment-meta">
+                <strong>{{ comment.author }}</strong> ·
+                <time datetime="{{ comment.created_at | date: '%Y-%m-%d' }}">{{ comment.created_at | date: "%B %-d, %Y" }}</time>
+              </p>
+              <div class="cna-rte">{{ comment.content }}</div>
+            </div>
+          {% endfor %}
+        {% endpaginate %}
+
+        {% form 'new_comment', article %}
+          {%- if form.posted_successfully? -%}
+            <div class="cna-form">
+              <p class="cna-ok">
+                {%- if blog.moderated? -%}{{ section.settings.comment_moderation }}{%- else -%}{{ section.settings.comment_success }}{%- endif -%}
+              </p>
+            </div>
+          {%- else -%}
+            <div class="cna-form">
+              <h3>{{ section.settings.comment_form_heading }}</h3>
+              {%- if form.errors -%}
+                <div class="cna-errors">
+                  {{ form.errors | default_errors }}
+                </div>
+              {%- endif -%}
+              <div class="cna-form-grid">
+                <input type="text" name="comment[author]" value="{{ form.author }}" placeholder="Name" aria-label="Name" required>
+                <input type="email" name="comment[email]" value="{{ form.email }}" placeholder="Email" aria-label="Email" required>
+              </div>
+              <textarea name="comment[body]" placeholder="Your comment" aria-label="Comment" required>{{ form.body }}</textarea>
+              <button type="submit" class="cna-btn cna-btn-solid">{{ section.settings.comment_button }}</button>
+            </div>
+          {%- endif -%}
+        {% endform %}
+      </section>
+    {%- endif -%}
+  </article>
+</div>
+
+{% schema %}
+{
+  "name": "Game article",
+  "tag": "section",
+  "class": "section-game-article",
+  "enabled_on": { "templates": ["article"] },
+  "settings": [
+    { "type": "color", "id": "color_bg", "label": "Paper background", "default": "#F6F1E3" },
+    { "type": "color", "id": "color_ink", "label": "Text (navy)", "default": "#1F2A44" },
+    { "type": "color", "id": "color_accent", "label": "Print red", "default": "#D6453D" },
+    { "type": "color", "id": "color_muted", "label": "Muted text", "default": "#5D6478" },
+    { "type": "color", "id": "color_card", "label": "Cards", "default": "#FDFAF1" },
+    { "type": "color", "id": "color_line", "label": "Hairlines", "default": "#C9BFA6" },
+    { "type": "text", "id": "back_label", "label": "Back link label", "default": "All posts" },
+    { "type": "text", "id": "comments_heading", "label": "Comments heading", "default": "Comments" },
+    { "type": "text", "id": "comment_form_heading", "label": "Comment form heading", "default": "Leave a comment" },
+    { "type": "text", "id": "comment_button", "label": "Comment button", "default": "Post comment" },
+    { "type": "text", "id": "comment_success", "label": "Comment posted message", "default": "Thanks! Your comment has been posted." },
+    { "type": "text", "id": "comment_moderation", "label": "Comment pending message", "default": "Thanks! Your comment is awaiting moderation." }
+  ]
+}
+{% endschema %}

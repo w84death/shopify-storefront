@@ -1,0 +1,753 @@
+{% comment %}
+  Game home — "Mail-order catalogue" edition (final, migrated from
+  proposal-n2c-hero layout + proposal-n2a colours, 2026-10-07).
+  Ticker, featured-release cover (swap image + copy per game),
+  numbered catalog sections, coupon newsletter, partners.
+  Fonts are self-hosted from theme assets (same files as game-landing).
+  Partner logos: upload logo-pmkc.png / logo-ccs-druk.png to theme assets
+  and select them in the partner blocks (text wordmark shows until then).
+{% endcomment %}
+
+{%- style -%}
+  @font-face {
+    font-family: "WDXL Lubrifont JP N";
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url({{ "wdxl-lubrifont-jp-n-latin-ext.woff2" | asset_url }}) format("woff2");
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+  }
+  @font-face {
+    font-family: "WDXL Lubrifont JP N";
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url({{ "wdxl-lubrifont-jp-n-latin.woff2" | asset_url }}) format("woff2");
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+  @font-face {
+    font-family: "Fredoka";
+    font-style: normal;
+    font-weight: 500 700;
+    font-stretch: 87.5% 125%;
+    font-display: swap;
+    src: url({{ "fredoka-latin-ext.woff2" | asset_url }}) format("woff2");
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+  }
+  @font-face {
+    font-family: "Fredoka";
+    font-style: normal;
+    font-weight: 500 700;
+    font-stretch: 87.5% 125%;
+    font-display: swap;
+    src: url({{ "fredoka-latin.woff2" | asset_url }}) format("woff2");
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+  @font-face {
+    font-family: "Nunito";
+    font-style: normal;
+    font-weight: 200 1000;
+    font-display: swap;
+    src: url({{ "nunito-latin-ext.woff2" | asset_url }}) format("woff2");
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+  }
+  @font-face {
+    font-family: "Nunito";
+    font-style: normal;
+    font-weight: 200 1000;
+    font-display: swap;
+    src: url({{ "nunito-latin.woff2" | asset_url }}) format("woff2");
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+
+  #shopify-section-{{ section.id }} .cn {
+    --paper: {{ section.settings.color_paper }};
+    --red: {{ section.settings.color_red }};
+    --navy: #1F2A44;
+    --dim: #5D6478;
+    --rule: #C9BFA6;
+    --paper2: color-mix(in srgb, var(--paper) 55%, #FFFFFF);
+    --mono: ui-monospace, "Cascadia Mono", "JetBrains Mono", Consolas, monospace;
+    --display: "WDXL Lubrifont JP N", "Fredoka", "Nunito", sans-serif;
+    background: var(--paper);
+    color: var(--navy);
+    font-family: "Nunito", "Trebuchet MS", "Avenir Next", "Segoe UI", sans-serif;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  #shopify-section-{{ section.id }} .cn * { box-sizing: border-box; }
+  #shopify-section-{{ section.id }} .cn a:not(.cn-btn) { color: inherit; text-decoration: none; }
+  #shopify-section-{{ section.id }} .cn :focus-visible { outline: 3px solid var(--red); outline-offset: 2px; }
+  #shopify-section-{{ section.id }} .cn-wrap { width: min(1120px, calc(100% - 40px)); margin: 0 auto; }
+  #shopify-section-{{ section.id }} .cn h1,
+  #shopify-section-{{ section.id }} .cn h2,
+  #shopify-section-{{ section.id }} .cn h3 {
+    font-family: var(--display);
+    font-weight: 650;
+    letter-spacing: -.02em;
+    text-wrap: balance;
+    margin: 0;
+  }
+
+  #shopify-section-{{ section.id }} .cn-ticker {
+    background: var(--navy); color: var(--paper);
+    font-family: var(--mono); font-size: 11.5px; font-weight: 700;
+    letter-spacing: .1em; text-transform: uppercase; text-align: center;
+    padding: 8px 12px;
+  }
+  #shopify-section-{{ section.id }} .cn-ticker b { color: #F6C94A; }
+
+  #shopify-section-{{ section.id }} .cn-kicker {
+    font-family: var(--mono); font-size: 12px; font-weight: 700;
+    letter-spacing: .1em; text-transform: uppercase; color: var(--red);
+  }
+  #shopify-section-{{ section.id }} .cn-textlink {
+    font-family: var(--mono); font-size: 13px; font-weight: 700;
+    color: var(--red); text-transform: uppercase;
+  }
+  #shopify-section-{{ section.id }} .cn-textlink:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+  #shopify-section-{{ section.id }} .cn-btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    height: 48px; padding: 0 24px; border-radius: 6px;
+    border: 2px solid var(--navy); font-weight: 800; font-size: 14px;
+    text-transform: uppercase; letter-spacing: .04em; cursor: pointer;
+    text-decoration: none;
+    transition: transform .12s ease, box-shadow .12s ease, background .12s ease, color .12s ease;
+  }
+  #shopify-section-{{ section.id }} .cn-btn-solid { background: var(--red); border-color: var(--red); color: #FFFFFF; }
+  #shopify-section-{{ section.id }} .cn-btn-solid:hover { transform: translate(-1px,-1px); box-shadow: 3px 3px 0 var(--navy); }
+  #shopify-section-{{ section.id }} .cn-btn-out { background: transparent; color: var(--navy); }
+  #shopify-section-{{ section.id }} .cn-btn-out:hover { background: var(--navy); color: var(--paper); }
+  #shopify-section-{{ section.id }} .cn-btn-cover { background: var(--paper); border-color: var(--paper); color: var(--navy); }
+  #shopify-section-{{ section.id }} .cn-btn-cover:hover { transform: translate(-1px,-1px); box-shadow: 3px 3px 0 rgba(246,241,227,.6); }
+  #shopify-section-{{ section.id }} .cn-btn-cover-ghost { background: rgba(31,42,68,.55); border-color: var(--paper); color: var(--paper); }
+  #shopify-section-{{ section.id }} .cn-btn-cover-ghost:hover { background: rgba(31,42,68,.78); transform: translate(-1px,-1px); box-shadow: 3px 3px 0 rgba(246,241,227,.6); }
+  #shopify-section-{{ section.id }} .cn-btn-disabled {
+    display: inline-flex; align-items: center; height: 48px; padding: 0 24px;
+    border-radius: 6px; border: 2px dashed var(--dim); color: var(--dim);
+    font-weight: 800; font-size: 14px; text-transform: uppercase; cursor: not-allowed;
+  }
+
+  /* featured release cover */
+  #shopify-section-{{ section.id }} .cn-cover {
+    position: relative; min-height: clamp(380px, 52vw, 560px); overflow: hidden;
+    background: repeating-linear-gradient(45deg, #EDE6D2 0 18px, #E5DCC4 18px 36px);
+    display: flex; align-items: flex-end;
+  }
+  #shopify-section-{{ section.id }} .cn-cover-img {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  }
+  #shopify-section-{{ section.id }} .cn-cover-ph {
+    position: absolute; top: 18px; left: 50%; transform: translateX(-50%);
+    font-family: var(--mono); font-size: 11px; font-weight: 700; letter-spacing: .1em;
+    text-transform: uppercase; color: #8A7F63; border: 1.5px dashed #A99F86;
+    border-radius: 6px; padding: 6px 12px; background: rgba(253,250,241,.7);
+    white-space: nowrap;
+  }
+  #shopify-section-{{ section.id }} .cn-cover-stamp {
+    position: absolute; top: 18px; right: 18px; transform: rotate(8deg);
+    border: 3px solid var(--paper); color: var(--paper); border-radius: 10px;
+    padding: 10px 16px; font-family: var(--mono); font-size: 11px; font-weight: 700;
+    letter-spacing: .12em; text-transform: uppercase; line-height: 1.5;
+    text-align: center; opacity: .95; z-index: 2;
+  }
+  #shopify-section-{{ section.id }} .cn-cover-scrim {
+    position: relative; z-index: 1; width: 100%;
+    background: linear-gradient(180deg, rgba(31,42,68,0) 0%, rgba(31,42,68,.55) 45%, rgba(31,42,68,.92) 100%);
+    padding: clamp(90px, 14vw, 150px) 0 clamp(28px, 4vw, 44px);
+  }
+  #shopify-section-{{ section.id }} .cn-cover-inner {
+    width: min(1120px, calc(100% - 40px)); margin: 0 auto;
+    display: flex; align-items: flex-end; justify-content: space-between;
+    gap: 24px; flex-wrap: wrap;
+  }
+  #shopify-section-{{ section.id }} .cn-release-chip {
+    display: inline-block; font-family: var(--mono); font-size: 11.5px; font-weight: 700;
+    letter-spacing: .14em; text-transform: uppercase; color: var(--paper);
+    background: var(--red); border-radius: 4px; padding: 5px 12px; margin-bottom: 12px;
+  }
+  #shopify-section-{{ section.id }} .cn-cover h1 {
+    font-size: clamp(44px, 6vw, 80px); line-height: .9; color: var(--paper);
+  }
+  #shopify-section-{{ section.id }} .cn-cover h1 em { font-style: normal; color: #F6C94A; display: block; }
+  #shopify-section-{{ section.id }} .cn-cover-tag {
+    color: rgba(246,241,227,.85); font-size: 16px; margin: 12px 0 20px; max-width: 520px;
+  }
+  #shopify-section-{{ section.id }} .cn-cover .cn-cta { display: flex; gap: 12px; flex-wrap: wrap; }
+  #shopify-section-{{ section.id }} .cn-cover-price {
+    font-family: var(--mono); font-size: 14px; font-weight: 700; color: var(--paper);
+    background: rgba(31,42,68,.55); border: 1.5px solid rgba(246,241,227,.5);
+    border-radius: 6px; padding: 12px 18px; text-align: center; line-height: 1.4;
+  }
+  #shopify-section-{{ section.id }} .cn-cover-price small {
+    display: block; font-size: 10.5px; font-weight: 400;
+    color: rgba(246,241,227,.7); letter-spacing: .08em;
+  }
+
+  /* masthead band */
+  #shopify-section-{{ section.id }} .cn-band {
+    position: relative; text-align: center; padding: 60px 0;
+  }
+  #shopify-section-{{ section.id }} .cn-band-kicker {
+    font-family: var(--mono); font-size: 12px; font-weight: 700;
+    letter-spacing: .14em; text-transform: uppercase; color: var(--dim); margin: 0 0 18px;
+  }
+  #shopify-section-{{ section.id }} .cn-band h2 {
+    font-size: clamp(40px, 6vw, 76px); line-height: .95; margin: 0 0 18px;
+  }
+  #shopify-section-{{ section.id }} .cn-band h2 .top { display: block; color: var(--navy); }
+  #shopify-section-{{ section.id }} .cn-band h2 .w0 { color: var(--red); }
+  #shopify-section-{{ section.id }} .cn-band h2 .w1 { color: #2E8C7A; }
+  #shopify-section-{{ section.id }} .cn-band h2 .w2 { color: #E8A93C; }
+  #shopify-section-{{ section.id }} .cn-band-lede {
+    color: var(--dim); font-size: 16.5px; max-width: 620px; margin: 0 auto 26px;
+  }
+  #shopify-section-{{ section.id }} .cn-band .cn-cta {
+    display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+  }
+  #shopify-section-{{ section.id }} .cn-band-stamp {
+    position: absolute; top: 30px; right: 3%; transform: rotate(8deg);
+    border: 3px solid var(--red); color: var(--red); border-radius: 10px;
+    padding: 10px 16px; font-family: var(--mono); font-size: 11px; font-weight: 700;
+    letter-spacing: .12em; text-transform: uppercase; line-height: 1.5; text-align: center;
+  }
+  @media (max-width: 900px) {
+    #shopify-section-{{ section.id }} .cn-band-stamp { display: none; }
+  }
+
+  /* numbered sections */
+  #shopify-section-{{ section.id }} .cn-sec { padding: 56px 0 0; }
+  #shopify-section-{{ section.id }} .cn-no {
+    display: flex; align-items: baseline; gap: 14px;
+    border-bottom: 2px solid var(--navy); padding-bottom: 10px; margin-bottom: 24px;
+  }
+  #shopify-section-{{ section.id }} .cn-no .num {
+    font-family: var(--mono); font-size: 13px; font-weight: 700;
+    color: var(--red); letter-spacing: .1em;
+  }
+  #shopify-section-{{ section.id }} .cn-no h2 { font-size: clamp(28px, 3.4vw, 40px); line-height: 1; }
+  #shopify-section-{{ section.id }} .cn-no .cn-textlink { margin-left: auto; }
+
+  /* game listings */
+  #shopify-section-{{ section.id }} .cn-listings {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px;
+  }
+  #shopify-section-{{ section.id }} .cn-listing {
+    background: var(--paper2); border: 2px solid var(--navy); border-radius: 8px; padding: 24px;
+    display: flex; flex-direction: column; gap: 10px; position: relative;
+    transition: transform .12s ease, box-shadow .12s ease;
+  }
+  #shopify-section-{{ section.id }} .cn-listing:hover { transform: translate(-2px,-2px); box-shadow: 5px 5px 0 var(--navy); }
+  #shopify-section-{{ section.id }} .cn-listing-cover {
+    width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover;
+    border-radius: 6px; display: block; margin-bottom: 4px;
+  }
+  #shopify-section-{{ section.id }} .cn-item {
+    font-family: var(--mono); font-size: 11px; font-weight: 700;
+    letter-spacing: .12em; color: var(--dim); text-transform: uppercase;
+  }
+  #shopify-section-{{ section.id }} .cn-listing h3 { font-size: clamp(24px, 2.4vw, 32px); line-height: .95; }
+  #shopify-section-{{ section.id }} .cn-listing h3 em { font-style: normal; display: block; }
+  #shopify-section-{{ section.id }} .acc-red { border-color: var(--red); }
+  #shopify-section-{{ section.id }} .acc-red h3 em { color: var(--red); }
+  #shopify-section-{{ section.id }} .acc-gold { border-color: #E8A93C; }
+  #shopify-section-{{ section.id }} .acc-gold h3 em { color: #E56B8C; }
+  #shopify-section-{{ section.id }} .acc-green { border-color: #5C8A4E; }
+  #shopify-section-{{ section.id }} .acc-green h3 em { color: #5C8A4E; }
+  #shopify-section-{{ section.id }} .acc-sky { border-color: var(--navy); }
+  #shopify-section-{{ section.id }} .acc-sky h3 em { color: #3D7FB8; }
+  #shopify-section-{{ section.id }} .cn-listing .cn-desc { color: var(--dim); font-size: 14.5px; }
+  #shopify-section-{{ section.id }} .cn-price-tag {
+    align-self: flex-start; font-family: var(--mono); font-size: 13px; font-weight: 700;
+    background: var(--navy); color: var(--paper); border-radius: 4px;
+    padding: 4px 10px; transform: rotate(-1deg);
+  }
+  #shopify-section-{{ section.id }} .cn-listing .cn-cta {
+    display: flex; gap: 8px; flex-wrap: wrap; margin-top: auto; padding-top: 8px;
+  }
+  #shopify-section-{{ section.id }} .cn-listing .cn-btn { height: 42px; padding: 0 18px; font-size: 12.5px; }
+  #shopify-section-{{ section.id }} .cn-listing .cn-btn-disabled { height: 42px; padding: 0 18px; font-size: 12.5px; }
+  #shopify-section-{{ section.id }} .cn-sold {
+    position: absolute; top: 14px; right: -8px; transform: rotate(6deg);
+    border: 2px solid var(--red); color: var(--red);
+    font-family: var(--mono); font-size: 10.5px; font-weight: 700;
+    letter-spacing: .1em; text-transform: uppercase;
+    padding: 5px 10px; border-radius: 4px; background: var(--paper);
+  }
+  #shopify-section-{{ section.id }} .cn-featured {
+    font-family: var(--mono); font-size: 10.5px; font-weight: 700;
+    letter-spacing: .1em; text-transform: uppercase;
+    color: var(--paper); background: var(--red);
+    border-radius: 4px; padding: 3px 8px; align-self: flex-start;
+  }
+
+  /* shop cards */
+  #shopify-section-{{ section.id }} .cn-cards {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); gap: 18px;
+  }
+  #shopify-section-{{ section.id }} .cn-card {
+    background: var(--paper2); border: 1.5px solid var(--navy); border-radius: 8px; padding: 20px 22px;
+    display: flex; flex-direction: column; gap: 7px; align-items: flex-start;
+    transition: transform .12s ease, box-shadow .12s ease;
+  }
+  #shopify-section-{{ section.id }} .cn-card:hover { transform: translate(-2px,-2px); box-shadow: 4px 4px 0 var(--navy); }
+  #shopify-section-{{ section.id }} .cn-chip {
+    font-family: var(--mono); font-size: 11px; font-weight: 700;
+    letter-spacing: .1em; text-transform: uppercase;
+    color: var(--paper); background: var(--red); border-radius: 4px; padding: 2px 8px;
+  }
+  #shopify-section-{{ section.id }} .cn-card h3 { font-size: 20px; }
+  #shopify-section-{{ section.id }} .cn-card p { color: var(--dim); font-size: 14px; }
+  #shopify-section-{{ section.id }} .cn-card .cn-textlink { margin-top: auto; padding-top: 4px; }
+
+  /* coupon */
+  #shopify-section-{{ section.id }} .cn-coupon-wrap { margin: 64px auto 60px; }
+  #shopify-section-{{ section.id }} .cn-coupon {
+    background: var(--paper2); border: 3px dashed var(--navy); border-radius: 10px;
+    padding: 36px; display: grid; grid-template-columns: 1fr 1fr; gap: 36px; position: relative;
+  }
+  #shopify-section-{{ section.id }} .cn-coupon::before {
+    content: "✂"; position: absolute; left: -14px; top: 50%; transform: translateY(-50%);
+    font-size: 22px; color: var(--navy); background: var(--paper); padding: 4px 2px;
+  }
+  #shopify-section-{{ section.id }} .cn-coupon h2 { font-size: clamp(22px, 2.6vw, 30px); line-height: 1.05; margin: 8px 0 10px; }
+  #shopify-section-{{ section.id }} .cn-coupon p { color: var(--dim); font-size: 14.5px; margin-bottom: 16px; }
+  #shopify-section-{{ section.id }} .cn-news-row { display: flex; gap: 10px; flex-wrap: wrap; }
+  #shopify-section-{{ section.id }} .cn-news-row input {
+    flex: 1 1 190px; height: 48px; border-radius: 6px; padding: 0 14px;
+    font-family: var(--mono); font-size: 13px; background: #FFFFFF;
+    border: 2px solid var(--navy); color: var(--navy);
+  }
+  #shopify-section-{{ section.id }} .cn-news-row input::placeholder { color: #9AA0B3; }
+  #shopify-section-{{ section.id }} .cn-news-ok { font-weight: 800; }
+  #shopify-section-{{ section.id }} .cn-fine {
+    font-family: var(--mono); font-size: 11px; color: var(--dim); margin-top: 12px;
+  }
+  #shopify-section-{{ section.id }} .cn-devlog h3 { font-size: clamp(20px, 2.2vw, 26px); margin: 8px 0 10px; }
+  #shopify-section-{{ section.id }} .cn-devlog p { margin-bottom: 16px; }
+
+  /* partners */
+  #shopify-section-{{ section.id }} .cn-partners {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr)); gap: 18px;
+    padding-bottom: 8px;
+  }
+  #shopify-section-{{ section.id }} .cn-partner {
+    display: flex; align-items: center; gap: 18px;
+    background: var(--paper2); border: 1.5px solid var(--navy); border-radius: 8px;
+    padding: 18px 22px; transition: transform .12s ease, box-shadow .12s ease;
+  }
+  #shopify-section-{{ section.id }} .cn-partner:hover { transform: translate(-2px,-2px); box-shadow: 4px 4px 0 var(--navy); }
+  #shopify-section-{{ section.id }} .cn-partner-logo {
+    background: #FFFFFF; border: 1px solid var(--rule); border-radius: 6px;
+    padding: 10px 14px; display: grid; place-items: center; flex: none;
+  }
+  #shopify-section-{{ section.id }} .cn-partner-logo img { height: 38px; width: auto; display: block; }
+  #shopify-section-{{ section.id }} .cn-partner-wordmark {
+    font-family: var(--display); font-weight: 650; font-size: 22px;
+    letter-spacing: .02em; color: var(--navy); text-transform: uppercase;
+  }
+  #shopify-section-{{ section.id }} .cn-partner-info { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  #shopify-section-{{ section.id }} .cn-partner-name { font-family: var(--display); font-weight: 650; font-size: 19px; }
+  #shopify-section-{{ section.id }} .cn-partner-role { color: var(--dim); font-size: 13.5px; }
+  #shopify-section-{{ section.id }} .cn-partner .cn-textlink { margin-left: auto; flex: none; }
+
+  #shopify-section-{{ section.id }} .cn-footer {
+    border-top: 2px solid var(--navy); margin-top: 56px; padding: 20px 0 44px; text-align: center;
+  }
+  #shopify-section-{{ section.id }} .cn-footer p {
+    font-family: var(--mono); font-size: 11.5px; font-weight: 700;
+    letter-spacing: .12em; text-transform: uppercase; color: var(--dim);
+  }
+
+  #shopify-section-{{ section.id }} .cn-legal {
+    margin-top: 48px; padding: 22px 0 0; border-top: 1px solid var(--rule);
+  }
+  #shopify-section-{{ section.id }} .cn-legal p {
+    color: var(--dim); font-size: 13px; line-height: 1.6; margin: 0 0 6px;
+  }
+
+  @media (max-width: 900px) {
+    #shopify-section-{{ section.id }} .cn-listings { grid-template-columns: 1fr; }
+    #shopify-section-{{ section.id }} .cn-coupon { grid-template-columns: 1fr; padding: 28px; }
+    #shopify-section-{{ section.id }} .cn-coupon::before { display: none; }
+    #shopify-section-{{ section.id }} .cn-cover-inner { flex-direction: column; align-items: flex-start; }
+  }
+{%- endstyle -%}
+
+<div class="cn">
+  <div class="cn-ticker">
+    {%- assign ticker = section.settings.ticker_text | strip -%}
+    {%- if ticker != blank -%}{{ ticker }} <b>★</b> {{ ticker }}{%- endif -%}
+  </div>
+
+  {%- assign cover_product = section.settings.cover_product -%}
+  <section class="cn-cover" aria-label="{{ section.settings.cover_chip | default: 'Featured release' }}">
+    {%- if section.settings.cover_image -%}
+      <img class="cn-cover-img"
+        src="{{ section.settings.cover_image | image_url: width: 1920 }}"
+        width="1920"
+        height="{{ 1920 | divided_by: section.settings.cover_image.aspect_ratio | round }}"
+        alt="{{ section.settings.cover_image.alt | default: section.settings.cover_title | escape }}">
+    {%- elsif section.settings.cover_image == blank -%}
+      <span class="cn-cover-ph">Latest game key art · 1920 × 820 — swap for each release</span>
+    {%- endif -%}
+    <div class="cn-cover-scrim">
+      <div class="cn-cover-inner">
+        <div>
+          {%- if section.settings.cover_chip != blank -%}
+            <span class="cn-release-chip">{{ section.settings.cover_chip }}</span>
+          {%- endif -%}
+          <h1>{{ section.settings.cover_title }}</h1>
+          <div class="cn-cta">
+            {%- if cover_product -%}
+              <a class="cn-btn cn-btn-cover" href="{{ cover_product.url }}">{{ section.settings.cover_cta_label }}</a>
+            {%- elsif section.settings.cover_cta_link != blank -%}
+              <a class="cn-btn cn-btn-cover" href="{{ section.settings.cover_cta_link }}">{{ section.settings.cover_cta_label }}</a>
+            {%- endif -%}
+            {%- if section.settings.cover_demo_link != blank -%}
+              <a class="cn-btn cn-btn-cover-ghost" href="{{ section.settings.cover_demo_link }}">{{ section.settings.cover_demo_label }}</a>
+            {%- endif -%}
+          </div>
+        </div>
+        {%- if cover_product -%}
+          <div class="cn-cover-price">
+            {{ cover_product.price | money }}
+            <small>GBC cartridge · small batch</small>
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </section>
+
+{%- liquid
+  if section.settings.band_cta1_link != blank
+    assign band_cta1_url = section.settings.band_cta1_link
+  else
+    assign band_cta1_url = routes.collections_url | append: '/games'
+  endif
+-%}
+<div class="cn-band">
+  {%- if section.settings.cover_stamp != blank -%}
+    <div class="cn-band-stamp">{{ section.settings.cover_stamp | newline_to_br | strip_newlines | replace: '<br />', '<br>' }}</div>
+  {%- endif -%}
+  <p class="cn-band-kicker">{{ section.settings.brand_name }} · {{ section.settings.brand_line }}</p>
+  {%- assign band_heading_lines = section.settings.band_heading | newline_to_br | split: '<br />' -%}
+  <h2>
+    <span class="top">{{ band_heading_lines[0] }}</span>
+    {%- if band_heading_lines[1] -%}
+      {%- assign band_words = band_heading_lines[1] | split: ' ' -%}
+      {%- for word in band_words -%}
+        {%- assign color_i = forloop.index0 | modulo: 3 -%}
+        <span class="w{{ color_i }}">{{ word }}</span>{%- unless forloop.last %} {% endunless -%}
+      {%- endfor -%}
+    {%- endif -%}
+  </h2>
+  {%- if section.settings.band_text != blank -%}
+    <p class="cn-band-lede">{{ section.settings.band_text }}</p>
+  {%- endif -%}
+  <div class="cn-cta">
+    <a class="cn-btn cn-btn-solid" href="{{ band_cta1_url }}">{{ section.settings.band_cta1_label }}</a>
+    <a class="cn-btn cn-btn-out" href="{{ section.settings.band_cta2_link | default: '/blogs/devlog' }}">{{ section.settings.band_cta2_label }}</a>
+  </div>
+</div>
+
+  <main>
+    <section class="cn-sec cn-wrap" style="padding-top:0">
+      <div class="cn-no">
+        <span class="num">No. 01</span>
+        <h2>{{ section.settings.listing_heading }}</h2>
+        <a class="cn-textlink" href="{{ routes.collections_url }}/games">Full catalog →</a>
+      </div>
+      <div class="cn-listings">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'listing' -%}
+            {%- liquid
+              assign listing_product = block.settings.product
+              assign order_fallback = routes.collections_url | append: '/games'
+              assign order_url = listing_product.url | default: order_fallback
+            -%}
+            <article class="cn-listing acc-{{ block.settings.accent }}" {{ block.shopify_attributes }}>
+              {%- if block.settings.cover -%}
+                <img class="cn-listing-cover"
+                  src="{{ block.settings.cover | image_url: width: 800 }}"
+                  width="800"
+                  height="{{ 800 | divided_by: block.settings.cover.aspect_ratio | round }}"
+                  alt="{{ block.settings.title | escape }}"
+                  loading="lazy">
+              {%- endif -%}
+              {%- if block.settings.coming_soon and block.settings.stamp_text != blank -%}
+                <span class="cn-sold">{{ block.settings.stamp_text }}</span>
+              {%- endif -%}
+              {%- if block.settings.featured -%}
+                <span class="cn-featured">{{ section.settings.featured_label }}</span>
+              {%- endif -%}
+              <span class="cn-item">{{ block.settings.item_no }}{% if block.settings.platform != blank %} · {{ block.settings.platform }}{% endif %}</span>
+              <h3>{{ block.settings.title }}</h3>
+              {%- if block.settings.desc != blank -%}
+                <p class="cn-desc">{{ block.settings.desc }}</p>
+              {%- endif -%}
+              {%- if listing_product -%}
+                <span class="cn-price-tag">{{ listing_product.price | money }}</span>
+              {%- elsif block.settings.price_text != blank -%}
+                <span class="cn-price-tag">{{ block.settings.price_text }}</span>
+              {%- endif -%}
+              <div class="cn-cta">
+                {%- if block.settings.coming_soon -%}
+                  <span class="cn-btn-disabled" aria-disabled="true">{{ block.settings.coming_soon_label | default: 'Coming soon' }}</span>
+                {%- else -%}
+                  <a class="cn-btn cn-btn-solid" href="{{ order_url }}">{{ block.settings.order_label }}</a>
+                  {%- if block.settings.demo_url != blank -%}
+                    <a class="cn-btn cn-btn-out" href="{{ block.settings.demo_url }}">{{ block.settings.demo_label }}</a>
+                  {%- endif -%}
+                {%- endif -%}
+              </div>
+            </article>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </section>
+
+    <section class="cn-sec cn-wrap">
+      <div class="cn-no">
+        <span class="num">No. 02</span>
+        <h2>{{ section.settings.shop_heading }}</h2>
+        <a class="cn-textlink" href="{{ section.settings.shop_link | default: routes.all_products_url }}">Full catalog →</a>
+      </div>
+      <div class="cn-cards">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'shopcard' -%}
+            {%- liquid
+              assign card_fallback = routes.collections_url | append: '/all'
+              assign card_url = block.settings.link | default: section.settings.shop_link | default: card_fallback
+            -%}
+            <a class="cn-card" href="{{ card_url }}" {{ block.shopify_attributes }}>
+              {%- if block.settings.chip != blank -%}<span class="cn-chip">{{ block.settings.chip }}</span>{%- endif -%}
+              <h3>{{ block.settings.title }}</h3>
+              {%- if block.settings.text != blank -%}<p>{{ block.settings.text }}</p>{%- endif -%}
+              {%- if block.settings.link_label != blank -%}<span class="cn-textlink">{{ block.settings.link_label }} →</span>{%- endif -%}
+            </a>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </section>
+
+    <section class="cn-coupon-wrap cn-wrap">
+      <div class="cn-coupon">
+        <div>
+          <p class="cn-kicker">Clip &amp; keep</p>
+          <h2>{{ section.settings.news_heading }}</h2>
+          <p>Restocks and new releases, straight to your inbox — before anyone else.</p>
+          {% form 'customer' %}
+            <input type="hidden" name="contact[tags]" value="newsletter">
+            {%- if form.posted_successfully? -%}
+              <p class="cn-news-ok">Thanks! You're on the list.</p>
+            {%- else -%}
+              <div class="cn-news-row">
+                <input type="email" name="contact[email]" value="{{ form.email }}" placeholder="you@example.com" required aria-label="Email address">
+                <button class="cn-btn cn-btn-solid" type="submit">{{ section.settings.news_button }}</button>
+              </div>
+            {%- endif -%}
+          {% endform %}
+          {%- if section.settings.news_fine != blank -%}<p class="cn-fine">{{ section.settings.news_fine }}</p>{%- endif -%}
+        </div>
+        <div class="cn-devlog">
+          <p class="cn-kicker">No. 03 — Devlog</p>
+          <h3>{{ section.settings.devlog_heading }}</h3>
+          <p>Progress updates, postmortems, and free templates — straight from development.</p>
+          <a class="cn-btn cn-btn-out" href="{{ section.settings.devlog_link | default: '/blogs/devlog' }}">{{ section.settings.devlog_button }}</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="cn-sec cn-wrap">
+      <div class="cn-no">
+        <span class="num">No. 04</span>
+        <h2>{{ section.settings.partners_heading }}</h2>
+      </div>
+      <div class="cn-partners">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'partner' -%}
+            <a class="cn-partner" href="{{ block.settings.url }}" {{ block.shopify_attributes }}{% if block.settings.new_tab %} target="_blank" rel="noopener"{% endif %}>
+              {%- if block.settings.logo -%}
+                <span class="cn-partner-logo">
+                  <img src="{{ block.settings.logo | image_url: width: 300 }}" width="300" height="{{ 300 | divided_by: block.settings.logo.aspect_ratio | round }}" alt="{{ block.settings.name | escape }}" loading="lazy">
+                </span>
+              {%- else -%}
+                <span class="cn-partner-logo"><span class="cn-partner-wordmark">{{ block.settings.name }}</span></span>
+              {%- endif -%}
+              <span class="cn-partner-info">
+                <span class="cn-partner-name">{{ block.settings.name }}</span>
+                {%- if block.settings.role != blank -%}
+                  <span class="cn-partner-role">{{ block.settings.role }}</span>
+                {%- endif -%}
+              </span>
+              <span class="cn-textlink">Visit →</span>
+            </a>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </section>
+
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'legal' and block.settings.text != blank -%}
+        <div class="cn-legal cn-wrap" {{ block.shopify_attributes }}>
+          <p>{{ block.settings.text | newline_to_br }}</p>
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
+  </main>
+
+  <footer class="cn-footer">
+    <p>{{ section.settings.footer_text }}</p>
+  </footer>
+</div>
+
+{% schema %}
+{
+  "name": "Game home",
+  "tag": "section",
+  "class": "section-game-home",
+  "enabled_on": { "templates": ["index"] },
+  "max_blocks": 12,
+  "settings": [
+    { "type": "header", "content": "Ticker" },
+    { "type": "textarea", "id": "ticker_text", "label": "Ticker text (repeated with ★)", "default": "New games for old machines · Handmade in Poland · Small batches · Tested on real hardware" },
+
+    { "type": "header", "content": "Featured release cover" },
+    { "type": "image_picker", "id": "cover_image", "label": "Key art (full-width, ~1920 × 820)" },
+    { "type": "text", "id": "cover_chip", "label": "Release chip", "default": "New release · Issue 03" },
+    { "type": "text", "id": "cover_title", "label": "Title", "default": "Meet KORO" },
+    { "type": "product", "id": "cover_product", "label": "Product (price + order link)" },
+    { "type": "url", "id": "cover_cta_link", "label": "Order link (if no product)" },
+    { "type": "text", "id": "cover_cta_label", "label": "Order button", "default": "Order now" },
+    { "type": "url", "id": "cover_demo_link", "label": "Demo link" },
+    { "type": "text", "id": "cover_demo_label", "label": "Demo button", "default": "Play the demo" },
+    { "type": "textarea", "id": "cover_stamp", "label": "Corner stamp (use line breaks)", "default": "Small\nBatch\nPoland" },
+
+    { "type": "header", "content": "Masthead band" },
+    { "type": "textarea", "id": "band_heading", "label": "Heading (line 1 navy, line 2 colour-cycled)", "default": "New games for old machines.\nHandmade in Poland." },
+    { "type": "textarea", "id": "band_text", "label": "Lede", "default": "Game Boy Color cartridges and MS-DOS floppy disks, written in assembly, tested on real hardware, and shipped in small batches." },
+    { "type": "text", "id": "band_cta1_label", "label": "Primary button", "default": "Browse the catalog" },
+    { "type": "url", "id": "band_cta1_link", "label": "Primary link (falls back to /collections/games)" },
+    { "type": "text", "id": "band_cta2_label", "label": "Secondary button", "default": "Read the devlog" },
+    { "type": "url", "id": "band_cta2_link", "label": "Secondary link (falls back to /blogs/devlog)" },
+    { "type": "text", "id": "brand_name", "label": "Brand", "default": "Cyfrowy Nomada" },
+    { "type": "text", "id": "brand_line", "label": "Line", "default": "Mail-order catalogue · Vol. 3 · Handmade in Poland" },
+
+    { "type": "header", "content": "No. 01 — Games" },
+    { "type": "text", "id": "listing_heading", "label": "Heading", "default": "Games — in stock" },
+    { "type": "text", "id": "featured_label", "label": "\"Featured\" chip text", "default": "Featured product" },
+
+    { "type": "header", "content": "No. 02 — Workbench" },
+    { "type": "text", "id": "shop_heading", "label": "Heading", "default": "Also from the workbench" },
+    { "type": "url", "id": "shop_link", "label": "Link (falls back to /collections/all)" },
+
+    { "type": "header", "content": "No. 03 — Coupon" },
+    { "type": "text", "id": "news_heading", "label": "Newsletter heading", "default": "Get release news" },
+    { "type": "text", "id": "news_button", "label": "Newsletter button", "default": "Subscribe" },
+    { "type": "text", "id": "news_fine", "label": "Fine print", "default": "* No spam. A few emails a year. Unsubscribe anytime." },
+    { "type": "text", "id": "devlog_heading", "label": "Devlog heading", "default": "From the workbench" },
+    { "type": "text", "id": "devlog_button", "label": "Devlog button", "default": "Read the devlog" },
+    { "type": "url", "id": "devlog_link", "label": "Devlog link (falls back to /blogs/devlog)" },
+
+    { "type": "header", "content": "No. 04 — Partners & footer" },
+    { "type": "text", "id": "partners_heading", "label": "Partners heading", "default": "People we work with" },
+    { "type": "text", "id": "footer_text", "label": "Footer line", "default": "Cyfrowy Nomada · handmade homebrew · prices in PLN · ships worldwide" },
+
+    { "type": "header", "content": "Colours & fonts" },
+    { "type": "color", "id": "color_paper", "label": "Paper background", "default": "#F6F1E3" },
+    { "type": "color", "id": "color_red", "label": "Print red", "default": "#D6453D" }
+  ],
+  "blocks": [
+    {
+      "type": "listing",
+      "name": "Game listing",
+      "settings": [
+        { "type": "text", "id": "item_no", "label": "Item no.", "default": "CN-001" },
+        { "type": "text", "id": "platform", "label": "Platform tag", "default": "GBC cart" },
+        { "type": "image_picker", "id": "cover", "label": "Cover image (optional)" },
+        { "type": "text", "id": "title", "label": "Title", "default": "Meet KORO" },
+        { "type": "textarea", "id": "desc", "label": "Description", "default": "A bright, quick and endlessly replayable marble puzzle. Assembly, no engines, real hardware." },
+        { "type": "product", "id": "product", "label": "Product (price + order link)" },
+        { "type": "text", "id": "price_text", "label": "Price text (if no product)", "default": "224 zł" },
+        { "type": "text", "id": "order_label", "label": "Order button", "default": "Order now" },
+        { "type": "url", "id": "demo_url", "label": "Demo link" },
+        { "type": "text", "id": "demo_label", "label": "Demo button", "default": "Play demo" },
+        {
+          "type": "select",
+          "id": "accent",
+          "label": "Accent colour",
+          "options": [
+            { "value": "red", "label": "Print red" },
+            { "value": "gold", "label": "Gold" },
+            { "value": "green", "label": "Green" },
+            { "value": "sky", "label": "Navy / sky" }
+          ],
+          "default": "red"
+        },
+        { "type": "checkbox", "id": "featured", "label": "Featured chip (on the cover)", "default": false },
+        { "type": "checkbox", "id": "coming_soon", "label": "Coming soon (disables buttons)", "default": false },
+        { "type": "text", "id": "coming_soon_label", "label": "Coming soon label", "default": "Coming soon" },
+        { "type": "text", "id": "stamp_text", "label": "Corner stamp (shows when Coming soon)", "default": "In development" }
+      ]
+    },
+    {
+      "type": "shopcard",
+      "name": "Shop card",
+      "settings": [
+        { "type": "text", "id": "chip", "label": "Tag", "default": "Catalog" },
+        { "type": "text", "id": "title", "label": "Title", "default": "Every game, one shelf" },
+        { "type": "textarea", "id": "text", "label": "Text", "default": "Cartridges, floppy disks, and everything in between." },
+        { "type": "url", "id": "link", "label": "Link" },
+        { "type": "text", "id": "link_label", "label": "Link label", "default": "Browse" }
+      ]
+    },
+    {
+      "type": "partner",
+      "name": "Partner",
+      "settings": [
+        { "type": "image_picker", "id": "logo", "label": "Logo (white chip behind it)" },
+        { "type": "text", "id": "name", "label": "Name", "default": "Partner" },
+        { "type": "text", "id": "role", "label": "Role", "default": "Testing & promotion" },
+        { "type": "url", "id": "url", "label": "Link" },
+        { "type": "checkbox", "id": "new_tab", "label": "Open in new tab", "default": true }
+      ]
+    },
+    {
+      "type": "legal",
+      "name": "Legal notice",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text",
+          "default": "Game Boy and Game Boy Color are trademarks of Nintendo.\nKORO and Fungus Foray DX are independently developed and published games and are not affiliated with, endorsed by, or licensed by Nintendo Co., Ltd.\nAll other trademarks are the property of their respective owners."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Game home",
+      "blocks": [
+        { "type": "listing", "settings": { "item_no": "CN-001", "platform": "GBC cart", "title": "Meet KORO", "accent": "gold", "featured": true } },
+        { "type": "listing", "settings": { "item_no": "CN-002", "platform": "GBC cart", "title": "Fungus Foray DX", "accent": "green", "price_text": "112 zł" } },
+        { "type": "listing", "settings": { "item_no": "CN-003", "platform": "DOS 3.5\"", "title": "Cortex Labs", "accent": "sky", "coming_soon": true, "stamp_text": "In development", "price_text": "TBA" } },
+        { "type": "shopcard", "settings": { "chip": "Catalog", "title": "Every game, one shelf" } },
+        { "type": "shopcard", "settings": { "chip": "Tool", "title": "P1Xel Editor", "text": "Professional indexed pixel-art editor — the tool our games are drawn in.", "link_label": "See it in the shop" } },
+        { "type": "shopcard", "settings": { "chip": "Custom work", "title": "Porting & commissions", "text": "Legacy games on new platforms, or a custom game for your brand. No engines.", "link_label": "Get in touch" } },
+        { "type": "partner", "settings": { "name": "PMKC", "role": "Testing & promotion", "url": "https://pmkc.pl/" } },
+        { "type": "partner", "settings": { "name": "CCS Druk", "role": "Printing", "url": "https://ccsdruk.pl/" } },
+        {
+          "type": "legal",
+          "settings": {
+            "text": "Game Boy and Game Boy Color are trademarks of Nintendo.\nKORO and Fungus Foray DX are independently developed and published games and are not affiliated with, endorsed by, or licensed by Nintendo Co., Ltd.\nAll other trademarks are the property of their respective owners."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

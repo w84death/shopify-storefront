@@ -1,0 +1,366 @@
+{% doc %}
+  @prompt
+    simple automatic slideshow (fade) for small images made by real Game Boy Pocket Camera - connect it to database image metadata, add an input to connect to the "list images" entry, i can not select (homepage-gb-camera-gallery-rvstoqci) as images source?, for image source use homepage_gb_camera_gallery
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-gbcam-slideshow-{{ ai_gen_id }} {
+    display: block; 
+    min-width: 276px;
+    margin: 0 auto;
+  }
+
+  .ai-gbcam-slideshow-container-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    min-width: 276px;
+    background-color: {{ block.settings.background_color }};
+    padding: {{ block.settings.padding }}px;
+    border: {{ block.settings.border_width }}px solid {{ block.settings.border_color }};
+    overflow: hidden;
+  }
+
+  .ai-gbcam-slideshow-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    min-width: 256px;
+    min-height:224px;
+  }
+
+  .ai-gbcam-slide-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 256px;
+    height:224px;
+    opacity: 0;
+    transition: opacity {{ block.settings.fade_duration }}s ease-in-out;
+    pointer-events: none;
+  }
+
+  .ai-gbcam-slide-{{ ai_gen_id }}.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .ai-gbcam-slide-{{ ai_gen_id }} img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+  }
+
+  .ai-gbcam-empty-state-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+    color: #666;
+    text-align: center;
+    padding: 20px;
+  }
+
+  .ai-gbcam-empty-state-{{ ai_gen_id }} svg {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 16px;
+    opacity: 0.3;
+  }
+
+  .ai-gbcam-caption-{{ ai_gen_id }} {
+    margin-top: {{ block.settings.caption_spacing }}px;
+    text-align: {{ block.settings.caption_alignment }};
+    color: {{ block.settings.caption_color }};
+    font-size: {{ block.settings.caption_size }}px;
+    font-family: {{ block.settings.caption_font.family }}, monospace;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-gbcam-slideshow-{{ ai_gen_id }} {
+      width: 100%;
+    }
+  }
+{% endstyle %}
+
+<gbcam-slideshow-{{ ai_gen_id }}
+  class="ai-gbcam-slideshow-{{ ai_gen_id }}"
+  data-interval="{{ block.settings.slide_interval }}"
+  data-autoplay="{{ block.settings.autoplay }}"
+  {{ block.shopify_attributes }}
+>
+  {% assign filtered_images = '' | split: '' %}
+
+  {% if block.settings.image_list_metaobject != blank %}
+    {% assign metaobject_entry = block.settings.image_list_metaobject %}
+    {% if metaobject_entry.images %}
+      {% assign filtered_images = metaobject_entry.images.value %}
+    {% endif %}
+  {% elsif block.settings.metadata_keyword != blank %}
+    {% assign gbcam_images = product.media | where: 'media_type', 'image' %}
+    
+    {% for media in gbcam_images %}
+      {% if media.alt contains block.settings.metadata_keyword %}
+        {% assign filtered_images = filtered_images | concat: media %}
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+
+  <div class="ai-gbcam-slideshow-container-{{ ai_gen_id }}">
+    {% if filtered_images.size > 0 %}
+      <div class="ai-gbcam-slideshow-wrapper-{{ ai_gen_id }}">
+        {% for media in filtered_images %}
+          <div class="ai-gbcam-slide-{{ ai_gen_id }} {% if forloop.first %}active{% endif %}" data-slide-index="{{ forloop.index0 }}">
+            <img
+              src="{{ media | image_url: width: 800 }}"
+              alt="{{ media.alt | escape }}"
+              width="{{ media.width }}"
+              height="{{ media.height }}"
+              loading="lazy"
+            >
+          </div>
+        {% endfor %}
+      </div>
+      
+      {% if block.settings.show_caption %}
+        <div class="ai-gbcam-caption-{{ ai_gen_id }}">
+          <span class="ai-gbcam-caption-text-{{ ai_gen_id }}">{{ filtered_images.first.alt | escape }}</span>
+        </div>
+      {% endif %}
+    {% else %}
+      <div class="ai-gbcam-empty-state-{{ ai_gen_id }}">
+        {{ 'image' | placeholder_svg_tag }}
+        <p>Select a metaobject list or set alt text keyword</p>
+      </div>
+    {% endif %}
+  </div>
+</gbcam-slideshow-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class GBCamSlideshow{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.currentIndex = 0;
+        this.slides = [];
+        this.intervalId = null;
+        this.interval = parseInt(this.dataset.interval) * 1000;
+        this.autoplay = this.dataset.autoplay === 'true';
+      }
+
+      connectedCallback() {
+        this.slides = Array.from(this.querySelectorAll('.ai-gbcam-slide-{{ ai_gen_id }}'));
+        this.captionElement = this.querySelector('.ai-gbcam-caption-text-{{ ai_gen_id }}');
+        
+        if (this.slides.length > 1 && this.autoplay) {
+          this.startSlideshow();
+        }
+      }
+
+      disconnectedCallback() {
+        this.stopSlideshow();
+      }
+
+      startSlideshow() {
+        this.intervalId = setInterval(() => {
+          this.nextSlide();
+        }, this.interval);
+      }
+
+      stopSlideshow() {
+        if (this.intervalId) {
+          clearInterval(this.intervalId);
+          this.intervalId = null;
+        }
+      }
+
+      nextSlide() {
+        this.slides[this.currentIndex].classList.remove('active');
+        this.currentIndex = (this.currentIndex + 1) % this.slides.length;
+        this.slides[this.currentIndex].classList.add('active');
+        
+        if (this.captionElement) {
+          const currentSlide = this.slides[this.currentIndex];
+          const img = currentSlide.querySelector('img');
+          if (img && img.alt) {
+            this.captionElement.textContent = img.alt;
+          }
+        }
+      }
+    }
+
+    customElements.define('gbcam-slideshow-{{ ai_gen_id }}', GBCamSlideshow{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Game Boy Camera slideshow",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Image source"
+    },
+    {
+      "type": "metaobject",
+      "id": "image_list_metaobject",
+      "label": "Image list metaobject",
+      "metaobject_type": "homepage_gb_camera_gallery"
+    },
+    {
+      "type": "text",
+      "id": "metadata_keyword",
+      "label": "Alt text keyword",
+      "default": "Game Boy Camera",
+      "info": "Only used if no metaobject selected above"
+    },
+    {
+      "type": "header",
+      "content": "Slideshow"
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Autoplay",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "slide_interval",
+      "label": "Slide interval",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "fade_duration",
+      "label": "Fade duration",
+      "min": 0.5,
+      "max": 2,
+      "step": 0.5,
+      "unit": "s",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 50
+    },
+    {
+      "type": "header",
+      "content": "Container style"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#e6e6e6"
+    },
+    {
+      "type": "range",
+      "id": "padding",
+      "label": "Padding",
+      "min": 0,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "label": "Border width",
+      "min": 0,
+      "max": 8,
+      "step": 1,
+      "unit": "px",
+      "default": 2
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color",
+      "default": "#1f1f1f"
+    },
+    {
+      "type": "header",
+      "content": "Caption"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_caption",
+      "label": "Show caption",
+      "default": true
+    },
+    {
+      "type": "font_picker",
+      "id": "caption_font",
+      "label": "Font",
+      "default": "anonymous_pro_n4"
+    },
+    {
+      "type": "range",
+      "id": "caption_size",
+      "label": "Size",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "color",
+      "id": "caption_color",
+      "label": "Color",
+      "default": "#1f1f1f"
+    },
+    {
+      "type": "select",
+      "id": "caption_alignment",
+      "label": "Alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "caption_spacing",
+      "label": "Spacing",
+      "min": 0,
+      "max": 32,
+      "step": 4,
+      "unit": "px",
+      "default": 8
+    }
+  ],
+  "presets": [
+    {
+      "name": "Game Boy Camera slideshow"
+    }
+  ]
+}
+{% endschema %}

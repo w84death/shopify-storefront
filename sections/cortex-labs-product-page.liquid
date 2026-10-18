@@ -1,0 +1,482 @@
+{% liquid
+  assign selected_variant = product.selected_or_first_available_variant
+
+    assign hero_image_url = section.settings.hero_image | image_url: width: 2400
+
+    assign floppy_image_url = section.settings.floppy_image | image_url: width: 1400
+
+    assign background_wide_url = section.settings.background_wide | image_url: width: 2800
+
+    assign background_square_url = section.settings.background_square | image_url: width: 1800
+
+    assign gallery_image_1_url = section.settings.gallery_image_1 | image_url: width: 2400
+
+    assign gallery_image_2_url = section.settings.gallery_image_2 | image_url: width: 1800
+
+    assign gallery_image_3_url = section.settings.gallery_image_3 | image_url: width: 2000
+    
+    assign cursor_url = section.settings.cursor | image_url: width: 64
+
+  assign demo_url = product.metafields.custom.iframe_game_url.value
+%}
+
+<section id="cortex-labs-{{ section.id }}" class="cortex-page">
+  <nav class="cortex-nav" aria-label="Cortex Labs page navigation">
+    <a class="cortex-nav__brand" href="#cortex-top">CORTEX LABS</a>
+    <div class="cortex-nav__links">
+      <a href="#mission">Mission</a>
+      <a href="#systems">Systems</a>
+      <a href="#play">Play</a>
+      <a href="#edition">Editions</a>
+    </div>
+    <a class="cortex-nav__buy" href="#buy">Acquire</a>
+  </nav>
+
+  <header id="cortex-top" class="cortex-hero">
+    <div class="cortex-hero__bg" style="background-image:url('{{ background_wide_url }}')"></div>
+    <div class="cortex-grid-overlay" aria-hidden="true"></div>
+
+    <div class="cortex-hero__copy">
+      <p class="cortex-kicker">{{ section.settings.eyebrow | escape }}</p>
+      <h1>
+        <span>CORTEX</span>
+        <span>LABS</span>
+      </h1>
+      <p class="cortex-hero__subtitle">{{ section.settings.hero_subtitle | escape }}</p>
+      <p class="cortex-hero__description">{{ section.settings.hero_text | escape }}</p>
+
+      <div class="cortex-hero__actions">
+        <a class="cortex-button cortex-button--primary" href="#buy">Choose edition</a>
+        {% if section.settings.show_demo and demo_url != blank %}
+          <a class="cortex-button cortex-button--ghost" href="#play">Run simulation</a>
+        {% endif %}
+      </div>
+
+      <dl class="cortex-spec-strip">
+        <div><dt>SIZE</dt><dd>16 KB</dd></div>
+        <div><dt>FORMAT</dt><dd>DOS .COM</dd></div>
+        <div><dt>WORLD</dt><dd>128×128</dd></div>
+        <div><dt>MEDIA</dt><dd>3.5″ FLOPPY</dd></div>
+      </dl>
+    </div>
+
+    <div class="cortex-hero__visual">
+      <div class="cortex-orbit" aria-hidden="true"></div>
+      <img src="{{ hero_image_url }}" alt="Cortex Labs collector's box and floppy disk" width="1600" height="900" fetchpriority="high">
+      <span class="cortex-stamp">BOOTABLE<br>MISSION<br>MEDIA</span>
+    </div>
+
+    <a class="cortex-scroll" href="#mission" aria-label="Scroll to mission briefing"><span></span>SCROLL TO BRIEFING</a>
+  </header>
+
+  <section id="mission" class="cortex-mission cortex-section">
+    <div class="cortex-section__label">01 / MISSION</div>
+    <div class="cortex-mission__copy">
+      <p class="cortex-overline">EARTH'S LAST UNAGING GENERATION IS DYING.</p>
+      <h2>{{ section.settings.story_title | escape }}</h2>
+      <div class="cortex-richtext">{{ section.settings.story_text }}</div>
+      <blockquote>“Harvest. Refine. Launch.”</blockquote>
+    </div>
+    <div class="cortex-mission__planet" style="background-image:url('{{ background_square_url }}')">
+      <div class="cortex-mission__telemetry">
+        <span>KEPLER-486i</span>
+        <span>REMOTE LINK: ACTIVE</span>
+        <span>NEUROFUNG: DETECTED</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="systems" class="cortex-systems cortex-section">
+    <div class="cortex-section__label">02 / SYSTEMS</div>
+    <div class="cortex-section__heading">
+      <p class="cortex-overline">LOGISTICS AT PLANETARY SCALE</p>
+      <h2>Build the machine that saves humanity.</h2>
+      <p>Every rail, station and pod is part of one living production chain. Extract alien matter, move it through your network, refine it, and fill the rocket.</p>
+    </div>
+
+    <div class="cortex-feature-grid">
+      <article><span>01</span><h3>Seeded worlds</h3><p>Six fixed maps plus a randomized expedition map.</p></article>
+      <article><span>02</span><h3>Rail logistics</h3><p>Build networks across a large 128×128 alien world.</p></article>
+      <article><span>03</span><h3>Autonomous pods</h3><p>Cargo pods transport resources through your rail system.</p></article>
+      <article><span>04</span><h3>Industrial chain</h3><p>Collectors, extractors, silos, refineries, labs and factories.</p></article>
+      <article><span>05</span><h3>Research upgrades</h3><p>Improve pod speed, extractor speed and range, and silo capacity.</p></article>
+      <article><span>06</span><h3>Fog and radar</h3><p>Expand visibility and reveal the planet before committing resources.</p></article>
+    </div>
+
+    <div class="cortex-process" aria-label="Core gameplay process">
+      <div><b>EXTRACT</b><small>Alien resources</small></div><i>→</i>
+      <div><b>TRANSPORT</b><small>Rail and cargo pods</small></div><i>→</i>
+      <div><b>REFINE</b><small>Green Neurofung</small></div><i>→</i>
+      <div><b>LAUNCH</b><small>Complete the mission</small></div>
+    </div>
+  </section>
+
+  {% if section.settings.show_demo %}
+    <section id="play" class="cortex-play cortex-section">
+      <div class="cortex-section__label">03 / LIVE TERMINAL</div>
+      <div class="cortex-terminal-head">
+        <div>
+          <p class="cortex-overline">REMOTE OPERATIONS CONSOLE</p>
+          <h2>Run Cortex Labs in your browser.</h2>
+        </div>
+        <div class="cortex-status"><span></span> LINK ESTABLISHED</div>
+      </div>
+
+      <div class="cortex-terminal">
+        <div class="cortex-terminal__bar">
+          <span>C:\CORTEX\CORTEX.COM</span>
+          <span>VGA / MOUSE / 16 KB</span>
+        </div>
+        {% if demo_url != blank %}
+          <iframe class="cortex-demo" src="{{ demo_url | escape }}" title="Cortex Labs browser demo" loading="lazy" allowfullscreen></iframe>
+        {% else %}
+          <div class="cortex-demo cortex-demo--placeholder">
+            <strong>NO REMOTE IMAGE</strong>
+            <span>Add a URL to product metafield <code>custom.iframe_game_url</code>.</span>
+          </div>
+        {% endif %}
+      </div>
+      <p class="cortex-play__note">{{ section.settings.demo_note | escape }}</p>
+    </section>
+  {% endif %}
+
+  <section class="cortex-gallery cortex-section">
+    <div class="cortex-section__label">04 / PHYSICAL ARCHIVE</div>
+    <div class="cortex-section__heading">
+      <p class="cortex-overline">FROM PROGRAM TO ARTIFACT</p>
+      <h2>Built to boot. Made to keep.</h2>
+    </div>
+
+    <div class="cortex-gallery__grid">
+      <figure class="cortex-gallery__wide">
+        <img src="{{ gallery_image_1_url }}" alt="{{ section.settings.gallery_image_1_alt | escape }}" width="1600" height="900" loading="lazy">
+        {% if section.settings.gallery_image_1_note != blank %}<figcaption>{{ section.settings.gallery_image_1_note | escape }}</figcaption>{% endif %}
+      </figure>
+      <figure>
+        <img src="{{ gallery_image_2_url }}" alt="{{ section.settings.gallery_image_2_alt | escape }}" width="1200" height="1200" loading="lazy">
+        {% if section.settings.gallery_image_2_note != blank %}<figcaption>{{ section.settings.gallery_image_2_note | escape }}</figcaption>{% endif %}
+      </figure>
+      <figure>
+        <img src="{{ gallery_image_3_url }}" alt="{{ section.settings.gallery_image_3_alt | escape }}" width="1200" height="1200" loading="lazy">
+        {% if section.settings.gallery_image_3_note != blank %}<figcaption>{{ section.settings.gallery_image_3_note | escape }}</figcaption>{% endif %}
+      </figure>
+    </div>
+  </section>
+
+  <section id="edition" class="cortex-editions cortex-section">
+    <div class="cortex-section__label">05 / LOADOUT</div>
+    <div class="cortex-section__heading">
+      <p class="cortex-overline">SELECT MISSION PACKAGE</p>
+      <h2>Classic or Limited Edition.</h2>
+    </div>
+
+    <div class="cortex-table-wrap">
+      <table>
+        <thead><tr><th>Included</th><th>Classic</th><th>Limited</th></tr></thead>
+        <tbody>
+          <tr><td>Collector's box</td><td>YES</td><td>YES</td></tr>
+          <tr><td>Floppy diskette</td><td>YES</td><td>YES</td></tr>
+          <tr><td>Floppy image backup</td><td>YES</td><td>YES</td></tr>
+          <tr><td>MS-DOS .COM download</td><td>YES</td><td>YES</td></tr>
+          <tr><td>DOSBox bundle for Windows and Linux</td><td>YES</td><td>YES</td></tr>
+          <tr><td>Manual booklet</td><td>YES</td><td>YES</td></tr>
+          <tr><td>Poster</td><td>—</td><td>YES</td></tr>
+          <tr><td>Mousepad</td><td>—</td><td>YES</td></tr>
+          <tr><td>USB optical mouse</td><td>—</td><td>YES</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="cortex-requirements cortex-section">
+    <div class="cortex-section__label">06 / HARDWARE CHECK</div>
+    <div class="cortex-requirements__layout">
+      <div>
+        <p class="cortex-overline">MINIMUM REQUIREMENTS</p>
+        <h2>Your machine is probably ready.</h2>
+      </div>
+      <ul>
+        <li><span>CPU</span><b>386 or better</b></li>
+        <li><span>VIDEO</span><b>VGA graphics</b></li>
+        <li><span>MEMORY</span><b>512 KB RAM</b></li>
+        <li><span>INPUT</span><b>Keyboard + PS/2 mouse</b></li>
+        <li><span>DOS</span><b>INT 33h-compatible mouse driver</b></li>
+      </ul>
+    </div>
+    <p class="cortex-requirements__note">The bootable-floppy version requires a PS/2-compatible mouse.</p>
+  </section>
+
+  <section id="buy" class="cortex-buy">
+    <div class="cortex-buy__media">
+      <img src="{{ floppy_image_url }}" alt="Cortex Labs boot disk" width="1000" height="1000" loading="lazy">
+    </div>
+    <div class="cortex-buy__panel">
+      <p class="cortex-overline">MISSION MEDIA AVAILABLE</p>
+      <h2>{{ product.title | default: 'Cortex Labs' | escape }}</h2>
+      <div class="cortex-price">{{ selected_variant.price | money }}</div>
+      <div class="cortex-product-copy">
+        {% if product.description != blank %}{{ product.description }}{% else %}<p>{{ section.settings.fallback_description | escape }}</p>{% endif %}
+      </div>
+
+      {% form 'product', product, class: 'cortex-product-form' %}
+        {% if product.has_only_default_variant == false %}
+          <label for="CortexVariant-{{ section.id }}">Edition</label>
+          <select id="CortexVariant-{{ section.id }}" name="id">
+            {% for variant in product.variants %}
+              <option value="{{ variant.id }}" {% if variant.id == selected_variant.id %}selected{% endif %} {% unless variant.available %}disabled{% endunless %}>
+                {{ variant.title }} — {{ variant.price | money }}{% unless variant.available %} — Sold out{% endunless %}
+              </option>
+            {% endfor %}
+          </select>
+        {% else %}
+          <input type="hidden" name="id" value="{{ selected_variant.id }}">
+        {% endif %}
+
+        <div class="cortex-qty-row">
+          <label for="CortexQty-{{ section.id }}">Quantity</label>
+          <input id="CortexQty-{{ section.id }}" type="number" name="quantity" min="1" value="1">
+        </div>
+
+        <button type="submit" class="cortex-button cortex-button--primary cortex-button--full" {% unless selected_variant.available %}disabled{% endunless %}>
+          {% if selected_variant.available %}Add mission package to cart{% else %}Mission unavailable{% endif %}
+        </button>
+      {% endform %}
+    </div>
+  </section>
+
+  <footer class="cortex-footer">
+    <strong>CORTEX LABS</strong>
+    <span>Assembly-built science-fiction logistics for classic x86 PCs.</span>
+    <span>© 2026 Cyfrowy Nomada</span>
+  </footer>
+</section>
+
+{% style %}
+  #cortex-labs-{{ section.id }} {
+    --cx-bg: #060a0e;
+    --cx-panel: #0b141a;
+    --cx-panel-2: #101d24;
+    --cx-ink: #e9f2ef;
+    --cx-muted: #8fa7aa;
+    --cx-cyan: #56d9df;
+    --cx-red: #ef3d2f;
+    --cx-red-hot: #ff5a43;
+    --cx-line: rgba(86, 217, 223, .22);
+    --cx-max: 1280px;
+    color: var(--cx-ink);
+    background: var(--cx-bg);
+    font-family: "Courier New", ui-monospace, monospace;
+    overflow: hidden;
+    cursor: url('{{ cursor_url }}') 4 4, auto;
+  }
+  #cortex-labs-{{ section.id }} *, #cortex-labs-{{ section.id }} *::before, #cortex-labs-{{ section.id }} *::after { box-sizing: border-box; }
+  #cortex-labs-{{ section.id }} a { color: inherit; text-decoration: none; }
+  #cortex-labs-{{ section.id }} img { display: block; max-width: 100%; }
+  #cortex-labs-{{ section.id }} h1, #cortex-labs-{{ section.id }} h2, #cortex-labs-{{ section.id }} h3, #cortex-labs-{{ section.id }} p { margin-top: 0; }
+
+  .cortex-nav { position: fixed; z-index: 50; top: 18px; left: 50%; transform: translateX(-50%); width: min(calc(100% - 32px), 1160px); height: 58px; display:flex; align-items:center; justify-content:space-between; gap:24px; padding:0 10px 0 22px; border:1px solid rgba(86,217,223,.3); background:rgba(5,10,14,.86); backdrop-filter:blur(16px); box-shadow:0 14px 50px rgba(0,0,0,.4); }
+  .cortex-nav__brand { font-weight:900; letter-spacing:.15em; }
+  .cortex-nav__links { display:flex; gap:28px; color:var(--cx-muted); font-size:12px; text-transform:uppercase; letter-spacing:.14em; }
+  .cortex-nav__links a:hover { color:var(--cx-cyan); }
+  .cortex-nav__buy { padding:13px 19px; background:var(--cx-red); color:#fff; font-size:12px; font-weight:900; letter-spacing:.12em; text-transform:uppercase; }
+
+  .cortex-hero { position:relative; min-height:100svh; padding:130px max(28px,calc((100vw - var(--cx-max))/2)) 95px; display:grid; grid-template-columns:minmax(0,.9fr) minmax(480px,1.2fr); gap:clamp(30px,5vw,90px); align-items:center; isolation:isolate; overflow:hidden; }
+  .cortex-hero__bg { position:absolute; inset:0; z-index:-4; background-size:cover; background-position:center; filter:saturate(.85) contrast(1.08) brightness(.42); transform:scale(1.03); }
+  .cortex-hero::before { content:""; position:absolute; inset:0; z-index:-3; background:linear-gradient(90deg,rgba(4,8,11,.96) 0%,rgba(4,8,11,.75) 38%,rgba(4,8,11,.2) 70%),linear-gradient(0deg,var(--cx-bg) 0%,transparent 35%); }
+  .cortex-grid-overlay { position:absolute; inset:0; z-index:-2; opacity:.32; background-image:linear-gradient(var(--cx-line) 1px,transparent 1px),linear-gradient(90deg,var(--cx-line) 1px,transparent 1px); background-size:48px 48px; mask-image:linear-gradient(to bottom,black,transparent 82%); }
+  .cortex-hero__copy { position:relative; z-index:2; max-width:620px; }
+  .cortex-kicker,.cortex-overline { color:var(--cx-cyan); font-size:12px; font-weight:900; letter-spacing:.18em; text-transform:uppercase; }
+  .cortex-hero h1 { margin:18px 0 20px; font-family:Impact,"Arial Black",sans-serif; font-size:clamp(72px,10vw,154px); line-height:.72; letter-spacing:.01em; text-transform:uppercase; }
+  .cortex-hero h1 span { display:block; text-shadow:7px 7px 0 #1029ca,11px 11px 0 var(--cx-red); }
+  .cortex-hero__subtitle { margin-bottom:18px; color:#fff; font-size:clamp(20px,2.2vw,34px); font-weight:900; line-height:1.1; }
+  .cortex-hero__description { max-width:590px; color:#b8c8c9; font-family:Arial,sans-serif; font-size:17px; line-height:1.65; }
+  .cortex-hero__actions { display:flex; flex-wrap:wrap; gap:12px; margin-top:30px; }
+  .cortex-button { display:inline-flex; min-height:50px; align-items:center; justify-content:center; padding:0 25px; border:1px solid var(--cx-cyan); font:900 12px/1 "Courier New",monospace; letter-spacing:.12em; text-transform:uppercase; cursor:pointer; }
+  .cortex-button--primary { border-color:var(--cx-red); background:var(--cx-red); color:#fff; box-shadow:5px 5px 0 rgba(16,41,202,.85); }
+  .cortex-button--primary:hover { background:var(--cx-red-hot); transform:translate(-1px,-1px); }
+  .cortex-button--ghost { background:rgba(5,12,16,.55); color:var(--cx-cyan); }
+  .cortex-spec-strip { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; margin:42px 0 0; border:1px solid var(--cx-line); background:var(--cx-line); }
+  .cortex-spec-strip div { padding:15px; background:rgba(6,10,14,.82); }
+  .cortex-spec-strip dt { color:var(--cx-muted); font-size:9px; letter-spacing:.16em; }
+  .cortex-spec-strip dd { margin:7px 0 0; font-size:12px; font-weight:900; }
+  .cortex-hero__visual { position:relative; z-index:2; display:grid; place-items:center; min-width:0; }
+  .cortex-hero__visual img { position:relative; z-index:2; width:min(780px,58vw); filter:drop-shadow(0 45px 40px rgba(0,0,0,.6)); transform:perspective(1000px) rotateY(-3deg); animation:cortex-float 7s ease-in-out infinite; }
+  .cortex-orbit { position:absolute; width:70%; aspect-ratio:1; border:1px solid rgba(86,217,223,.35); border-radius:50%; box-shadow:0 0 100px rgba(86,217,223,.12),inset 0 0 100px rgba(239,61,47,.08); }
+  .cortex-orbit::before,.cortex-orbit::after { content:""; position:absolute; inset:9%; border:1px dashed rgba(239,61,47,.42); border-radius:50%; }
+  .cortex-orbit::after { inset:22%; border-color:rgba(86,217,223,.42); }
+  .cortex-stamp { position:absolute; z-index:3; right:0; bottom:8%; width:112px; aspect-ratio:1; display:grid; place-items:center; border-radius:50%; background:#d9d24f; color:#171b18; text-align:center; font-size:11px; font-weight:900; line-height:1.3; transform:rotate(8deg); }
+  .cortex-scroll { position:absolute; left:50%; bottom:25px; transform:translateX(-50%); display:flex; align-items:center; gap:12px; color:var(--cx-muted); font-size:9px; letter-spacing:.18em; }
+  .cortex-scroll span { width:34px; height:1px; background:var(--cx-red); }
+
+  .cortex-section { position:relative; padding:110px max(28px,calc((100vw - var(--cx-max))/2)); border-top:1px solid var(--cx-line); }
+  .cortex-section__label { margin-bottom:55px; color:var(--cx-red); font-size:10px; font-weight:900; letter-spacing:.18em; }
+  .cortex-section__heading { max-width:800px; margin-bottom:55px; }
+  .cortex-section h2 { margin:12px 0 20px; font-family:Impact,"Arial Black",sans-serif; font-size:clamp(42px,6vw,82px); line-height:.95; letter-spacing:.01em; text-transform:uppercase; }
+  .cortex-section__heading > p:last-child,.cortex-richtext { color:#b5c3c5; font-family:Arial,sans-serif; font-size:18px; line-height:1.7; }
+
+  .cortex-mission { display:grid; grid-template-columns:90px 1fr 1.05fr; gap:clamp(30px,5vw,80px); align-items:center; background:linear-gradient(130deg,#081015,#0c171d); }
+  .cortex-mission .cortex-section__label { align-self:start; writing-mode:vertical-rl; }
+  .cortex-mission__copy blockquote { margin:40px 0 0; padding:24px 0 24px 25px; border-left:4px solid var(--cx-red); color:#fff; font:900 clamp(24px,3vw,42px)/1.1 Impact,sans-serif; letter-spacing:.04em; text-transform:uppercase; }
+  .cortex-mission__planet { min-height:640px; position:relative; background-size:cover; background-position:center; border:1px solid var(--cx-line); box-shadow:16px 16px 0 rgba(239,61,47,.08); }
+  .cortex-mission__telemetry { position:absolute; right:14px; bottom:14px; left:14px; display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--cx-line); }
+  .cortex-mission__telemetry span { padding:10px; background:rgba(3,8,11,.85); color:var(--cx-cyan); font-size:9px; }
+
+  .cortex-systems { background:#070d11; }
+  .cortex-feature-grid { display:grid; grid-template-columns:repeat(3,1fr); border-top:1px solid var(--cx-line); border-left:1px solid var(--cx-line); }
+  .cortex-feature-grid article { min-height:240px; padding:30px; border-right:1px solid var(--cx-line); border-bottom:1px solid var(--cx-line); background:linear-gradient(145deg,rgba(16,29,36,.85),rgba(7,13,17,.6)); }
+  .cortex-feature-grid article > span { color:var(--cx-red); font-size:11px; }
+  .cortex-feature-grid h3 { margin:45px 0 12px; font-size:20px; text-transform:uppercase; }
+  .cortex-feature-grid p { color:var(--cx-muted); font-family:Arial,sans-serif; line-height:1.55; }
+  .cortex-process { margin-top:50px; display:grid; grid-template-columns:1fr auto 1fr auto 1fr auto 1fr; align-items:center; gap:18px; }
+  .cortex-process div { padding:25px; border:1px solid var(--cx-line); background:#0b141a; }
+  .cortex-process b,.cortex-process small { display:block; }
+  .cortex-process b { color:var(--cx-cyan); }
+  .cortex-process small { margin-top:8px; color:var(--cx-muted); }
+  .cortex-process i { color:var(--cx-red); font-size:25px; font-style:normal; }
+
+  .cortex-play { background:radial-gradient(circle at 80% 20%,rgba(239,61,47,.14),transparent 35%),#04080b; }
+  .cortex-terminal-head { display:flex; justify-content:space-between; align-items:end; gap:30px; margin-bottom:35px; }
+  .cortex-terminal-head h2 { margin-bottom:0; }
+  .cortex-status { display:flex; align-items:center; gap:9px; color:var(--cx-cyan); font-size:10px; letter-spacing:.14em; white-space:nowrap; }
+  .cortex-status span { width:9px; height:9px; border-radius:50%; background:var(--cx-cyan); box-shadow:0 0 15px var(--cx-cyan); }
+  .cortex-terminal { 
+  aspect-ratio: 320 / 200;
+  border:1px solid rgba(86,217,223,.45); background:#000; box-shadow:0 30px 80px rgba(0,0,0,.6); 
+  }
+  .cortex-terminal__bar { height:42px; display:flex; align-items:center; justify-content:space-between; padding:0 14px; border-bottom:1px solid var(--cx-line); background:#101b21; color:var(--cx-muted); font-size:10px; }
+  .cortex-demo { 
+  
+    display:block; width:100%; min-height:680px; border:0; background:#000; 
+  aspect-ratio: 320 / 200;
+  }
+  .cortex-demo--placeholder { min-height:500px; display:grid; place-content:center; gap:14px; text-align:center; color:var(--cx-muted); }
+  .cortex-demo--placeholder strong { color:var(--cx-red); font-size:30px; }
+  .cortex-play__note { margin:20px 0 0; color:var(--cx-muted); font-size:12px; }
+
+  .cortex-gallery { background:#0b1217; }
+  .cortex-gallery__grid { display:grid; grid-template-columns:1.15fr .85fr; gap:18px; }
+  .cortex-gallery figure { margin:0; overflow:hidden; border:1px solid var(--cx-line); background:#05090c; }
+  .cortex-gallery__wide { grid-row:span 2; }
+  .cortex-gallery img { width:100%; height:100%; min-height:330px; object-fit:cover; transition:transform .5s ease; }
+  .cortex-gallery figure:hover img { transform:scale(1.025); }
+  .cortex-gallery figcaption { padding:15px 18px; border-top:1px solid var(--cx-line); color:var(--cx-muted); font-size:11px; letter-spacing:.06em; }
+  .cortex-gallery__wide img { min-height:680px; }
+
+  .cortex-editions { background:#05090c; }
+  .cortex-table-wrap { overflow-x:auto; border:1px solid var(--cx-line); }
+  .cortex-editions table { width:100%; border-collapse:collapse; min-width:680px; }
+  .cortex-editions th,.cortex-editions td { padding:18px 22px; border-bottom:1px solid var(--cx-line); text-align:center; }
+  .cortex-editions th:first-child,.cortex-editions td:first-child { text-align:left; }
+  .cortex-editions th { background:#101b21; color:var(--cx-cyan); font-size:11px; letter-spacing:.12em; text-transform:uppercase; }
+  .cortex-editions td { color:#cad4d3; font-size:13px; }
+  .cortex-editions td:not(:first-child) { color:var(--cx-red-hot); font-weight:900; }
+
+  .cortex-requirements { background:linear-gradient(135deg,#0b151a,#071014); }
+  .cortex-requirements__layout { display:grid; grid-template-columns:.8fr 1.2fr; gap:70px; align-items:start; }
+  .cortex-requirements ul { margin:0; padding:0; list-style:none; border-top:1px solid var(--cx-line); }
+  .cortex-requirements li { display:flex; justify-content:space-between; gap:20px; padding:20px 0; border-bottom:1px solid var(--cx-line); }
+  .cortex-requirements li span { color:var(--cx-muted); font-size:11px; }
+  .cortex-requirements li b { text-align:right; }
+  .cortex-requirements__note { margin:35px 0 0; color:var(--cx-red-hot); font-size:12px; }
+
+  .cortex-buy { display:grid; grid-template-columns:1fr 1fr; min-height:760px; border-top:1px solid var(--cx-line); }
+  .cortex-buy__media { position:relative; display:grid; place-items:center; padding:80px; overflow:hidden; background:radial-gradient(circle,rgba(239,61,47,.22),transparent 45%),linear-gradient(145deg,#081117,#030608); }
+  .cortex-buy__media::before { content:""; position:absolute; inset:0; background-image:linear-gradient(var(--cx-line) 1px,transparent 1px),linear-gradient(90deg,var(--cx-line) 1px,transparent 1px); background-size:38px 38px; opacity:.25; }
+  .cortex-buy__media img { position:relative; width:min(530px,85%); filter:drop-shadow(0 35px 35px rgba(0,0,0,.7)); transform:rotate(-5deg); }
+  .cortex-buy__panel { display:flex; flex-direction:column; justify-content:center; padding:clamp(45px,8vw,115px); background:#e8e9e4; color:#111619; }
+  .cortex-buy__panel h2 { margin:12px 0; font:900 clamp(55px,7vw,100px)/.85 Impact,sans-serif; text-transform:uppercase; }
+  .cortex-buy__panel .cortex-overline { color:#c52820; }
+  .cortex-price { margin:20px 0; font-size:28px; font-weight:900; }
+  .cortex-product-copy { color:#3d484b; font-family:Arial,sans-serif; line-height:1.65; }
+  .cortex-product-form { margin-top:30px; }
+  .cortex-product-form label { display:block; margin-bottom:8px; font-size:11px; font-weight:900; text-transform:uppercase; letter-spacing:.12em; }
+  .cortex-product-form select,.cortex-product-form input { width:100%; min-height:50px; margin-bottom:18px; padding:0 14px; border:1px solid #1f2a2d; border-radius:0; background:#fff; color:#111619; font:700 14px "Courier New",monospace; }
+  .cortex-qty-row { max-width:150px; }
+  .cortex-button--full { width:100%; min-height:60px; }
+  .cortex-button:disabled { opacity:.45; cursor:not-allowed; }
+
+  .cortex-footer { display:grid; grid-template-columns:auto 1fr auto; gap:30px; padding:30px max(28px,calc((100vw - var(--cx-max))/2)); border-top:1px solid var(--cx-line); color:var(--cx-muted); font-size:10px; letter-spacing:.08em; }
+  .cortex-footer strong { color:var(--cx-ink); }
+
+  @keyframes cortex-float { 0%,100% { transform:perspective(1000px) rotateY(-3deg) translateY(0); } 50% { transform:perspective(1000px) rotateY(1deg) translateY(-14px); } }
+
+  @media (max-width: 980px) {
+    .cortex-nav__links { display:none; }
+    .cortex-hero { grid-template-columns:1fr; padding-top:120px; }
+    .cortex-hero__visual { order:-1; }
+    .cortex-hero__visual img { width:min(760px,100%); }
+    .cortex-mission { grid-template-columns:1fr; }
+    .cortex-mission .cortex-section__label { writing-mode:horizontal-tb; }
+    .cortex-feature-grid { grid-template-columns:repeat(2,1fr); }
+    .cortex-process { grid-template-columns:1fr; }
+    .cortex-process i { transform:rotate(90deg); justify-self:center; }
+    .cortex-gallery__grid,.cortex-requirements__layout,.cortex-buy { grid-template-columns:1fr; }
+    .cortex-gallery__wide { grid-row:auto; }
+    .cortex-gallery__wide img { min-height:430px; }
+  }
+
+  @media (max-width: 640px) {
+    .cortex-nav { top:10px; width:calc(100% - 20px); }
+    .cortex-nav__brand { font-size:12px; }
+    .cortex-nav__buy { padding-inline:12px; }
+    .cortex-hero { padding:100px 20px 75px; }
+    .cortex-hero h1 { font-size:70px; }
+    .cortex-hero h1 span { text-shadow:4px 4px 0 #1029ca,7px 7px 0 var(--cx-red); }
+    .cortex-spec-strip { grid-template-columns:repeat(2,1fr); }
+    .cortex-stamp { width:86px; right:2%; bottom:2%; font-size:9px; }
+    .cortex-section { padding:80px 20px; }
+    .cortex-section__label { margin-bottom:35px; }
+    .cortex-feature-grid { grid-template-columns:1fr; }
+    .cortex-terminal-head { align-items:start; flex-direction:column; }
+    .cortex-gallery img,.cortex-gallery__wide img { min-height:300px; }
+    .cortex-mission__planet { min-height:470px; }
+    .cortex-mission__telemetry { grid-template-columns:1fr; }
+    .cortex-buy__media { min-height:520px; padding:35px; }
+    .cortex-buy__panel { padding:60px 22px; }
+    .cortex-footer { grid-template-columns:1fr; }
+  }
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "Cortex Labs product page",
+  "tag": "section",
+  "class": "cortex-labs-section",
+  "settings": [
+    { "type": "header", "content": "Hero" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "MS-DOS STRATEGY GAME / 16 KB" },
+    { "type": "text", "id": "hero_subtitle", "label": "Hero subtitle", "default": "Build the rails. Harvest the planet. Fill the rocket." },
+    { "type": "textarea", "id": "hero_text", "label": "Hero text", "default": "A compact science-fiction logistics strategy game for classic x86 PCs, written entirely in assembly." },
+    { "type": "image_picker", "id": "hero_image", "label": "Hero product visualization" },
+    { "type": "image_picker", "id": "background_wide", "label": "Wide background image" },
+    { "type": "image_picker", "id": "background_square", "label": "Square story background" },
+    { "type": "image_picker", "id": "floppy_image", "label": "Floppy image" },
+
+    { "type": "header", "content": "Mouse" },
+    { "type": "image_picker", "id": "cursor", "label": "Cursor image" },
+
+    { "type": "header", "content": "Story" },
+    { "type": "text", "id": "story_title", "label": "Story title", "default": "You are Orbital Commander." },
+    { "type": "richtext", "id": "story_text", "label": "Story text", "default": "<p>For three decades, Cortex Labs has chased Neurofung — a wild organism found only on Kepler-486i. A single gram can extend cognition and cellular life. A full rocket could change the fate of humanity.</p><p>You are the remote mind of an automated mining expedition.</p>" },
+
+    { "type": "header", "content": "Browser demo" },
+    { "type": "checkbox", "id": "show_demo", "label": "Show browser demo", "default": true },
+    { "type": "textarea", "id": "demo_note", "label": "Demo footer note", "default": "Mouse required. The browser version runs through the product's custom iframe URL metafield." },
+
+    { "type": "header", "content": "Physical archive gallery" },
+    { "type": "image_picker", "id": "gallery_image_1", "label": "Large gallery image" },
+    { "type": "text", "id": "gallery_image_1_alt", "label": "Large image alt text", "default": "Cortex Labs collector's edition" },
+    { "type": "textarea", "id": "gallery_image_1_note", "label": "Large image footer note", "default": "Collector's box, printed manual and bootable mission media." },
+    { "type": "image_picker", "id": "gallery_image_2", "label": "Upper-right gallery image" },
+    { "type": "text", "id": "gallery_image_2_alt", "label": "Upper-right image alt text", "default": "Cortex Labs floppy disk" },
+    { "type": "textarea", "id": "gallery_image_2_note", "label": "Upper-right footer note", "default": "A physical 3.5-inch diskette for real compatible hardware." },
+    { "type": "image_picker", "id": "gallery_image_3", "label": "Lower-right gallery image" },
+    { "type": "text", "id": "gallery_image_3_alt", "label": "Lower-right image alt text", "default": "Kepler-486i red planet artwork" },
+    { "type": "textarea", "id": "gallery_image_3_note", "label": "Lower-right footer note", "default": "Original key art from the Kepler-486i expedition." },
+
+    { "type": "header", "content": "Product" },
+    { "type": "textarea", "id": "fallback_description", "label": "Fallback description", "default": "A physical MS-DOS release with a collector's box, floppy disk, manual and digital backup." }
+  ],
+  "presets": [{ "name": "Cortex Labs product page" }]
+}
+{% endschema %}

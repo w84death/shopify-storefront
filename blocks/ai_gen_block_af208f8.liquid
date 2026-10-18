@@ -1,0 +1,581 @@
+{% doc %}
+  @prompt
+    Create a "Company Milestones" section block that displays a list of milestones from a metaobject definition of type "milestone_1". Each milestone metaobject has three fields: year (key: year, single_line_text_field), title (key: title, single_line_text_field), and description (key: description, multi_line_text_field). The block should support up to 5 milestones, each with a metaobject_reference setting pointing to milestone_1 entries. Display each milestone as a timeline-style row showing the year, title, and description. All three fields must be properly bound as dynamic sources to the metaobject fields — no hardcoded Liquid syntax in setting values. The visual style should match a retro, utilitarian indie game store aesthetic.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-milestones-container-{{ ai_gen_id }} {
+    display: block;
+    width: {{ block.settings.desktop_width_percent }}%;
+    max-width: 100%;
+    padding: {{ block.settings.section_padding }}px 0;
+    background-color: {{ block.settings.background_color }};
+  }
+
+  .ai-milestones-wrapper-{{ ai_gen_id }} {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .ai-milestones-heading-{{ ai_gen_id }} {
+    font-family: {{ block.settings.heading_font.family }}, monospace;
+    font-size: {{ block.settings.heading_size }}px;
+    color: {{ block.settings.heading_color }};
+    margin: 0 0 {{ block.settings.spacing_below_heading }}px 0;
+    text-transform: {{ block.settings.heading_transform }};
+    letter-spacing: {{ block.settings.heading_letter_spacing }}px;
+  }
+
+  .ai-milestones-list-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: {{ block.settings.milestone_spacing }}px;
+  }
+
+  .ai-milestone-item-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: {{ block.settings.year_width }}px 1fr;
+    gap: {{ block.settings.column_gap }}px;
+    padding: {{ block.settings.item_padding }}px;
+    border: {{ block.settings.border_width }}px {{ block.settings.border_style }} {{ block.settings.border_color }};
+    background-color: {{ block.settings.item_background }};
+    position: relative;
+  }
+
+  .ai-milestone-year-{{ ai_gen_id }} {
+    font-family: {{ block.settings.year_font.family }}, monospace;
+    font-size: {{ block.settings.year_size }}px;
+    font-weight: {{ block.settings.year_weight }};
+    color: {{ block.settings.year_color }};
+    line-height: 1.2;
+    text-transform: {{ block.settings.year_transform }};
+  }
+
+  .ai-milestone-content-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: {{ block.settings.content_gap }}px;
+  }
+
+  .ai-milestone-title-{{ ai_gen_id }} {
+    font-family: {{ block.settings.title_font.family }}, monospace;
+    font-size: {{ block.settings.title_size }}px;
+    font-weight: {{ block.settings.title_weight }};
+    color: {{ block.settings.title_color }};
+    margin: 0;
+    line-height: 1.3;
+    text-transform: {{ block.settings.title_transform }};
+  }
+
+  .ai-milestone-description-{{ ai_gen_id }} {
+    font-family: {{ block.settings.description_font.family }}, monospace;
+    font-size: {{ block.settings.description_size }}px;
+    color: {{ block.settings.description_color }};
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .ai-milestone-empty-{{ ai_gen_id }} {
+    padding: 40px 20px;
+    text-align: center;
+    color: {{ block.settings.description_color }};
+    font-family: {{ block.settings.description_font.family }}, monospace;
+    font-size: 14px;
+    border: 1px dashed {{ block.settings.border_color }};
+    background-color: {{ block.settings.item_background }};
+  }
+
+  .ai-completed-{{ ai_gen_id }} .ai-milestone-title-{{ ai_gen_id }},
+  .ai-completed-{{ ai_gen_id }} .ai-milestone-year-{{ ai_gen_id }} {
+    text-decoration: line-through;
+    color: #b6b6b6ff;
+  }
+  .ai-completed-{{ ai_gen_id }} .ai-milestone-description-{{ ai_gen_id }} {
+    color: #868686ff;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-milestone-item-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+      gap: {{ block.settings.content_gap }}px;
+    }
+
+    .ai-milestones-heading-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.heading_size }}px * 0.7);
+    }
+
+    .ai-milestone-year-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.year_size }}px * 0.85);
+    }
+
+    .ai-milestone-title-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.title_size }}px * 0.85);
+    }
+  }
+{% endstyle %}
+
+<company-milestones-{{ ai_gen_id }} class="ai-milestones-container-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-milestones-wrapper-{{ ai_gen_id }}">
+    {% if block.settings.section_heading != blank %}
+      <h2 class="ai-milestones-heading-{{ ai_gen_id }}">{{ block.settings.section_heading }}</h2>
+    {% endif %}
+
+    {% assign has_milestones = false %}
+    {% for i in (1..5) %}
+      {% assign milestone_key = 'milestone_' | append: i %}
+      {% assign milestone = block.settings[milestone_key] %}
+      {% if milestone != blank %}
+        {% assign has_milestones = true %}
+        {% break %}
+      {% endif %}
+    {% endfor %}
+
+    {% if has_milestones %}
+      <div class="ai-milestones-list-{{ ai_gen_id }}">
+        {% for i in (1..5) %}
+          {% assign milestone_key = 'milestone_' | append: i %}
+          {% assign milestone = block.settings[milestone_key] %}
+          
+          {% if milestone != blank %}
+            <div class="ai-milestone-item-{{ ai_gen_id }}{% if milestone.done == true %} ai-completed-{{ ai_gen_id }}{% endif %}">
+              <div class="ai-milestone-year-{{ ai_gen_id }}">
+                {{ milestone.year.value }}
+              </div>             
+              <div class="ai-milestone-content-{{ ai_gen_id }}">
+                <h3 class="ai-milestone-title-{{ ai_gen_id }}">
+                  {{ milestone.title.value }}
+                </h3>
+                {% if milestone.description.value != blank %}
+                  <p class="ai-milestone-description-{{ ai_gen_id }}">
+                    {{ milestone.description.value }}
+                  </p>
+                {% endif %}
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="ai-milestone-empty-{{ ai_gen_id }}">
+        Next, add milestone metaobjects to display your company timeline
+      </div>
+    {% endif %}
+  </div>
+</company-milestones-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class CompanyMilestones{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.initializeMilestones();
+      }
+
+      initializeMilestones() {
+        const items = this.querySelectorAll('.ai-milestone-item-{{ ai_gen_id }}');
+        items.forEach((item, index) => {
+          item.style.animationDelay = `${index * 0.1}s`;
+        });
+      }
+    }
+
+    customElements.define('company-milestones-{{ ai_gen_id }}', CompanyMilestones{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Company milestones",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section"
+    },
+    {
+      "type": "text",
+      "id": "section_heading",
+      "label": "Heading",
+      "default": "Our Journey"
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "section_padding",
+      "label": "Section padding",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Milestones"
+    },
+    {
+      "type": "metaobject",
+      "id": "milestone_1",
+      "label": "Milestone 1",
+      "metaobject_type": "milestone_1"
+    },
+    {
+      "type": "metaobject",
+      "id": "milestone_2",
+      "label": "Milestone 2",
+      "metaobject_type": "milestone_1"
+    },
+    {
+      "type": "metaobject",
+      "id": "milestone_3",
+      "label": "Milestone 3",
+      "metaobject_type": "milestone_1"
+    },
+    {
+      "type": "metaobject",
+      "id": "milestone_4",
+      "label": "Milestone 4",
+      "metaobject_type": "milestone_1"
+    },
+    {
+      "type": "metaobject",
+      "id": "milestone_5",
+      "label": "Milestone 5",
+      "metaobject_type": "milestone_1"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "milestone_spacing",
+      "label": "Space between milestones",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "year_width",
+      "label": "Year column width",
+      "min": 60,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "column_gap",
+      "label": "Gap between columns",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "item_padding",
+      "label": "Item padding",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "content_gap",
+      "label": "Gap between title and description",
+      "min": 5,
+      "max": 30,
+      "step": 5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "header",
+      "content": "Item style"
+    },
+    {
+      "type": "color",
+      "id": "item_background",
+      "label": "Item background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "select",
+      "id": "border_style",
+      "label": "Border style",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "solid",
+          "label": "Solid"
+        },
+        {
+          "value": "dashed",
+          "label": "Dashed"
+        },
+        {
+          "value": "dotted",
+          "label": "Dotted"
+        }
+      ],
+      "default": "solid"
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "label": "Border width",
+      "min": 0,
+      "max": 5,
+      "step": 1,
+      "unit": "px",
+      "default": 1
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color",
+      "default": "#1f1f1f"
+    },
+    {
+      "type": "header",
+      "content": "Section heading"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Font",
+      "default": "space_mono_n4"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Size",
+      "min": 16,
+      "max": 72,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Color",
+      "default": "#1f1f1f"
+    },
+    {
+      "type": "select",
+      "id": "heading_transform",
+      "label": "Text transform",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "uppercase",
+          "label": "Uppercase"
+        }
+      ],
+      "default": "uppercase"
+    },
+    {
+      "type": "range",
+      "id": "heading_letter_spacing",
+      "label": "Letter spacing",
+      "min": 0,
+      "max": 5,
+      "step": 0.5,
+      "unit": "px",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "spacing_below_heading",
+      "label": "Space below heading",
+      "min": 10,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Year"
+    },
+    {
+      "type": "font_picker",
+      "id": "year_font",
+      "label": "Font",
+      "default": "space_mono_n4"
+    },
+    {
+      "type": "range",
+      "id": "year_size",
+      "label": "Size",
+      "min": 14,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "select",
+      "id": "year_weight",
+      "label": "Weight",
+      "options": [
+        {
+          "value": "400",
+          "label": "Normal"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "700"
+    },
+    {
+      "type": "color",
+      "id": "year_color",
+      "label": "Color",
+      "default": "#404040"
+    },
+    {
+      "type": "select",
+      "id": "year_transform",
+      "label": "Text transform",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "uppercase",
+          "label": "Uppercase"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "header",
+      "content": "Title"
+    },
+    {
+      "type": "font_picker",
+      "id": "title_font",
+      "label": "Font",
+      "default": "anonymous_pro_n4"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Size",
+      "min": 14,
+      "max": 36,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Weight",
+      "options": [
+        {
+          "value": "400",
+          "label": "Normal"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "700"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Color",
+      "default": "#1f1f1f"
+    },
+    {
+      "type": "select",
+      "id": "title_transform",
+      "label": "Text transform",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "uppercase",
+          "label": "Uppercase"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "header",
+      "content": "Description"
+    },
+    {
+      "type": "font_picker",
+      "id": "description_font",
+      "label": "Font",
+      "default": "anonymous_pro_n4"
+    },
+    {
+      "type": "range",
+      "id": "description_size",
+      "label": "Size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "description_color",
+      "label": "Color",
+      "default": "#1f1f1f"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Company milestones"
+    }
+  ]
+}
+{% endschema %}

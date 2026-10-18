@@ -1,0 +1,548 @@
+{% doc %}
+  @prompt
+    Create an optional slideshow section for a page template that reads images from a page metafield called "Slideshow Images" (namespace: custom, key: slideshow_images, type: list.file_reference). The slideshow should: 1) Only render if the metafield has at least one image (fully optional), 2) Support an arbitrary number of images, 3) Use a slide (horizontal scroll/swipe) transition style with previous/next arrow buttons, 4) Include dot navigation indicators, 5) Be placed at the end of the page content, 6) Be responsive and work on mobile, 7) Use vanilla JS (no external libraries), 8) Have a clean, minimal retro-style aesthetic matching an indie pixel-art game store. The section should be a reusable Liquid section/block that can be added to any page template.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+{% assign slideshow_images = page.metafields.custom.slideshow_images.value %}
+
+{% if slideshow_images.size > 0 %}
+  {% style %}
+    .ai-slideshow-container-{{ ai_gen_id }} {
+      display: block;
+      width: {{ block.settings.desktop_width_percent }}%;
+      max-width: 100%;
+      margin: 0 auto;
+      padding: {{ block.settings.spacing_top }}px 0 {{ block.settings.spacing_bottom }}px;
+      background-color: {{ block.settings.background_color }};
+    }
+
+    .ai-slideshow-wrapper-{{ ai_gen_id }} {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+      background-color: {{ block.settings.slide_background }};
+      border: {{ block.settings.border_width }}px solid {{ block.settings.border_color }};
+    }
+
+    .ai-slideshow-track-{{ ai_gen_id }} {
+      display: flex;
+      transition: transform 0.3s ease-out;
+      width: 100%;
+    }
+
+    .ai-slideshow-slide-{{ ai_gen_id }} {
+      min-width: 100%;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ai-slideshow-slide-{{ ai_gen_id }} img {
+      width: 100%;
+      height: auto;
+      display: block;
+      image-rendering: {{ block.settings.image_rendering }};
+    }
+
+    .ai-slideshow-arrow-{{ ai_gen_id }} {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: {{ block.settings.arrow_background }};
+      color: {{ block.settings.arrow_color }};
+      border: {{ block.settings.arrow_border_width }}px solid {{ block.settings.arrow_border_color }};
+      width: {{ block.settings.arrow_size }}px;
+      height: {{ block.settings.arrow_size }}px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 10;
+      padding: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    .ai-slideshow-arrow-{{ ai_gen_id }}:hover {
+      opacity: 0.8;
+    }
+
+    .ai-slideshow-arrow-{{ ai_gen_id }}:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    .ai-slideshow-arrow-prev-{{ ai_gen_id }} {
+      left: {{ block.settings.arrow_offset }}px;
+    }
+
+    .ai-slideshow-arrow-next-{{ ai_gen_id }} {
+      right: {{ block.settings.arrow_offset }}px;
+    }
+
+    .ai-slideshow-arrow-{{ ai_gen_id }} svg {
+      width: 50%;
+      height: 50%;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+    }
+
+    .ai-slideshow-dots-{{ ai_gen_id }} {
+      display: flex;
+      justify-content: center;
+      gap: {{ block.settings.dot_spacing }}px;
+      padding: {{ block.settings.dot_container_padding }}px 0;
+      margin: 0;
+    }
+
+    .ai-slideshow-dot-{{ ai_gen_id }} {
+      width: {{ block.settings.dot_size }}px;
+      height: {{ block.settings.dot_size }}px;
+      background-color: {{ block.settings.dot_color }};
+      border: {{ block.settings.dot_border_width }}px solid {{ block.settings.dot_border_color }};
+      cursor: pointer;
+      padding: 0;
+      transition: background-color 0.2s ease;
+    }
+
+    .ai-slideshow-dot-{{ ai_gen_id }}:hover {
+      opacity: 0.8;
+    }
+
+    .ai-slideshow-dot-{{ ai_gen_id }}.active {
+      background-color: {{ block.settings.dot_active_color }};
+    }
+
+    @media screen and (max-width: 749px) {
+      .ai-slideshow-container-{{ ai_gen_id }} {
+        width: 100%;
+      }
+
+      .ai-slideshow-arrow-{{ ai_gen_id }} {
+        width: {{ block.settings.arrow_size | times: 0.8 }}px;
+        height: {{ block.settings.arrow_size | times: 0.8 }}px;
+      }
+
+      .ai-slideshow-arrow-prev-{{ ai_gen_id }} {
+        left: {{ block.settings.arrow_offset | times: 0.5 }}px;
+      }
+
+      .ai-slideshow-arrow-next-{{ ai_gen_id }} {
+        right: {{ block.settings.arrow_offset | times: 0.5 }}px;
+      }
+    }
+  {% endstyle %}
+
+  <page-slideshow-{{ ai_gen_id }}
+    class="ai-slideshow-container-{{ ai_gen_id }}"
+    data-slide-count="{{ slideshow_images.size }}"
+    {{ block.shopify_attributes }}
+  >
+    <div class="ai-slideshow-wrapper-{{ ai_gen_id }}">
+      <div class="ai-slideshow-track-{{ ai_gen_id }}">
+        {% for image in slideshow_images %}
+          <div class="ai-slideshow-slide-{{ ai_gen_id }}">
+            <img
+              src="{{ image | image_url: width: 2000 }}"
+              alt="{{ image.alt | escape }}"
+              loading="lazy"
+              width="{{ image.width }}"
+              height="{{ image.height }}"
+            >
+          </div>
+        {% endfor %}
+      </div>
+
+      {% if slideshow_images.size > 1 %}
+        <button
+          class="ai-slideshow-arrow-{{ ai_gen_id }} ai-slideshow-arrow-prev-{{ ai_gen_id }}"
+          aria-label="Previous slide"
+          data-direction="prev"
+        >
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+
+        <button
+          class="ai-slideshow-arrow-{{ ai_gen_id }} ai-slideshow-arrow-next-{{ ai_gen_id }}"
+          aria-label="Next slide"
+          data-direction="next"
+        >
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+      {% endif %}
+    </div>
+
+    {% if slideshow_images.size > 1 and block.settings.show_dots %}
+      <div class="ai-slideshow-dots-{{ ai_gen_id }}">
+        {% for image in slideshow_images %}
+          <button
+            class="ai-slideshow-dot-{{ ai_gen_id }} {% if forloop.first %}active{% endif %}"
+            aria-label="Go to slide {{ forloop.index }}"
+            data-slide-index="{{ forloop.index0 }}"
+          ></button>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </page-slideshow-{{ ai_gen_id }}>
+
+  <script>
+    (function() {
+      class PageSlideshow{{ ai_gen_id }} extends HTMLElement {
+        constructor() {
+          super();
+          this.currentSlide = 0;
+          this.slideCount = parseInt(this.dataset.slideCount);
+          this.track = this.querySelector('.ai-slideshow-track-{{ ai_gen_id }}');
+          this.dots = this.querySelectorAll('.ai-slideshow-dot-{{ ai_gen_id }}');
+          this.prevButton = this.querySelector('.ai-slideshow-arrow-prev-{{ ai_gen_id }}');
+          this.nextButton = this.querySelector('.ai-slideshow-arrow-next-{{ ai_gen_id }}');
+          this.startX = 0;
+          this.currentX = 0;
+          this.isDragging = false;
+        }
+
+        connectedCallback() {
+          this.setupEventListeners();
+        }
+
+        setupEventListeners() {
+          if (this.prevButton) {
+            this.prevButton.addEventListener('click', () => this.goToSlide(this.currentSlide - 1));
+          }
+
+          if (this.nextButton) {
+            this.nextButton.addEventListener('click', () => this.goToSlide(this.currentSlide + 1));
+          }
+
+          this.dots.forEach((dot) => {
+            dot.addEventListener('click', (e) => {
+              const index = parseInt(e.currentTarget.dataset.slideIndex);
+              this.goToSlide(index);
+            });
+          });
+
+          this.track.addEventListener('touchstart', (e) => this.handleTouchStart(e), { passive: true });
+          this.track.addEventListener('touchmove', (e) => this.handleTouchMove(e), { passive: true });
+          this.track.addEventListener('touchend', () => this.handleTouchEnd());
+
+          this.track.addEventListener('mousedown', (e) => this.handleMouseDown(e));
+          this.track.addEventListener('mousemove', (e) => this.handleMouseMove(e));
+          this.track.addEventListener('mouseup', () => this.handleMouseUp());
+          this.track.addEventListener('mouseleave', () => this.handleMouseUp());
+        }
+
+        handleTouchStart(e) {
+          this.startX = e.touches[0].clientX;
+          this.isDragging = true;
+        }
+
+        handleTouchMove(e) {
+          if (!this.isDragging) return;
+          this.currentX = e.touches[0].clientX;
+        }
+
+        handleTouchEnd() {
+          if (!this.isDragging) return;
+          this.isDragging = false;
+
+          const diff = this.startX - this.currentX;
+          const threshold = 50;
+
+          if (Math.abs(diff) > threshold) {
+            if (diff > 0) {
+              this.goToSlide(this.currentSlide + 1);
+            } else {
+              this.goToSlide(this.currentSlide - 1);
+            }
+          }
+
+          this.startX = 0;
+          this.currentX = 0;
+        }
+
+        handleMouseDown(e) {
+          this.startX = e.clientX;
+          this.isDragging = true;
+          this.track.style.cursor = 'grabbing';
+        }
+
+        handleMouseMove(e) {
+          if (!this.isDragging) return;
+          this.currentX = e.clientX;
+        }
+
+        handleMouseUp() {
+          if (!this.isDragging) return;
+          this.isDragging = false;
+          this.track.style.cursor = 'grab';
+
+          const diff = this.startX - this.currentX;
+          const threshold = 50;
+
+          if (Math.abs(diff) > threshold) {
+            if (diff > 0) {
+              this.goToSlide(this.currentSlide + 1);
+            } else {
+              this.goToSlide(this.currentSlide - 1);
+            }
+          }
+
+          this.startX = 0;
+          this.currentX = 0;
+        }
+
+        goToSlide(index) {
+          if (index < 0 || index >= this.slideCount) return;
+
+          this.currentSlide = index;
+          const offset = -100 * index;
+          this.track.style.transform = `translateX(${offset}%)`;
+
+          this.dots.forEach((dot, i) => {
+            if (i === index) {
+              dot.classList.add('active');
+            } else {
+              dot.classList.remove('active');
+            }
+          });
+        }
+      }
+
+      customElements.define('page-slideshow-{{ ai_gen_id }}', PageSlideshow{{ ai_gen_id }});
+    })();
+  </script>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Page slideshow",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "This block displays images from the page metafield 'custom.slideshow_images' (type: list.file_reference). Add images to the page metafield to display the slideshow."
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "spacing_top",
+      "label": "Spacing top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "spacing_bottom",
+      "label": "Spacing bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "slide_background",
+      "label": "Slide background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border",
+      "default": "#1f1f1f"
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "label": "Border width",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "default": 2
+    },
+    {
+      "type": "header",
+      "content": "Image rendering"
+    },
+    {
+      "type": "select",
+      "id": "image_rendering",
+      "label": "Rendering style",
+      "options": [
+        {
+          "value": "auto",
+          "label": "Auto"
+        },
+        {
+          "value": "crisp-edges",
+          "label": "Crisp edges"
+        },
+        {
+          "value": "pixelated",
+          "label": "Pixelated"
+        }
+      ],
+      "default": "pixelated",
+      "info": "Pixelated rendering preserves sharp pixel-art aesthetics"
+    },
+    {
+      "type": "header",
+      "content": "Navigation arrows"
+    },
+    {
+      "type": "range",
+      "id": "arrow_size",
+      "label": "Arrow size",
+      "min": 24,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "arrow_offset",
+      "label": "Arrow offset",
+      "min": 0,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "arrow_background",
+      "label": "Arrow background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "arrow_color",
+      "label": "Arrow color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "arrow_border_color",
+      "label": "Arrow border",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "arrow_border_width",
+      "label": "Arrow border width",
+      "min": 0,
+      "max": 4,
+      "step": 1,
+      "unit": "px",
+      "default": 2
+    },
+    {
+      "type": "header",
+      "content": "Dot navigation"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dots",
+      "label": "Show dots",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "dot_size",
+      "label": "Dot size",
+      "min": 6,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "dot_spacing",
+      "label": "Dot spacing",
+      "min": 4,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "dot_container_padding",
+      "label": "Container padding",
+      "min": 0,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "dot_color",
+      "label": "Dot color",
+      "default": "#e6e6e6"
+    },
+    {
+      "type": "color",
+      "id": "dot_active_color",
+      "label": "Active dot color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "dot_border_color",
+      "label": "Dot border",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "dot_border_width",
+      "label": "Dot border width",
+      "min": 0,
+      "max": 4,
+      "step": 1,
+      "unit": "px",
+      "default": 1
+    }
+  ],
+  "presets": [
+    {
+      "name": "Page slideshow"
+    }
+  ]
+}
+{% endschema %}

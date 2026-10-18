@@ -1,0 +1,194 @@
+{% doc %}
+  @prompt
+    create menu block with links but without header and with horizontal layout (make it selectable horizontal/vertical) and add gap settings
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-menu-block-{{ ai_gen_id }} {
+    display: block;
+    width: {{ block.settings.desktop_width_percent }}%;
+    max-width: 100%;
+  }
+
+  .ai-menu-list-{{ ai_gen_id }} {
+    display: flex;
+    {% if block.settings.layout == 'horizontal' %}
+      flex-direction: row;
+      flex-wrap: wrap;
+    {% else %}
+      flex-direction: column;
+    {% endif %}
+    gap: {{ block.settings.gap }}px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .ai-menu-item-{{ ai_gen_id }} {
+    margin: 0;
+  }
+
+  .ai-menu-link-{{ ai_gen_id }} {
+    display: inline-block;
+    color: {{ block.settings.link_color }};
+    text-decoration: none;
+    font-size: {{ block.settings.font_size }}px;
+    transition: color 0.2s ease;
+  }
+
+  .ai-menu-link-{{ ai_gen_id }}:hover {
+    color: {{ block.settings.link_hover_color }};
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-menu-list-{{ ai_gen_id }} {
+      {% if block.settings.mobile_layout == 'horizontal' %}
+        flex-direction: row;
+        flex-wrap: wrap;
+      {% else %}
+        flex-direction: column;
+      {% endif %}
+      gap: {{ block.settings.mobile_gap }}px;
+    }
+  }
+{% endstyle %}
+
+<nav class="ai-menu-block-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  {% if block.settings.menu != blank %}
+    <ul class="ai-menu-list-{{ ai_gen_id }}">
+      {% for link in block.settings.menu.links %}
+        <li class="ai-menu-item-{{ ai_gen_id }}">
+          <a href="{{ link.url }}" class="ai-menu-link-{{ ai_gen_id }}">
+            {{ link.title }}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <ul class="ai-menu-list-{{ ai_gen_id }}">
+      <li class="ai-menu-item-{{ ai_gen_id }}">
+        <a href="#" class="ai-menu-link-{{ ai_gen_id }}">Home</a>
+      </li>
+      <li class="ai-menu-item-{{ ai_gen_id }}">
+        <a href="#" class="ai-menu-link-{{ ai_gen_id }}">Shop</a>
+      </li>
+      <li class="ai-menu-item-{{ ai_gen_id }}">
+        <a href="#" class="ai-menu-link-{{ ai_gen_id }}">About</a>
+      </li>
+      <li class="ai-menu-item-{{ ai_gen_id }}">
+        <a href="#" class="ai-menu-link-{{ ai_gen_id }}">Contact</a>
+      </li>
+    </ul>
+  {% endif %}
+</nav>
+
+{% schema %}
+{
+  "name": "Menu links",
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Desktop layout",
+      "options": [
+        {
+          "value": "horizontal",
+          "label": "Horizontal"
+        },
+        {
+          "value": "vertical",
+          "label": "Vertical"
+        }
+      ],
+      "default": "horizontal"
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Desktop gap",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "select",
+      "id": "mobile_layout",
+      "label": "Mobile layout",
+      "options": [
+        {
+          "value": "horizontal",
+          "label": "Horizontal"
+        },
+        {
+          "value": "vertical",
+          "label": "Vertical"
+        }
+      ],
+      "default": "vertical"
+    },
+    {
+      "type": "range",
+      "id": "mobile_gap",
+      "label": "Mobile gap",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "Font size",
+      "min": 10,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "link_color",
+      "label": "Link color",
+      "default": "#1f1f1f"
+    },
+    {
+      "type": "color",
+      "id": "link_hover_color",
+      "label": "Link hover color",
+      "default": "#404040"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Menu links"
+    }
+  ]
+}
+{% endschema %}
