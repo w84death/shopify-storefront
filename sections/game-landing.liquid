@@ -206,7 +206,31 @@
   #shopify-section-{{ section.id }} .gl-btn,
   #shopify-section-{{ section.id }} .gl-chip {
     position: relative;
-    transition: transform .08s ease, box-shadow .08s ease;
+    overflow: hidden;
+    transition: filter .18s ease, box-shadow .18s ease;
+  }
+  /* liquid sheen that sweeps across on hover (the lighting change) */
+  #shopify-section-{{ section.id }} .gl-btn::after,
+  #shopify-section-{{ section.id }} .gl-chip::after {
+    content: ""; position: absolute; top: -40%; bottom: -40%; left: -60%; width: 45%;
+    background: linear-gradient(105deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.5) 50%, rgba(255,255,255,0) 100%);
+    transform: skewX(-18deg);
+    transition: transform .5s ease;
+    pointer-events: none;
+  }
+  #shopify-section-{{ section.id }} .gl-btn:hover::after,
+  #shopify-section-{{ section.id }} .gl-chip:hover::after { transform: skewX(-18deg) translateX(360%); }
+  /* fluid jump: stretch up, squash on landing */
+  @keyframes gl-jump-{{ section.id }} {
+    0% { transform: translateY(0) scale(1, 1); }
+    35% { transform: translateY(-3px) scale(.97, 1.07); }
+    70% { transform: translateY(1px) scale(1.03, .95); }
+    100% { transform: translateY(0) scale(1, 1); }
+  }
+  #shopify-section-{{ section.id }} .gl-btn:hover,
+  #shopify-section-{{ section.id }} .gl-chip:hover {
+    animation: gl-jump-{{ section.id }} .45s cubic-bezier(.34, 1.56, .64, 1);
+    filter: brightness(1.07) saturate(1.06);
   }
   #shopify-section-{{ section.id }} .gl-btn-primary,
   #shopify-section-{{ section.id }} .gl-chip {
