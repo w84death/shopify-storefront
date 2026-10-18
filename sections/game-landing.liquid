@@ -254,6 +254,26 @@
     background: #111; display: grid; place-items: center;
   }
   #shopify-section-{{ section.id }} .gl-play-frame img { width: 100%; height: 100%; object-fit: cover; }
+  #shopify-section-{{ section.id }} .gl-play--player { grid-template-columns: minmax(300px, 480px) 1fr; }
+  #shopify-section-{{ section.id }} .gl-player-shell {
+    width: 100%; border-radius: 16px; overflow: hidden;
+    border: 1px solid var(--gl-line); background: #111; box-shadow: var(--gl-shadow);
+  }
+  #shopify-section-{{ section.id }} .gl-player-bar {
+    display: flex; justify-content: space-between; padding: 10px 14px;
+    font-size: 12px; font-weight: 800; letter-spacing: .12em; color: color-mix(in srgb, var(--gl-ink) 55%, transparent);
+  }
+  #shopify-section-{{ section.id }} .gl-player-screen { display: block; width: 100%; border: 0; background: #000; }
+  #shopify-section-{{ section.id }} .gl-player-screen--gb { aspect-ratio: 160 / 144; }
+  #shopify-section-{{ section.id }} .gl-player-screen--dos { aspect-ratio: 4 / 3; }
+  #shopify-section-{{ section.id }} .gl-keys {
+    margin: 16px auto 0; text-align: center;
+    font-family: ui-monospace, monospace; font-size: 13px; color: var(--gl-muted);
+  }
+  #shopify-section-{{ section.id }} .gl-keys kbd {
+    padding: 4px 8px; border: 1px solid var(--gl-line); border-radius: 6px;
+    background: var(--gl-surface); color: var(--gl-ink); font-family: inherit; font-size: 12px;
+  }
   #shopify-section-{{ section.id }} .gl-box { display: grid; gap: 12px; grid-template-columns: repeat(4, 1fr); }
   #shopify-section-{{ section.id }} .gl-box .gl-card { text-align: center; }
   #shopify-section-{{ section.id }} .gl-buy { display: grid; grid-template-columns: 1.2fr .8fr; gap: 18px; }
@@ -395,10 +415,34 @@
   {% endif %}
 
   {% if section.settings.show_play %}
+    {% liquid
+      assign has_player = false
+      if section.settings.demo_url != blank and section.settings.demo_embed == blank
+        assign has_player = true
+      endif
+      case section.settings.demo_platform
+        when 'dos'
+          assign platform_label = 'MS-DOS'
+        else
+          assign platform_label = 'GAME BOY'
+      endcase
+    %}
     <section class="gl-block gl-wrap" id="gl-play-{{ section.id }}">
-      <div class="gl-play">
+      <div class="gl-play{% if has_player %} gl-play--player{% endif %}">
         <div class="gl-play-frame">
-          {% if section.settings.play_image %}
+          {% if has_player %}
+            <div class="gl-player-shell">
+              <div class="gl-player-bar"><span>{{ section.settings.logo_text }}</span><span>{{ platform_label }}</span></div>
+              <iframe
+                class="gl-player-screen gl-player-screen--{{ section.settings.demo_platform }}"
+                src="{{ section.settings.demo_url | escape }}"
+                title="Play the {{ section.settings.logo_text | default: 'game' }} demo"
+                loading="lazy"
+                allow="autoplay; fullscreen; gamepad"
+                allowfullscreen
+              ></iframe>
+            </div>
+          {% elsif section.settings.play_image %}
             <img src="{{ section.settings.play_image | image_url: width: 800 }}" width="800" height="{{ 800 | divided_by: section.settings.play_image.aspect_ratio | round }}" alt="">
           {% elsif section.settings.demo_embed != blank %}
             <div style="width:100%">{{ section.settings.demo_embed }}</div>
@@ -411,10 +455,19 @@
           <h3>{{ section.settings.play_heading }}</h3>
           <p class="gl-sub" style="margin:10px 0 16px">{{ section.settings.play_text }}</p>
           {% if section.settings.demo_url != blank %}
-            <a class="gl-btn gl-btn-primary" href="{{ section.settings.demo_url }}">{{ section.settings.play_button }}</a>
+            <a class="gl-btn gl-btn-primary" href="{{ section.settings.demo_url }}" target="_blank" rel="noopener">{{ section.settings.play_button }}</a>
           {% endif %}
         </div>
       </div>
+      {% if has_player %}
+        <p class="gl-keys">
+          {% if section.settings.demo_platform == 'dos' %}
+            Keyboard: <kbd>Arrows</kbd> Move &nbsp; <kbd>Z</kbd>/<kbd>X</kbd> Action &nbsp; <kbd>Enter</kbd> Start
+          {% else %}
+            Keyboard: <kbd>Arrows</kbd> D-Pad &nbsp; <kbd>X</kbd> A &nbsp; <kbd>Z</kbd> B &nbsp; <kbd>Enter</kbd> Start &nbsp; <kbd>Tab</kbd> Select
+          {% endif %}
+        </p>
+      {% endif %}
     </section>
   {% endif %}
 
@@ -565,8 +618,12 @@
 
     { "type": "header", "content": "Play / demo" },
     { "type": "image_picker", "id": "play_image", "label": "Play image (GBC / screenshot)" },
-    { "type": "html", "id": "demo_embed", "label": "Optional iframe / embed HTML" },
-    { "type": "url", "id": "demo_url", "label": "Demo URL" },
+    { "type": "html", "id": "demo_embed", "label": "Optional iframe / embed HTML (overrides player)" },
+    { "type": "url", "id": "demo_url", "label": "Demo URL (enables embedded player)" },
+    { "type": "select", "id": "demo_platform", "label": "Player platform", "options": [
+      { "value": "gb", "label": "Game Boy (160×144)" },
+      { "value": "dos", "label": "MS-DOS (4:3)" }
+    ], "default": "gb" },
     { "type": "text", "id": "play_eyebrow", "label": "Play eyebrow", "default": "Try before you buy" },
     { "type": "text", "id": "play_heading", "label": "Play heading", "default": "Same rules. Same compact controls." },
     { "type": "textarea", "id": "play_text", "label": "Play text", "default": "Browser demo of the cartridge ROM." },
