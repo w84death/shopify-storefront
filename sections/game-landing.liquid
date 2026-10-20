@@ -440,6 +440,27 @@
   }
   #shopify-section-{{ section.id }} .gl-box .gl-card h4 { margin: 14px 14px 4px; }
   #shopify-section-{{ section.id }} .gl-box .gl-card p { margin: 0 14px 16px; }
+  #shopify-section-{{ section.id }} .gl-editions {
+    display: grid; gap: 14px;
+    grid-template-columns: repeat(auto-fit, minmax(215px, 1fr));
+    align-items: stretch; margin-top: 20px;
+  }
+  #shopify-section-{{ section.id }} .gl-edition {
+    position: relative; display: flex; flex-direction: column; gap: 8px;
+    padding: 22px; background: var(--gl-card); border-radius: var(--gl-radius);
+    box-shadow: var(--gl-shadow);
+  }
+  #shopify-section-{{ section.id }} .gl-edition--best { border: 2px solid var(--gl-accent); }
+  #shopify-section-{{ section.id }} .gl-edition__badge {
+    position: absolute; top: -12px; right: 16px;
+    background: var(--gl-accent); color: #000;
+    font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
+    padding: 4px 10px; border-radius: 999px;
+  }
+  #shopify-section-{{ section.id }} .gl-edition h4 { margin: 0; font-family: var(--gl-display); font-size: 20px; }
+  #shopify-section-{{ section.id }} .gl-edition__price { font-family: var(--gl-display); font-weight: 800; font-size: 24px; }
+  #shopify-section-{{ section.id }} .gl-edition p { margin: 0; color: var(--gl-muted); font-size: 14.5px; }
+  #shopify-section-{{ section.id }} .gl-edition__btns { margin-top: auto; padding-top: 10px; display: flex; gap: 8px; flex-wrap: wrap; }
   #shopify-section-{{ section.id }} .gl-buy { display: grid; grid-template-columns: 1.2fr .8fr; gap: 18px; }
   #shopify-section-{{ section.id }} .gl-shot {
     border-radius: var(--gl-radius); min-height: 300px; overflow: hidden;
@@ -623,6 +644,51 @@
     </section>
   {% endif %}
 
+  {% if section.settings.show_editions %}
+    <section class="gl-block gl-wrap" id="gl-editions-{{ section.id }}">
+      <h3>{{ section.settings.editions_heading }}</h3>
+      {% if section.settings.editions_sub != blank %}<p class="gl-sub" style="margin-bottom:18px">{{ section.settings.editions_sub }}</p>{% endif %}
+      <div class="gl-editions">
+        {% for block in section.blocks %}
+          {% if block.type == 'edition' %}
+            {% liquid
+              assign b1 = '#gl-buy-' | append: section.id
+              if block.settings.btn1_action == 'player'
+                assign b1 = '#gl-top-' | append: section.id
+              elsif block.settings.btn1_action == 'mobile' and demo_url != blank
+                assign b1 = demo_url
+              elsif block.settings.btn1_action == 'custom' and block.settings.btn1_link != blank
+                assign b1 = block.settings.btn1_link
+              endif
+              assign b2 = '#gl-buy-' | append: section.id
+              if block.settings.btn2_action == 'player'
+                assign b2 = '#gl-top-' | append: section.id
+              elsif block.settings.btn2_action == 'mobile' and demo_url != blank
+                assign b2 = demo_url
+              elsif block.settings.btn2_action == 'custom' and block.settings.btn2_link != blank
+                assign b2 = block.settings.btn2_link
+              endif
+            %}
+            <article class="gl-edition{% if block.settings.badge != blank %} gl-edition--best{% endif %}" {{ block.shopify_attributes }}>
+              {% if block.settings.badge != blank %}<span class="gl-edition__badge">{{ block.settings.badge }}</span>{% endif %}
+              <h4>{{ block.settings.title }}</h4>
+              {% if block.settings.price != blank %}<div class="gl-edition__price">{{ block.settings.price }}</div>{% endif %}
+              <p>{{ block.settings.text }}</p>
+              <div class="gl-edition__btns">
+                {% if block.settings.btn1_label != blank %}
+                  <a class="gl-btn gl-btn-primary" href="{{ b1 }}">{{ block.settings.btn1_label }}</a>
+                {% endif %}
+                {% if block.settings.btn2_label != blank and block.settings.btn2_action != 'mobile' or block.settings.btn2_action == 'mobile' and demo_url != blank %}
+                  <a class="gl-btn gl-btn-ghost" href="{{ b2 }}">{{ block.settings.btn2_label }}</a>
+                {% endif %}
+              </div>
+            </article>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </section>
+  {% endif %}
+
   {% if section.settings.show_box %}
     <section class="gl-block gl-wrap" id="gl-box-{{ section.id }}">
       <h3>{{ section.settings.box_heading }}</h3>
@@ -755,6 +821,7 @@
     { "type": "checkbox", "id": "show_story", "label": "Story card", "default": true },
     { "type": "checkbox", "id": "show_rules", "label": "Rules / how to play", "default": true },
     { "type": "checkbox", "id": "show_play", "label": "Play / demo", "default": true },
+    { "type": "checkbox", "id": "show_editions", "label": "Editions", "default": false },
     { "type": "checkbox", "id": "show_box", "label": "What's in the box", "default": true },
     { "type": "checkbox", "id": "show_buy", "label": "Buy row", "default": true },
 
@@ -813,7 +880,11 @@
     { "type": "image_picker", "id": "buy_image", "label": "Product photo (falls back to product image)" },
     { "type": "text", "id": "buy_eyebrow", "label": "Buy eyebrow", "default": "Bring it home" },
     { "type": "text", "id": "buy_heading", "label": "Buy heading", "default": "Physical edition" },
-    { "type": "text", "id": "buy_button", "label": "Add to cart label", "default": "Add to cart" }
+    { "type": "text", "id": "buy_button", "label": "Add to cart label", "default": "Add to cart" },
+
+    { "type": "header", "content": "Editions" },
+    { "type": "text", "id": "editions_heading", "label": "Editions heading", "default": "Choose your edition" },
+    { "type": "textarea", "id": "editions_sub", "label": "Editions subline" }
   ],
   "blocks": [
     {
@@ -847,6 +918,34 @@
       "name": "Buy fact",
       "settings": [
         { "type": "text", "id": "text", "label": "Fact", "default": "Works on original hardware" }
+      ]
+    },
+    {
+      "type": "edition",
+      "name": "Edition card",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Title", "default": "Free" },
+        { "type": "text", "id": "price", "label": "Price label" },
+        { "type": "textarea", "id": "text", "label": "Text", "default": "Play in your browser or on your phone." },
+        { "type": "text", "id": "badge", "label": "Badge (marks the card)" },
+        { "type": "header", "content": "Button 1" },
+        { "type": "text", "id": "btn1_label", "label": "Label", "default": "Get it" },
+        { "type": "select", "id": "btn1_action", "label": "Action", "default": "buy", "options": [
+          { "value": "buy", "label": "Scroll to buy" },
+          { "value": "player", "label": "Scroll to player" },
+          { "value": "mobile", "label": "Open mobile game" },
+          { "value": "custom", "label": "Custom link" }
+        ] },
+        { "type": "url", "id": "btn1_link", "label": "Custom link" },
+        { "type": "header", "content": "Button 2 (optional)" },
+        { "type": "text", "id": "btn2_label", "label": "Label" },
+        { "type": "select", "id": "btn2_action", "label": "Action", "default": "mobile", "options": [
+          { "value": "buy", "label": "Scroll to buy" },
+          { "value": "player", "label": "Scroll to player" },
+          { "value": "mobile", "label": "Open mobile game" },
+          { "value": "custom", "label": "Custom link" }
+        ] },
+        { "type": "url", "id": "btn2_link", "label": "Custom link" }
       ]
     }
   ],
