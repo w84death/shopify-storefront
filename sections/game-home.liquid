@@ -421,8 +421,8 @@
         </div>
         {%- if cover_product -%}
           <div class="cn-cover-price">
-            {{ cover_product.price | money }}
-            <small>GBC cartridge · small batch</small>
+            {% if cover_product.variants.size > 1 %}from {% endif %}{{ cover_product.price | money }}
+            <small>small batch · made in Poland</small>
           </div>
         {%- endif -%}
       </div>
