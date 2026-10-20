@@ -631,6 +631,10 @@
       document.addEventListener('keydown', function (e) {
         if (e.key === 'Escape') close();
       });
+      if (location.hash === '#buy') {
+        var buy = sec.querySelector('[id^="gl-buy-"]');
+        if (buy) requestAnimationFrame(function () { buy.scrollIntoView({ block: 'start' }); });
+      }
     })();
   </script>
 

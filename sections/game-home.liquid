@@ -402,11 +402,13 @@
           <h1>{{ section.settings.cover_title }}</h1>
           <div class="cn-cta">
             {%- if cover_product -%}
-              <a class="cn-btn cn-btn-cover" href="{{ cover_product.url }}">{{ section.settings.cover_cta_label }}</a>
+              <a class="cn-btn cn-btn-cover" href="{{ cover_product.url }}#buy">{{ section.settings.cover_cta_label }}</a>
             {%- elsif section.settings.cover_cta_link != blank -%}
               <a class="cn-btn cn-btn-cover" href="{{ section.settings.cover_cta_link }}">{{ section.settings.cover_cta_label }}</a>
             {%- endif -%}
-            {%- if section.settings.cover_demo_link != blank -%}
+            {%- if cover_product -%}
+              <a class="cn-btn cn-btn-cover-ghost" href="{{ cover_product.url }}">{{ section.settings.cover_demo_label }}</a>
+            {%- elsif section.settings.cover_demo_link != blank -%}
               <a class="cn-btn cn-btn-cover-ghost" href="{{ section.settings.cover_demo_link }}">{{ section.settings.cover_demo_label }}</a>
             {%- endif -%}
           </div>
@@ -498,9 +500,6 @@
                   <span class="cn-btn-disabled" aria-disabled="true">{{ block.settings.coming_soon_label | default: 'Coming soon' }}</span>
                 {%- else -%}
                   <a class="cn-btn cn-btn-solid" href="{{ order_url }}">{{ block.settings.order_label }}</a>
-                  {%- if block.settings.demo_url != blank -%}
-                    <a class="cn-btn cn-btn-out" href="{{ block.settings.demo_url }}">{{ block.settings.demo_label }}</a>
-                  {%- endif -%}
                 {%- endif -%}
               </div>
             </article>
@@ -623,7 +622,7 @@
     { "type": "url", "id": "cover_cta_link", "label": "Order link (if no product)" },
     { "type": "text", "id": "cover_cta_label", "label": "Order button", "default": "Order now" },
     { "type": "url", "id": "cover_demo_link", "label": "Demo link" },
-    { "type": "text", "id": "cover_demo_label", "label": "Demo button", "default": "Play the demo" },
+    { "type": "text", "id": "cover_demo_label", "label": "Demo button", "default": "Read more" },
     { "type": "textarea", "id": "cover_stamp", "label": "Corner stamp (use line breaks)", "default": "Small\nBatch\nPoland" },
 
     { "type": "header", "content": "Masthead band" },
@@ -672,7 +671,7 @@
         { "type": "textarea", "id": "desc", "label": "Description", "default": "A bright, quick and endlessly replayable marble puzzle. Assembly, no engines, real hardware." },
         { "type": "product", "id": "product", "label": "Product (price + order link)" },
         { "type": "text", "id": "price_text", "label": "Price text (if no product)", "default": "224 zł" },
-        { "type": "text", "id": "order_label", "label": "Order button", "default": "Order now" },
+        { "type": "text", "id": "order_label", "label": "Read more button", "default": "Read more" },
         { "type": "url", "id": "demo_url", "label": "Demo link" },
         { "type": "text", "id": "demo_label", "label": "Demo button", "default": "Play demo" },
         {
