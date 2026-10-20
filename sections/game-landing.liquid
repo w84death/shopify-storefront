@@ -468,6 +468,8 @@
     box-shadow: var(--gl-shadow);
   }
   #shopify-section-{{ section.id }} .gl-edition--best { border: 2px solid var(--gl-accent); }
+  #shopify-section-{{ section.id }} .gl-edition--soldout { opacity: .55; filter: saturate(.35); }
+  #shopify-section-{{ section.id }} .gl-edition--soldout .gl-btn { cursor: not-allowed; }
   #shopify-section-{{ section.id }} .gl-edition__badge {
     position: absolute; top: -12px; right: 16px;
     background: var(--gl-accent); color: #000;
@@ -723,15 +725,45 @@
               elsif block.settings.btn2_action == 'custom' and block.settings.btn2_link != blank
                 assign b2 = block.settings.btn2_link
               endif
+              comment
+                Match the card to a product variant by keyword: ROM only -> *ROM*,
+                Just cart -> *Cardridge*, Full CIB -> *Box / CIB*.
+              endcomment
+              assign card_title = block.settings.title | downcase
+              assign matched_variant = null
+              assign sold_out = false
+              if landing_product
+                for v in landing_product.variants
+                  assign vt = v.title | downcase
+                  if card_title contains 'rom' and vt contains 'rom'
+                    assign matched_variant = v
+                  elsif card_title contains 'cart' and vt contains 'card'
+                    assign matched_variant = v
+                  elsif card_title contains 'cib' and (vt contains 'box' or vt contains 'cib')
+                    assign matched_variant = v
+                  endif
+                endfor
+              endif
+              if matched_variant and matched_variant.available == false
+                assign sold_out = true
+              endif
             %}
-            <article class="gl-edition{% if block.settings.badge != blank %} gl-edition--best{% endif %}" {{ block.shopify_attributes }}>
+            <article class="gl-edition{% if block.settings.badge != blank %} gl-edition--best{% endif %}{% if sold_out %} gl-edition--soldout{% endif %}" {{ block.shopify_attributes }}>
               {% if block.settings.badge != blank %}<span class="gl-edition__badge">{{ block.settings.badge }}</span>{% endif %}
               <h4>{{ block.settings.title }}</h4>
-              {% if block.settings.price != blank %}<div class="gl-edition__price">{{ block.settings.price }}</div>{% endif %}
+              {% if matched_variant %}
+                <div class="gl-edition__price">{{ matched_variant.price | money }}</div>
+              {% elsif block.settings.price != blank %}
+                <div class="gl-edition__price">{{ block.settings.price }}</div>
+              {% endif %}
               <p>{{ block.settings.text }}</p>
               <div class="gl-edition__btns">
                 {% if block.settings.btn1_label != blank %}
-                  <a class="gl-btn gl-btn-primary" href="{{ b1 }}">{{ block.settings.btn1_label }}</a>
+                  {% if sold_out %}
+                    <span class="gl-btn gl-btn-primary gl-btn--soon" aria-disabled="true">Coming soon</span>
+                  {% else %}
+                    <a class="gl-btn gl-btn-primary" href="{{ b1 }}">{{ block.settings.btn1_label }}</a>
+                  {% endif %}
                 {% endif %}
                 {% if block.settings.btn2_label != blank and block.settings.btn2_action != 'mobile' or block.settings.btn2_action == 'mobile' and demo_url != blank %}
                   <a class="gl-btn gl-btn-ghost" href="{{ b2 }}">{{ block.settings.btn2_label }}</a>
