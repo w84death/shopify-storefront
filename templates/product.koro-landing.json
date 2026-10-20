@@ -103,6 +103,47 @@
           "settings": {
             "text": "Box + cart + keychain + manual"
           }
+        },
+        "edition_1": {
+          "type": "edition",
+          "settings": {
+            "title": "Free",
+            "price": "0 zł",
+            "text": "The full game in your browser or on your phone. No purchase needed.",
+            "btn1_label": "Play now",
+            "btn1_action": "player",
+            "btn2_label": "Play on mobile",
+            "btn2_action": "mobile"
+          }
+        },
+        "edition_2": {
+          "type": "edition",
+          "settings": {
+            "title": "ROM only",
+            "text": "The game's ROM file to play on your own emulator, or flash it to a cart for original hardware.",
+            "btn1_label": "Get the ROM",
+            "btn1_action": "buy"
+          }
+        },
+        "edition_3": {
+          "type": "edition",
+          "settings": {
+            "title": "Just cart",
+            "text": "Cartridge and printed instruction manual. Region free.",
+            "btn1_label": "Get it",
+            "btn1_action": "buy"
+          }
+        },
+        "edition_4": {
+          "type": "edition",
+          "settings": {
+            "title": "Full CIB",
+            "badge": "Complete",
+            "price": "223 zł",
+            "text": "Cartridge, instruction, presentation box with custom insert, the ROM, and a Gameboy-shaped keychain.",
+            "btn1_label": "Get it",
+            "btn1_action": "buy"
+          }
         }
       },
       "block_order": [
@@ -118,7 +159,11 @@
         "box_4",
         "fact_1",
         "fact_2",
-        "fact_3"
+        "fact_3",
+        "edition_1",
+        "edition_2",
+        "edition_3",
+        "edition_4"
       ],
       "settings": {
         "color_bg": "#f6c94a",
@@ -180,7 +225,10 @@
         "buy_image": "shopify://shop_images/koro-box-preview.jpg",
         "buy_eyebrow": "Bring Koro home",
         "buy_heading": "KORO",
-        "buy_button": "Add to cart"
+        "buy_button": "Add to cart",
+        "show_editions": true,
+        "editions_heading": "Choose your edition",
+        "editions_sub": "Free in your browser. Own it on a cartridge."
       }
     }
   },
