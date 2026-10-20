@@ -382,7 +382,13 @@
     {%- if ticker != blank -%}{{ ticker }} <b>★</b> {{ ticker }}{%- endif -%}
   </div>
 
-  {%- assign cover_product = section.settings.cover_product -%}
+  {%- liquid
+    assign cover_handle = section.settings.cover_product | split: '/' | last
+    assign cover_product = all_products[cover_handle]
+    if cover_product == blank
+      assign cover_product = section.settings.cover_product
+    endif
+  -%}
   <section class="cn-cover" aria-label="{{ section.settings.cover_chip | default: 'Featured release' }}">
     {%- if section.settings.cover_image -%}
       <img class="cn-cover-img"
