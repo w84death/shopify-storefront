@@ -47,6 +47,23 @@
       class="collection-wrapper grid gap-style{% if section.settings.product_grid_width == 'full-width' %} collection-wrapper--grid-full-width{% endif %}"
     >
       <h1 class="cn-page-title">{{ collection.title }}</h1>
+      {% liquid
+        assign avail_on = false
+        if request.url contains 'filter.v.availability=1'
+          assign avail_on = true
+        endif
+        assign chip_url = request.url | remove: '&filter.v.availability=1' | remove: '?filter.v.availability=1'
+        unless avail_on
+          if request.url contains '?'
+            assign chip_url = chip_url | append: '&filter.v.availability=1'
+          else
+            assign chip_url = chip_url | append: '?filter.v.availability=1'
+          endif
+        endunless
+      %}
+      <a class="cn-chip{% if avail_on %} cn-chip--on{% endif %}" href="{{ chip_url }}" rel="nofollow">
+        {% if avail_on %}Showing available only ✕{% else %}Show only available{% endif %}
+      </a>
       {% content_for 'block',
         type: 'filters',
         id: 'filters',
