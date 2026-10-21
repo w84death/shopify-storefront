@@ -62,7 +62,13 @@
           endif
         endunless
       %}
-      <a class="cn-chip{% if avail_on %} cn-chip--on{% endif %}" href="{{ chip_url }}" rel="nofollow" data-diag="page_url[{{ request.page_url }}] url[{{ request.url }}] path[{{ request.path }}]">
+      {% liquid
+        assign diagf = ''
+        for f in collection.filters
+          assign diagf = diagf | append: f.param_name | append: ':' | append: f.active_values.size | append: ' '
+        endfor
+      %}
+      <a class="cn-chip{% if avail_on %} cn-chip--on{% endif %}" href="{{ chip_url }}" rel="nofollow" data-diag="filters[{{ diagf }}] all[{{ collection.all_products_count }}] shown[{{ collection.products_count }}] path[{{ request.path }}]">
         {% if avail_on %}Showing available only ✕{% else %}Show only available{% endif %}
       </a>
       {% content_for 'block',
