@@ -27,10 +27,11 @@
     .template-page, .template-page-catalog, .template-search, .template-list-collections) main .section {
   background: transparent !important;
 }
-/* Nuke any remaining scheme-painted wrappers inside the results grid */
+/* Nuke any remaining scheme-painted wrappers inside the results grid
+   (the cards themselves get frames below) */
 :is(.template-collection, .template-collection-catalog, .template-search, .template-list-collections) main
   :is([class*="color-custom"], results-list, collection-component, .collection-wrapper,
-      .product-grid, .product-grid__item, .product-card, .card__content) {
+      .product-grid, .product-grid__item) {
   background-color: transparent !important;
 }
 
@@ -42,18 +43,18 @@
   letter-spacing: -0.01em;
 }
 
-/* Catalog buttons */
+/* Catalog buttons — match the homepage .cn-btn look (2px ink border,
+   shadow only on hover) */
 :is(.template-collection, .template-collection-catalog, .template-blog, .template-article,
     .template-page, .template-page-catalog, .template-search, .template-list-collections) .button {
   background: var(--cn-red);
   color: #ffffff;
-  border: 1.5px solid var(--cn-navy);
+  border: 2px solid var(--cn-navy);
   border-radius: 6px;
   font-family: "Anonymous Pro", ui-monospace, monospace;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: .06em;
-  box-shadow: 3px 3px 0 var(--cn-navy);
   transition: transform .15s ease, box-shadow .15s ease;
 }
 :is(.template-collection, .template-collection-catalog, .template-blog, .template-article,
@@ -67,21 +68,31 @@
   color: var(--cn-navy);
 }
 
-/* Cards: paper tiles with ink outlines */
+/* Cards: every item sits in a rounded paper frame (homepage .cn-listing
+   parameters: paper2 fill, 2px ink border, 8px radius) */
 :is(.template-collection, .template-collection-catalog, .template-blog, .template-search,
-    .template-list-collections) :is(.card, .blog-post-item, .resource-card) {
+    .template-list-collections) main
+  :is(.card, .blog-post-item, .resource-card, .collection-card, .product-card) {
   background: var(--cn-paper2);
-  border: 1.5px solid var(--cn-navy);
-  border-radius: 10px;
+  border: 2px solid var(--cn-navy);
+  border-radius: 8px;
+  color: var(--cn-navy);
+  overflow: clip;
+}
+:is(.template-collection, .template-collection-catalog, .template-blog, .template-search,
+    .template-list-collections) main
+  :is(.card, .blog-post-item, .resource-card, .collection-card, .product-card)
+  :is(h2, h3, h4, a) {
   color: var(--cn-navy);
 }
 :is(.template-collection, .template-collection-catalog, .template-blog, .template-search,
-    .template-list-collections) :is(.card, .blog-post-item, .resource-card) :is(h2, h3, h4, a) {
-  color: var(--cn-navy);
-}
-:is(.template-collection, .template-collection-catalog, .template-blog, .template-search,
-    .template-list-collections) :is(.card, .blog-post-item, .resource-card) a:hover {
+    .template-list-collections) main
+  :is(.card, .blog-post-item, .resource-card, .collection-card, .product-card) a:hover {
   color: var(--cn-red);
+}
+/* Product cards breathe inside their frame */
+:is(.template-collection, .template-collection-catalog, .template-search, .template-list-collections) main .product-card {
+  padding: 12px;
 }
 
 /* Inputs, selects, filter chips */
@@ -105,4 +116,176 @@
   font-size: clamp(34px, 5vw, 56px);
   margin: 0 0 18px;
   line-height: 1.05;
+}
+
+/* Headers under sections share the main page's .cn-no look: Fredoka on a
+   2px ink baseline rule */
+:is(.template-collection, .template-collection-catalog, .template-blog, .template-article,
+    .template-page, .template-page-catalog, .template-search, .template-list-collections) main h1,
+:is(.template-collection, .template-collection-catalog, .template-blog, .template-article,
+    .template-page, .template-page-catalog, .template-search, .template-list-collections) main
+  h2:not(.visually-hidden):not(.theme-drawer__title) {
+  border-bottom: 2px solid var(--cn-navy);
+  padding-bottom: 10px;
+  margin-bottom: 24px;
+}
+
+/* Blog cards: descriptions were flush against the frame — pad the whole
+   text column and let the edge-to-edge image clip to the rounded frame */
+.template-blog .blog-post-item .blog-post-card__content {
+  padding: 18px 22px 22px;
+}
+.template-blog .blog-post-item .blog-post-card__image {
+  border-radius: 0;
+}
+
+/* ============================================================
+   Catalog controls: no dropdowns. The desktop facet/sort popovers
+   become always-visible clickable label chips (the inputs keep their
+   form wiring — checking a chip still auto-submits via facets.js).
+   The mobile drawer and its native select are untouched.
+   ============================================================ */
+@media screen and (min-width: 750px) {
+  /* Let the facet groups wrap instead of scrolling off inside the
+     overflow-list's shadow row */
+  :is(.template-collection, .template-collection-catalog, .template-search) main
+    .facets__overflow-list::part(list) {
+    flex-wrap: wrap;
+    overflow: visible;
+    row-gap: 10px;
+  }
+
+  /* Each facet group: kicker label above a row of chips */
+  :is(.template-collection, .template-collection-catalog, .template-search) main
+    .facets--horizontal :is(accordion-custom.facets__item, sorting-filter-component.sorting-filter) {
+    display: grid;
+    gap: 8px;
+    justify-items: start;
+    align-content: start;
+  }
+
+  /* Summary stops being a button: plain red kicker text, no caret/status */
+  :is(.template-collection, .template-collection-catalog, .template-search) main
+    .facets--horizontal .facets__summary {
+    display: block;
+    height: auto;
+    min-height: 0;
+    justify-content: flex-start;
+    pointer-events: none;
+  }
+  :is(.template-collection, .template-collection-catalog, .template-search) main
+    .facets--horizontal .facets__summary
+    :is(.svg-wrapper, .facets__status-wrapper, .facets__status) {
+    display: none;
+  }
+  :is(.template-collection, .template-collection-catalog, .template-search) main
+    .facets--horizontal .facets__summary .facets__label {
+    font-family: "Anonymous Pro", ui-monospace, monospace;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--cn-red);
+  }
+
+  /* Show panel contents even while the details is closed, and strip the
+     popover chrome (position/shadow/scroll) back to plain flow */
+  :is(.template-collection, .template-collection-catalog, .template-search) main
+    .facets--horizontal .facets__panel:not([open])
+    > :is(.facets__panel-content, .sorting-filter__options) {
+    display: block !important;
+  }
+  :is(.template-collection, .template-collection-catalog, .template-search) main
+    .facets--horizontal :is(.facets__inputs, .sorting-filter__options) {
+    position: static !important;
+    inset: auto !important;
+    box-shadow: none !important;
+    border: 0 !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    max-height: none !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    opacity: 1 !important;
+    grid-template-rows: 1fr !important;
+    z-index: auto !important;
+  }
+
+  /* Chip rows */
+  :is(.template-collection, .template-collection-catalog, .template-search) main
+    .facets--horizontal
+    :is(.facets__inputs-wrapper, .facets__inputs-list, .sorting-filter__options-inner) {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  /* Checkbox values -> label chips (box art hidden, checked = filled) */
+  :is(.template-collection, .template-collection-catalog, .template-search) main
+    .facets--horizontal .facets__inputs-list-item .checkbox .icon-checkmark {
+    display: none;
+  }
+  :is(.template-collection, .template-collection-catalog, .template-search) main
+    .facets--horizontal .facets__inputs-list-item .checkbox__label {
+    min-width: 0;
+    line-height: 1.2;
+    padding: 7px 14px;
+    border: 2px solid var(--cn-navy);
+    border-radius: 6px;
+    background: var(--cn-paper2);
+    color: var(--cn-navy);
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+    transition: transform .12s ease, box-shadow .12s ease, background .12s ease, color .12s ease;
+  }
+  :is(.template-collection, .template-collection-catalog, .template-search) main
+    .facets--horizontal .facets__inputs-list-item .checkbox__label:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 3px 3px 0 var(--cn-navy);
+  }
+  :is(.template-collection, .template-collection-catalog, .template-search) main
+    .facets--horizontal .facets__inputs-list-item .checkbox:has(.checkbox__input:checked) .checkbox__label {
+    background: var(--cn-red);
+    border-color: var(--cn-red);
+    color: #ffffff;
+  }
+
+  /* Sort options -> the same chip look; the active sort stays filled */
+  :is(.template-collection, .template-collection-catalog, .template-search) main
+    .facets--horizontal .sorting-filter__options label {
+    display: inline-flex;
+  }
+  :is(.template-collection, .template-collection-catalog, .template-search) main
+    .facets--horizontal .sorting-filter__checkmark {
+    display: none;
+  }
+  :is(.template-collection, .template-collection-catalog, .template-search) main
+    .facets--horizontal .sorting-filter__option {
+    display: inline-flex;
+    padding: 7px 14px;
+    border: 2px solid var(--cn-navy);
+    border-radius: 6px;
+    background: var(--cn-paper2);
+    color: var(--cn-navy);
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+    transition: transform .12s ease, box-shadow .12s ease, background .12s ease, color .12s ease;
+  }
+  :is(.template-collection, .template-collection-catalog, .template-search) main
+    .facets--horizontal .sorting-filter__option:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 3px 3px 0 var(--cn-navy);
+  }
+  :is(.template-collection, .template-collection-catalog, .template-search) main
+    .facets--horizontal label:has(.sorting-filter__input:checked) .sorting-filter__option {
+    background: var(--cn-red);
+    border-color: var(--cn-red);
+    color: #ffffff;
+  }
 }
