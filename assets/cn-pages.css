@@ -149,7 +149,7 @@
 /* Hide the availability accordion facet (its popover panel is broken) */
 :is(.template-collection, .template-collection-catalog, .template-search) main
   .facets__item[data-filter-param-name="filter-v-availability"] {
-  display: none;
+  display: none !important;
 }
 
 /* Page title on collection pages */
