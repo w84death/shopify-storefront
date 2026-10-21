@@ -237,6 +237,7 @@
     assign color_shadow = '--color-shadow: rgb(var(--color-foreground-rgb) / var(--opacity-10-25));'
     assign form_style = localization_font | append: localization_font_size | append: color_shadow
   %}
+  {% render 'lang-switch' %}
   {% if show_language and show_country == false %}
     <div class="dropdown-localization mobile:hidden">
       {% render 'localization-form',

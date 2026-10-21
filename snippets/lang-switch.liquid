@@ -1,0 +1,52 @@
+{% doc %}
+  Flat language switcher (e.g. EN | PL) for the header. Renders nothing
+  until the store publishes more than one language (admin → Settings →
+  Languages). Links go to the current page in the other language.
+{% enddoc %}
+
+{% if localization.available_languages.size > 1 %}
+  <nav class="lang-switch" aria-label="{{ 'content.language' | t }}">
+    {%- for language in localization.available_languages -%}
+      <a
+        class="lang-switch__item"
+        href="{{ language.url | default: language.root_url }}"
+        lang="{{ language.iso_code }}"
+        title="{{ language.endonym_name | capitalize }}"
+        {% if language.iso_code == localization.language.iso_code %}
+          aria-current="true"
+        {% endif %}
+      >
+        {{- language.iso_code | upcase -}}
+      </a>
+    {%- endfor -%}
+  </nav>
+{% endif %}
+
+{% stylesheet %}
+  .lang-switch {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-inline-end: 10px;
+  }
+
+  .lang-switch__item {
+    font-family: 'Anonymous Pro', ui-monospace, monospace;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-decoration: none;
+    color: inherit;
+    padding: 2px 3px;
+    border-bottom: 2px solid transparent;
+  }
+
+  .lang-switch__item:hover {
+    color: var(--cn-red, #d6453d);
+  }
+
+  .lang-switch__item[aria-current] {
+    color: var(--cn-red, #d6453d);
+    border-bottom-color: var(--cn-red, #d6453d);
+  }
+{% endstylesheet %}
