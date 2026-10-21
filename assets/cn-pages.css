@@ -165,7 +165,7 @@
   border-radius: 6px;
   border: 2px solid var(--cn-red);
   background: var(--cn-red);
-  color: #ffffff;
+  color: #ffffff !important;
   font-family: "Nunito", "Trebuchet MS", "Avenir Next", "Segoe UI", sans-serif;
   font-weight: 800;
   font-size: 12.5px;
@@ -178,7 +178,7 @@
 :is(.template-blog) .cn-btn-read-more:hover {
   transform: translate(-1px, -1px);
   box-shadow: 3px 3px 0 var(--cn-navy);
-  color: #ffffff;
+  color: #ffffff !important;
 }
 
 /* Page title on collection pages */
