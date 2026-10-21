@@ -48,13 +48,14 @@
     >
       <h1 class="cn-page-title">{{ collection.title }}</h1>
       {% liquid
+        assign page_url = request.page_url | default: request.url
         assign avail_on = false
-        if request.url contains 'filter.v.availability=1'
+        if page_url contains 'filter.v.availability=1'
           assign avail_on = true
         endif
-        assign chip_url = request.url | remove: '&filter.v.availability=1' | remove: '?filter.v.availability=1'
+        assign chip_url = page_url | remove: '?filter.v.availability=1&' | remove: '&filter.v.availability=1' | remove: '?filter.v.availability=1'
         unless avail_on
-          if request.url contains '?'
+          if page_url contains '?'
             assign chip_url = chip_url | append: '&filter.v.availability=1'
           else
             assign chip_url = chip_url | append: '?filter.v.availability=1'
