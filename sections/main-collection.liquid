@@ -48,27 +48,14 @@
     >
       <h1 class="cn-page-title">{{ collection.title }}</h1>
       {% liquid
-        assign page_url = request.page_url | default: request.url
         assign avail_on = false
-        if page_url contains 'filter.v.availability=1'
-          assign avail_on = true
-        endif
-        assign chip_url = page_url | remove: '?filter.v.availability=1&' | remove: '&filter.v.availability=1' | remove: '?filter.v.availability=1'
-        unless avail_on
-          if page_url contains '?'
-            assign chip_url = chip_url | append: '&filter.v.availability=1'
-          else
-            assign chip_url = chip_url | append: '?filter.v.availability=1'
-          endif
-        endunless
-      %}
-      {% liquid
-        assign diagf = ''
         for f in collection.filters
-          assign diagf = diagf | append: f.param_name | append: ':' | append: f.active_values.size | append: ' '
+          if f.param_name == 'filter.v.availability' and f.active_values.size > 0
+            assign avail_on = true
+          endif
         endfor
       %}
-      <a class="cn-chip{% if avail_on %} cn-chip--on{% endif %}" href="{{ chip_url }}" rel="nofollow" data-diag="filters[{{ diagf }}] all[{{ collection.all_products_count }}] shown[{{ collection.products_count }}] path[{{ request.path }}]">
+      <a class="cn-chip{% if avail_on %} cn-chip--on{% endif %}" href="{{ collection.url }}{% unless avail_on %}?filter.v.availability=1{% endunless %}" rel="nofollow">
         {% if avail_on %}Showing available only ✕{% else %}Show only available{% endif %}
       </a>
       {% content_for 'block',
