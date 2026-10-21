@@ -23,6 +23,10 @@
     .template-page, .template-page-catalog, .template-search, .template-list-collections) main .section-background {
   background: transparent !important;
 }
+:is(.template-collection, .template-collection-catalog, .template-blog, .template-article,
+    .template-page, .template-page-catalog, .template-search, .template-list-collections) main .section {
+  background: transparent !important;
+}
 
 /* Display headings like the catalog cover */
 :is(.template-collection, .template-collection-catalog, .template-blog, .template-article,
