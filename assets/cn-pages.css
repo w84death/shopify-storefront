@@ -1,0 +1,98 @@
+/* cn-pages.css — Cyfrowy Nomada catalog look for the "paper" templates:
+   collections, blog listing, search, pages. Matches the game-home "cn" design.
+   Game/product pages keep their own full-bleed designs. */
+
+:is(.template-collection, .template-collection-catalog, .template-blog, .template-article,
+    .template-page, .template-page-catalog, .template-search, .template-list-collections) {
+  --cn-paper: #f6f1e3;
+  --cn-paper2: #fdfaf1;
+  --cn-navy: #1f2a44;
+  --cn-red: #d6453d;
+  --cn-dim: #5d6478;
+  --cn-rule: #c9bfa6;
+  background: var(--cn-paper);
+  color: var(--cn-navy);
+}
+
+/* Let the paper show through instead of per-section scheme backgrounds */
+:is(.template-collection, .template-collection-catalog, .template-blog, .template-article,
+    .template-page, .template-page-catalog, .template-search, .template-list-collections) main {
+  background: var(--cn-paper);
+}
+:is(.template-collection, .template-collection-catalog, .template-blog, .template-article,
+    .template-page, .template-page-catalog, .template-search, .template-list-collections) main .section-background {
+  background: transparent !important;
+}
+
+/* Display headings like the catalog cover */
+:is(.template-collection, .template-collection-catalog, .template-blog, .template-article,
+    .template-page, .template-page-catalog, .template-search, .template-list-collections) main :is(h1, h2, h3) {
+  font-family: "Fredoka", "WDXL Lubrifont JP N", "Anonymous Pro", ui-monospace, monospace;
+  color: var(--cn-navy);
+  letter-spacing: -0.01em;
+}
+
+/* Catalog buttons */
+:is(.template-collection, .template-collection-catalog, .template-blog, .template-article,
+    .template-page, .template-page-catalog, .template-search, .template-list-collections) .button {
+  background: var(--cn-red);
+  color: #ffffff;
+  border: 1.5px solid var(--cn-navy);
+  border-radius: 6px;
+  font-family: "Anonymous Pro", ui-monospace, monospace;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  box-shadow: 3px 3px 0 var(--cn-navy);
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+:is(.template-collection, .template-collection-catalog, .template-blog, .template-article,
+    .template-page, .template-page-catalog, .template-search, .template-list-collections) .button:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 var(--cn-navy);
+}
+:is(.template-collection, .template-collection-catalog, .template-blog, .template-article,
+    .template-page, .template-page-catalog, .template-search, .template-list-collections) .button-secondary {
+  background: transparent;
+  color: var(--cn-navy);
+}
+
+/* Cards: paper tiles with ink outlines */
+:is(.template-collection, .template-collection-catalog, .template-blog, .template-search,
+    .template-list-collections) :is(.card, .blog-post-item, .resource-card) {
+  background: var(--cn-paper2);
+  border: 1.5px solid var(--cn-navy);
+  border-radius: 10px;
+  color: var(--cn-navy);
+}
+:is(.template-collection, .template-collection-catalog, .template-blog, .template-search,
+    .template-list-collections) :is(.card, .blog-post-item, .resource-card) :is(h2, h3, h4, a) {
+  color: var(--cn-navy);
+}
+:is(.template-collection, .template-collection-catalog, .template-blog, .template-search,
+    .template-list-collections) :is(.card, .blog-post-item, .resource-card) a:hover {
+  color: var(--cn-red);
+}
+
+/* Inputs, selects, filter chips */
+:is(.template-collection, .template-collection-catalog, .template-blog, .template-page,
+    .template-page-catalog, .template-search, .template-list-collections) main
+  :is(select, input:not([type="checkbox"]):not([type="radio"]):not([type="submit"])) {
+  background: var(--cn-paper2);
+  color: var(--cn-navy);
+  border: 1.5px solid var(--cn-navy);
+  border-radius: 6px;
+}
+
+/* Meta text */
+:is(.template-collection, .template-collection-catalog, .template-blog, .template-page,
+    .template-page-catalog, .template-search, .template-list-collections) main :is(time, .meta, small) {
+  color: var(--cn-dim);
+}
+
+/* Page title on collection pages */
+.cn-page-title {
+  font-size: clamp(34px, 5vw, 56px);
+  margin: 0 0 18px;
+  line-height: 1.05;
+}
