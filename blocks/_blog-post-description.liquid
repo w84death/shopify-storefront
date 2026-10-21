@@ -66,7 +66,7 @@
   <{{ element }} {{ attributes }}>
     {{ content | strip_html | truncatewords: truncatewords }}
     {% if show_read_more %}
-      <a href="{{ article.url }}">{{- 'content.read_more' | t -}}</a>
+      <a href="{{ article.url }}" class="cn-btn-read-more">{{- 'content.read_more' | t -}}</a>
     {% endif %}
   </{{ element }}>
 {% endif %}

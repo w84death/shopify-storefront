@@ -152,6 +152,30 @@
   display: none !important;
 }
 
+/* "Read more..." on blog cards → catalog button (matches homepage buttons) */
+:is(.template-blog) .cn-btn-read-more {
+  display: inline-block;
+  margin-block-start: 12px;
+  padding: 7px 14px;
+  background: var(--cn-red);
+  color: #ffffff;
+  border: 1.5px solid var(--cn-navy);
+  border-radius: 6px;
+  font-family: "Anonymous Pro", ui-monospace, monospace;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  text-decoration: none;
+  box-shadow: 3px 3px 0 var(--cn-navy);
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+:is(.template-blog) .cn-btn-read-more:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 var(--cn-navy);
+  color: #ffffff;
+}
+
 /* Page title on collection pages */
 .cn-page-title {
   grid-column: 1 / -1;
