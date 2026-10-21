@@ -27,6 +27,12 @@
     .template-page, .template-page-catalog, .template-search, .template-list-collections) main .section {
   background: transparent !important;
 }
+/* Nuke any remaining scheme-painted wrappers inside the results grid */
+:is(.template-collection, .template-collection-catalog, .template-search, .template-list-collections) main
+  :is([class*="color-custom"], results-list, collection-component, .collection-wrapper,
+      .product-grid, .product-grid__item, .product-card, .card__content) {
+  background-color: transparent !important;
+}
 
 /* Display headings like the catalog cover */
 :is(.template-collection, .template-collection-catalog, .template-blog, .template-article,
