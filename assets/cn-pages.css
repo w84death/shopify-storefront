@@ -30,9 +30,18 @@
 /* Nuke any remaining scheme-painted wrappers inside the results grid
    (the cards themselves get frames below) */
 :is(.template-collection, .template-collection-catalog, .template-search, .template-list-collections) main
-  :is([class*="color-custom"], results-list, collection-component, .collection-wrapper,
+  :is([class*="color-custom"]:not([class*="popover"]), results-list, collection-component, .collection-wrapper,
       .product-grid, .product-grid__item) {
   background-color: transparent !important;
+}
+/* Filter/sort popovers get a solid catalog tile (they need an opaque surface) */
+:is(.template-collection, .template-collection-catalog, .template-search, .template-list-collections) main
+  :is([class*="popover"], floating-panel-component) {
+  background-color: var(--cn-paper2) !important;
+  border: 1.5px solid var(--cn-navy);
+  border-radius: 8px;
+  box-shadow: 4px 4px 0 var(--cn-navy);
+  color: var(--cn-navy);
 }
 
 /* Display headings like the catalog cover */
@@ -113,6 +122,7 @@
 
 /* Page title on collection pages */
 .cn-page-title {
+  grid-column: 1 / -1;
   font-size: clamp(34px, 5vw, 56px);
   margin: 0 0 18px;
   line-height: 1.05;
