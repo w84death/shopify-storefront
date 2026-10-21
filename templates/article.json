@@ -1,1 +1,24 @@
-{"sections":{"main":{"type":"game-article","settings":{"color_bg":"#F6F1E3","color_ink":"#1F2A44","color_accent":"#D6453D","color_muted":"#5D6478","color_card":"#FDFAF1","color_line":"#C9BFA6","back_label":"All posts","comments_heading":"Comments","comment_form_heading":"Leave a comment","comment_button":"Post comment","comment_success":"Thanks! Your comment has been posted.","comment_moderation":"Thanks! Your comment is awaiting moderation."}},"section":{"type":"main-blog-post","blocks":{"blog-post-title":{"type":"text","name":"t:names.title","settings":{"text":"\u003ch1\u003e{{ article.title }}\u003c\/h1\u003e","width":"100%","max_width":"normal","alignment":"center","type_preset":"h2","font":"var(--font-body--family)","line_height":"normal","letter_spacing":"normal","case":"none","wrap":"pretty","background":false,"background_color":"#00000026","corner_radius":0,"padding-block-start":0,"padding-block-end":0,"padding-inline-start":0,"padding-inline-end":0},"blocks":{}},"blog-post-details":{"type":"_blog-post-info-text","name":"t:names.details","settings":{"show_date":true,"show_author":false,"alignment":"center","show_alignment":true,"padding-block-start":0,"padding-block-end":0},"blocks":{}},"blog-post-image":{"type":"image","name":"t:names.featured_image","settings":{"image":"{{ article.image }}","width":"fill","custom_width":100,"width_mobile":"fill","custom_width_mobile":100,"height":"fit","border":"none","border_width":1,"border_opacity":100,"border_radius":0,"padding-block-start":0,"padding-block-end":0,"padding-inline-start":0,"padding-inline-end":0},"blocks":{}},"blog-post-content":{"type":"_blog-post-content","settings":{},"blocks":{}}},"block_order":["blog-post-title","blog-post-details","blog-post-image","blog-post-content"],"settings":{"content_direction":"column","gap":32,"background_color":"{{ settings.color_palette.background }}","padding-block-start":40,"padding-block-end":80}}},"order":["section","main"]}
+{
+  "sections": {
+    "main": {
+      "type": "game-article",
+      "settings": {
+        "color_bg": "#F6F1E3",
+        "color_ink": "#1F2A44",
+        "color_accent": "#D6453D",
+        "color_muted": "#5D6478",
+        "color_card": "#FDFAF1",
+        "color_line": "#C9BFA6",
+        "back_label": "All posts",
+        "comments_heading": "Comments",
+        "comment_form_heading": "Leave a comment",
+        "comment_button": "Post comment",
+        "comment_success": "Thanks! Your comment has been posted.",
+        "comment_moderation": "Thanks! Your comment is awaiting moderation."
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}
