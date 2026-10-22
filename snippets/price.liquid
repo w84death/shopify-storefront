@@ -13,7 +13,8 @@
   assign show_unit_price = show_unit_price | default: false
   assign show_sale_price_first = show_sale_price_first | default: false
   assign selected_variant = product_resource.selected_or_first_available_variant
-  assign price = selected_variant.price
+  # Show the highest variant price (full box) instead of the cheapest
+  assign price = product_resource.price_max
   assign compare_at_price = selected_variant.compare_at_price
 
   assign show_compare_price = false

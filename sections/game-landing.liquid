@@ -525,7 +525,7 @@
         {% if section.settings.show_buy %}<a href="#gl-buy-{{ section.id }}">{{ section.settings.nav_buy }}</a>{% endif %}
       </nav>
       <a class="gl-chip" href="#gl-buy-{{ section.id }}">
-        {% if landing_product %}{{ landing_product.price | money }} →{% else %}{{ section.settings.nav_buy }}{% endif %}
+        {% if landing_product %}{{ landing_product.price_max | money }} →{% else %}{{ section.settings.nav_buy }}{% endif %}
       </a>
     </header>
   {% endif %}
@@ -566,7 +566,7 @@
               <a class="gl-btn gl-btn-ghost" href="{% if section.settings.cta_secondary_link != blank %}{{ section.settings.cta_secondary_link }}{% else %}#gl-buy-{{ section.id }}{% endif %}">{{ section.settings.cta_secondary_label }}</a>
             {% endif %}
             {% if landing_product %}
-              <span class="gl-price-chip">{{ landing_product.price | money }}{% if landing_product.compare_at_price > landing_product.price %} · {{ landing_product.compare_at_price | money }}{% endif %}</span>
+              <span class="gl-price-chip">{{ landing_product.price_max | money }}{% if landing_product.compare_at_price > landing_product.price %} · {{ landing_product.compare_at_price | money }}{% endif %}</span>
             {% elsif section.settings.price_chip != blank %}
               <span class="gl-price-chip">{{ section.settings.price_chip }}</span>
             {% endif %}
@@ -814,7 +814,7 @@
           <p class="gl-eyebrow">{{ section.settings.buy_eyebrow }}</p>
           <h3>{{ section.settings.buy_heading | default: landing_product.title }}</h3>
           {% if landing_product %}
-            <div class="price">{{ landing_product.price | money }}</div>
+            <div class="price">{{ landing_product.price_max | money }}</div>
           {% elsif section.settings.price_chip != blank %}
             <div class="price">{{ section.settings.price_chip }}</div>
           {% endif %}
