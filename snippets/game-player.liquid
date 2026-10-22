@@ -28,7 +28,8 @@
 </div>
 <p class="gl-keys">
   {% if platform == 'dos' %}
-    Keyboard: <kbd>Arrows</kbd> Move &nbsp; <kbd>Z</kbd>/<kbd>X</kbd> Action &nbsp; <kbd>Enter</kbd> Start
+    {% comment %} shortcut: Cortex Labs controls hardcoded; make a keys setting when a 2nd DOS game needs different ones {% endcomment %}
+    Keyboard: <kbd>Mouse</kbd> Move pointer &nbsp; <kbd>Screen edge</kbd> Scroll map &nbsp; <kbd>Arrows</kbd> Scroll map &nbsp; <kbd>LMB</kbd> Build / select / inspect &nbsp; <kbd>RMB</kbd> or <kbd>Enter</kbd> Rotate switch / exit &nbsp; <kbd>F1</kbd> Cost sheet &nbsp; <kbd>F2</kbd> Center base &nbsp; <kbd>Esc</kbd> Menu
   {% else %}
     Keyboard: <kbd>Arrows</kbd> D-Pad &nbsp; <kbd>X</kbd> A &nbsp; <kbd>Z</kbd> B &nbsp; <kbd>Enter</kbd> Start &nbsp; <kbd>Tab</kbd> Select
   {% endif %}
