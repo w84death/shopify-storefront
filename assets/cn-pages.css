@@ -181,6 +181,17 @@
   color: #ffffff !important;
 }
 
+/* Article body: respect editor-set image widths (base.css forces img{width:100%}) */
+:is(.template-article) main img {
+  width: auto;
+  height: auto;
+}
+:is(.template-article) main :is(img, picture, video, canvas, svg) {
+  display: inline-block;
+  max-width: 100%;
+  vertical-align: top;
+}
+
 /* Page title on collection pages */
 .cn-page-title {
   grid-column: 1 / -1;
