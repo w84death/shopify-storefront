@@ -10,7 +10,7 @@
 {
   "sections": {
     "game_landing": {
-      "type": "game-landing-pro",
+      "type": "game-landing",
       "blocks": {
         "pill_1": {
           "type": "pill",
