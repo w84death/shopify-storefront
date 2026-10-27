@@ -42,12 +42,12 @@
             "desc": "A tiny forest adventure: collect mushrooms, push boulders, dodge crawlers. 1–2 players.",
             "product": "shopify://products/fungus-foray-dx",
             "price_text": "",
-            "order_label": "Order now",
+            "order_label": "Play test",
             "demo_url": "https://cyfrowynomada.com/products/fungus-foray-dx",
             "demo_label": "Play demo",
             "accent": "green",
             "featured": false,
-            "coming_soon": true,
+            "coming_soon": false,
             "coming_soon_label": "Coming soon",
             "stamp_text": "IN DEVELOPMENT"
           }
@@ -62,12 +62,12 @@
             "desc": "A new experiment for retro PCs. Hand-written assembly, dark rooms, and things best left offline.",
             "product": "",
             "price_text": "TBA",
-            "order_label": "Order now",
+            "order_label": "Play test",
             "demo_url": "",
             "demo_label": "Play demo",
             "accent": "sky",
             "featured": false,
-            "coming_soon": true,
+            "coming_soon": false,
             "coming_soon_label": "Coming soon",
             "stamp_text": "In development"
           }
