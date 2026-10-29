@@ -58,7 +58,7 @@
   #shopify-section-{{ section.id }} .cna * { box-sizing: border-box; }
   #shopify-section-{{ section.id }} .cna a:not(.cna-btn) { color: inherit; text-decoration: none; }
   #shopify-section-{{ section.id }} .cna :focus-visible { outline: 3px solid var(--red); outline-offset: 2px; }
-  #shopify-section-{{ section.id }} .cna-wrap { width: min(760px, calc(100% - 40px)); margin: 0 auto; }
+  #shopify-section-{{ section.id }} .cna-wrap { width: 100%; margin: 0 auto; }
   #shopify-section-{{ section.id }} .cna h1,
   #shopify-section-{{ section.id }} .cna h2,
   #shopify-section-{{ section.id }} .cna h3 {
@@ -99,6 +99,34 @@
     width: 100%; height: auto; border: 2px solid var(--navy);
     border-radius: 8px; display: block; margin-bottom: 34px;
   }
+
+  /* Full-bleed gallery — paste into a post's code (</>) view anywhere between paragraphs:
+     <div class="cna-gallery">
+       <img src="https://cdn.shopify.com/s/files/.../shot1.png" alt="caption">
+       <img src="https://cdn.shopify.com/s/files/.../shot2.png" alt="">
+     </div>
+     Post content is full-width; any <div> spans edge to edge, text stays columned. */
+  #shopify-section-{{ section.id }} .cna-gallery {
+    margin: 30px auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(170px, 100%), 1fr));
+    gap: 10px;
+  }
+  #shopify-section-{{ section.id }} .cna-gallery img {
+    width: 100%; margin: 0;
+    aspect-ratio: 4 / 3; object-fit: cover;
+    cursor: zoom-in;
+  }
+  #shopify-section-{{ section.id }} .cna-lightbox {
+    max-width: min(1400px, 96vw); padding: 8px;
+    border: 3px solid var(--navy); border-radius: 10px;
+    background: var(--paper); color: var(--navy);
+  }
+  #shopify-section-{{ section.id }} .cna-lightbox img {
+    display: block; width: auto; height: auto;
+    max-width: 100%; max-height: 86vh; border-radius: 6px;
+  }
+  #shopify-section-{{ section.id }} .cna-lightbox::backdrop { background: rgb(31 42 68 / .85); }
 
   /* rich text */
   #shopify-section-{{ section.id }} .cna-rte { font-size: 17px; }
@@ -155,6 +183,30 @@
   }
   #shopify-section-{{ section.id }} .cna-rte tr:nth-child(even) td { background: var(--paper2); }
   #shopify-section-{{ section.id }} .cna-rte figcaption { color: var(--dim); font-size: 13px; text-align: center; }
+
+  /* post is full-width; text elements get the readable column, divs (galleries) go wide */
+  #shopify-section-{{ section.id }} .cna-head,
+  #shopify-section-{{ section.id }} .cna-cover,
+  #shopify-section-{{ section.id }} .cna-tags,
+  #shopify-section-{{ section.id }} .cna-foot,
+  #shopify-section-{{ section.id }} .cna-comments,
+  #shopify-section-{{ section.id }} .cna-rte > p,
+  #shopify-section-{{ section.id }} .cna-rte > h1,
+  #shopify-section-{{ section.id }} .cna-rte > h2,
+  #shopify-section-{{ section.id }} .cna-rte > h3,
+  #shopify-section-{{ section.id }} .cna-rte > h4,
+  #shopify-section-{{ section.id }} .cna-rte > h5,
+  #shopify-section-{{ section.id }} .cna-rte > h6,
+  #shopify-section-{{ section.id }} .cna-rte > ul,
+  #shopify-section-{{ section.id }} .cna-rte > ol,
+  #shopify-section-{{ section.id }} .cna-rte > blockquote,
+  #shopify-section-{{ section.id }} .cna-rte > table,
+  #shopify-section-{{ section.id }} .cna-rte > pre,
+  #shopify-section-{{ section.id }} .cna-rte > hr,
+  #shopify-section-{{ section.id }} .cna-rte > figure {
+    width: min(760px, calc(100% - 40px));
+    margin-inline: auto;
+  }
 
   /* tags */
   #shopify-section-{{ section.id }} .cna-tags { display: flex; gap: 8px; flex-wrap: wrap; margin: 30px 0 0; }
@@ -302,6 +354,37 @@
     {%- endif -%}
   </article>
 </div>
+
+<script>
+  (() => {
+    const root = document.querySelector('.cna');
+    if (!root || root.dataset.lightbox) return;
+    root.dataset.lightbox = '1';
+    const box = document.createElement('dialog');
+    box.className = 'cna-lightbox';
+    box.innerHTML = '<img alt="">';
+    root.appendChild(box);
+    box.addEventListener('click', () => box.close());
+    const open = (img) => {
+      const shot = box.firstElementChild;
+      shot.src = img.getAttribute('src').replace(/width=\d+/, 'width=1800');
+      shot.alt = img.alt;
+      box.showModal();
+    };
+    root.addEventListener('click', (e) => {
+      const img = e.target.closest('.cna-gallery img');
+      if (img) open(img);
+    });
+    root.addEventListener('keydown', (e) => {
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      const img = e.target.closest('.cna-gallery img');
+      if (!img) return;
+      e.preventDefault();
+      open(img);
+    });
+    root.querySelectorAll('.cna-gallery img').forEach((img) => { img.tabIndex = 0; });
+  })();
+</script>
 
 {% schema %}
 {
