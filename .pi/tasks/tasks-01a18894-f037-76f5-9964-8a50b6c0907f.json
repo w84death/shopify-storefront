@@ -1,0 +1,49 @@
+{
+  "nextId": 5,
+  "tasks": [
+    {
+      "id": "1",
+      "subject": "Fix KORO landing \"coming soon\" mismatch → launch copy (JSON template)",
+      "description": "product.koro-landing.json show_playtest copy says \"First batch of 10 — coming soon!\" while buy box is live. Change to launch + scarcity copy (audit blocker #1 + urgency mechanic 03c). Also add shipping/EU facts.",
+      "status": "in_progress",
+      "metadata": {},
+      "blocks": [],
+      "blockedBy": [],
+      "createdAt": 1793400925468,
+      "updatedAt": 1793401004596
+    },
+    {
+      "id": "2",
+      "subject": "Add JSON-LD Product schema to cn-landing.liquid",
+      "description": "KORO page emits zero JSON-LD. Add Product schema (name, description, image, brand, offers with price/currency/availability/url) to sections/cn-landing.liquid, guarded on landing_product.",
+      "status": "pending",
+      "metadata": {},
+      "blocks": [],
+      "blockedBy": [],
+      "createdAt": 1793400925470,
+      "updatedAt": 1793400925470
+    },
+    {
+      "id": "3",
+      "subject": "Add expo photos social-proof gallery + FAQ to landing",
+      "description": "User has no reviews but has expo photos of people (age 7+) playing KORO. Add expo_photo block type + section in cn-landing.liquid (tile grid, guarded to render only when photos exist), enable in template; FAQ block type + section with 5 true Q&As in template. Add buy-note line (shipping estimate, EU-only, secure checkout, 14-day return).",
+      "status": "pending",
+      "metadata": {},
+      "blocks": [],
+      "blockedBy": [],
+      "createdAt": 1793400925471,
+      "updatedAt": 1793400925471
+    },
+    {
+      "id": "4",
+      "subject": "Fix mobile hero headline wrapping (band h2 clamp)",
+      "description": "game-home.liquid .cn-band h2 clamp(40px,6vw,76px) wraps badly at 375px. Lower min to 32px.",
+      "status": "pending",
+      "metadata": {},
+      "blocks": [],
+      "blockedBy": [],
+      "createdAt": 1793400925472,
+      "updatedAt": 1793400925472
+    }
+  ]
+}
