@@ -520,6 +520,10 @@
   }
   #shopify-section-{{ section.id }} .gl-faq[open] summary::after { content: "\2013"; }
   #shopify-section-{{ section.id }} .gl-faq p { margin: 10px 0 0; color: var(--gl-muted); }
+  #shopify-section-{{ section.id }} .gl-expo-ph {
+    border: 2px dashed var(--gl-line); border-radius: calc(var(--gl-radius) * .6);
+    padding: 28px; text-align: center; color: var(--gl-muted); font-size: 14px; margin: 0;
+  }
   @media (max-width: 800px) {
     #shopify-section-{{ section.id }} .gl-hero-grid,
     #shopify-section-{{ section.id }} .gl-grid,
@@ -866,7 +870,7 @@
     {% for block in section.blocks %}
       {% if block.type == 'expo_photo' and block.settings.image %}{% assign expo_count = expo_count | plus: 1 %}{% endif %}
     {% endfor %}
-    {% if expo_count > 0 %}
+    {% if expo_count > 0 or request.design_mode %}
       <section class="gl-block gl-wrap" id="gl-expo-{{ section.id }}">
         <h3>{{ section.settings.expo_heading }}</h3>
         {% if section.settings.expo_sub != blank %}<p class="gl-sub" style="margin-bottom:18px">{{ section.settings.expo_sub }}</p>{% endif %}
@@ -878,6 +882,9 @@
               </figure>
             {% endif %}
           {% endfor %}
+          {% if expo_count == 0 %}
+            <p class="gl-expo-ph">No photos yet — use “Add block” → Expo photo in the sidebar.</p>
+          {% endif %}
         </div>
       </section>
     {% endif %}
@@ -888,7 +895,7 @@
     {% for block in section.blocks %}
       {% if block.type == 'faq' and block.settings.question != blank %}{% assign faq_count = faq_count | plus: 1 %}{% endif %}
     {% endfor %}
-    {% if faq_count > 0 %}
+    {% if faq_count > 0 or request.design_mode %}
       <section class="gl-block gl-wrap" id="gl-faq-{{ section.id }}">
         <h3>{{ section.settings.faq_heading }}</h3>
         {% for block in section.blocks %}
@@ -899,6 +906,9 @@
             </details>
           {% endif %}
         {% endfor %}
+        {% if faq_count == 0 %}
+          <p class="gl-expo-ph">No questions yet — use “Add block” → FAQ entry in the sidebar.</p>
+        {% endif %}
       </section>
     {% endif %}
   {% endif %}
