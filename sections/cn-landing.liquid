@@ -487,6 +487,39 @@
     background: var(--gl-surface); color: var(--gl-ink);
   }
   #shopify-section-{{ section.id }} .gl-buy-card .gl-btn { width: 100%; }
+  #shopify-section-{{ section.id }} .gl-buy-note {
+    font-size: 13px; color: var(--gl-muted); text-align: center;
+    margin: 12px 0 0; line-height: 1.5;
+  }
+
+  /* expo photos — social proof tile grid */
+  #shopify-section-{{ section.id }} .gl-expo {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr)); gap: 12px;
+  }
+  #shopify-section-{{ section.id }} .gl-expo figure { margin: 0; }
+  #shopify-section-{{ section.id }} .gl-expo img {
+    display: block; width: 100%; height: 100%;
+    aspect-ratio: 4 / 3; object-fit: cover;
+    border-radius: calc(var(--gl-radius) * .6);
+    border: 2px solid var(--gl-line);
+  }
+
+  /* FAQ accordion */
+  #shopify-section-{{ section.id }} .gl-faq {
+    background: var(--gl-card); border: 2px solid var(--gl-line);
+    border-radius: calc(var(--gl-radius) * .6);
+    padding: 14px 18px; margin-bottom: 10px;
+  }
+  #shopify-section-{{ section.id }} .gl-faq summary {
+    font-weight: 800; cursor: pointer; list-style: none;
+    display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  }
+  #shopify-section-{{ section.id }} .gl-faq summary::-webkit-details-marker { display: none; }
+  #shopify-section-{{ section.id }} .gl-faq summary::after {
+    content: "+"; font-size: 22px; line-height: 1; color: var(--gl-accent); flex: none;
+  }
+  #shopify-section-{{ section.id }} .gl-faq[open] summary::after { content: "\2013"; }
+  #shopify-section-{{ section.id }} .gl-faq p { margin: 10px 0 0; color: var(--gl-muted); }
   @media (max-width: 800px) {
     #shopify-section-{{ section.id }} .gl-hero-grid,
     #shopify-section-{{ section.id }} .gl-grid,
@@ -498,6 +531,31 @@
 {%- endstyle -%}
 
 <div class="gl" id="gl-{{ section.id }}">
+  {% if landing_product %}
+    {% comment %} Product structured data — rich results for price/availability (audit 03b/04d) {% endcomment %}
+    {% assign schema_img = section.settings.buy_image | default: section.settings.hero_image | default: landing_product.featured_image %}
+    {% assign schema_desc = landing_product.description | strip_html | truncate: 300 %}
+    {% if schema_desc == blank %}{% assign schema_desc = section.settings.lede %}{% endif %}
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org/",
+      "@type": "Product",
+      "name": {{ landing_product.title | json }},
+      "description": {{ schema_desc | json }},
+      {% if schema_img %}"image": {{ schema_img | image_url: width: 1200 | json }},{% endif %}
+      "brand": { "@type": "Brand", "name": {{ shop.name | json }} },
+      "sku": {{ landing_product.selected_or_first_available_variant.sku | json }},
+      "offers": {
+        "@type": "Offer",
+        "url": {{ shop.url | append: landing_product.url | json }},
+        "price": {{ landing_product.selected_or_first_available_variant.price | money_without_currency | json }},
+        "priceCurrency": {{ cart.currency.iso_code | json }},
+        "availability": "https://schema.org/{% if landing_product.available %}InStock{% else %}OutOfStock{% endif %}",
+        "itemCondition": "https://schema.org/NewCondition"
+      }
+    }
+    </script>
+  {% endif %}
   {% if section.settings.show_playtest %}
     <div class="gl-warning" id="gl-top-{{ section.id }}">
       <strong class="gl-warning__title">⚠ {{ section.settings.playtest_title }}</strong>
@@ -798,6 +856,48 @@
     </section>
   {% endif %}
 
+  {% if section.settings.show_expo %}
+    {% assign expo_count = 0 %}
+    {% for block in section.blocks %}
+      {% if block.type == 'expo_photo' and block.settings.image %}{% assign expo_count = expo_count | plus: 1 %}{% endif %}
+    {% endfor %}
+    {% if expo_count > 0 %}
+      <section class="gl-block gl-wrap" id="gl-expo-{{ section.id }}">
+        <h3>{{ section.settings.expo_heading }}</h3>
+        {% if section.settings.expo_sub != blank %}<p class="gl-sub" style="margin-bottom:18px">{{ section.settings.expo_sub }}</p>{% endif %}
+        <div class="gl-expo">
+          {% for block in section.blocks %}
+            {% if block.type == 'expo_photo' and block.settings.image %}
+              <figure {{ block.shopify_attributes }}>
+                <img src="{{ block.settings.image | image_url: width: 800 }}" width="800" height="600" alt="{{ block.settings.alt | escape }}" loading="lazy">
+              </figure>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </section>
+    {% endif %}
+  {% endif %}
+
+  {% if section.settings.show_faq %}
+    {% assign faq_count = 0 %}
+    {% for block in section.blocks %}
+      {% if block.type == 'faq' and block.settings.question != blank %}{% assign faq_count = faq_count | plus: 1 %}{% endif %}
+    {% endfor %}
+    {% if faq_count > 0 %}
+      <section class="gl-block gl-wrap" id="gl-faq-{{ section.id }}">
+        <h3>{{ section.settings.faq_heading }}</h3>
+        {% for block in section.blocks %}
+          {% if block.type == 'faq' and block.settings.question != blank %}
+            <details class="gl-faq" {{ block.shopify_attributes }}>
+              <summary>{{ block.settings.question }}</summary>
+              <p>{{ block.settings.answer }}</p>
+            </details>
+          {% endif %}
+        {% endfor %}
+      </section>
+    {% endif %}
+  {% endif %}
+
   {% if section.settings.show_buy %}
     <section class="gl-block gl-wrap" id="gl-buy-{{ section.id }}">
       <div class="gl-buy">
@@ -842,6 +942,10 @@
           {% else %}
             <a class="gl-btn gl-btn-primary" href="{{ section.settings.cta_secondary_link }}">{{ section.settings.buy_button }}</a>
           {% endif %}
+          <p class="gl-buy-note">
+            Secure checkout · 14-day EU return right<br>
+            Ships from Poznań, Poland · EU only · PL 1–2 days, EU 3–7 days · calculated at checkout
+          </p>
         </aside>
       </div>
     </section>
@@ -912,6 +1016,11 @@
     { "type": "checkbox", "id": "show_play", "label": "Play / demo", "default": true },
     { "type": "checkbox", "id": "show_editions", "label": "Editions", "default": false },
     { "type": "checkbox", "id": "show_box", "label": "What's in the box", "default": true },
+    { "type": "checkbox", "id": "show_expo", "label": "Expo photos (social proof)", "default": false },
+    { "type": "text", "id": "expo_heading", "label": "Expo heading", "default": "Played at the expo" },
+    { "type": "text", "id": "expo_sub", "label": "Expo subhead", "default": "Kids as young as 7 picked it up in seconds — no instructions needed." },
+    { "type": "checkbox", "id": "show_faq", "label": "FAQ", "default": false },
+    { "type": "text", "id": "faq_heading", "label": "FAQ heading", "default": "Quick answers" },
     { "type": "checkbox", "id": "show_buy", "label": "Buy row", "default": true },
 
     { "type": "header", "content": "Nav" },
@@ -1013,6 +1122,22 @@
       ]
     },
     {
+      "type": "expo_photo",
+      "name": "Expo photo",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Photo" },
+        { "type": "text", "id": "alt", "label": "Alt text", "default": "Playing KORO hands-on at the expo" }
+      ]
+    },
+    {
+      "type": "faq",
+      "name": "FAQ entry",
+      "settings": [
+        { "type": "text", "id": "question", "label": "Question", "default": "Does it work on real hardware?" },
+        { "type": "textarea", "id": "answer", "label": "Answer", "default": "Yes. KORO is written in assembly and tested on real Game Boy Color hardware." }
+      ]
+    },
+    {
       "type": "edition",
       "name": "Edition card",
       "settings": [
@@ -1056,7 +1181,9 @@
         { "type": "box_item", "settings": { "title": "Glass marble", "text": "A real one. Obviously." } },
         { "type": "box_item", "settings": { "title": "Printed manual", "text": "Short, useful, keepable." } },
         { "type": "fact", "settings": { "text": "Works on Game Boy Color hardware" } },
-        { "type": "fact", "settings": { "text": "Small-batch, packed in Poland" } }
+        { "type": "fact", "settings": { "text": "Small-batch, packed in Poland" } },
+        { "type": "faq", "settings": { "question": "Does it work on real hardware?", "answer": "Yes. KORO is written in assembly and tested on real Game Boy Color hardware." } },
+        { "type": "faq", "settings": { "question": "Can I try before buying?", "answer": "Yes — the full game plays free in your browser or on your phone." } }
       ]
     }
   ]
