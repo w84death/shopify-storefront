@@ -838,7 +838,7 @@
               <div class="gl-edition__btns">
                 {% if block.settings.btn1_label != blank %}
                   {% if sold_out %}
-                    <span class="gl-btn gl-btn-primary gl-btn--soon" aria-disabled="true">Sold out</span>
+                    <span class="gl-btn gl-btn-primary gl-btn--soon" aria-disabled="true">{{ section.settings.sold_out_label | default: 'Sold out' }}</span>
                   {% else %}
                     <a class="gl-btn gl-btn-primary" href="{{ b1 }}">{{ block.settings.btn1_label }}</a>
                   {% endif %}
@@ -1071,6 +1071,7 @@
     { "type": "checkbox", "id": "show_faq", "label": "FAQ", "default": false },
     { "type": "text", "id": "faq_heading", "label": "FAQ heading", "default": "Quick answers" },
     { "type": "checkbox", "id": "show_buy", "label": "Buy row", "default": true },
+    { "type": "text", "id": "sold_out_label", "label": "Sold-out edition label", "default": "Sold out" },
 
     { "type": "header", "content": "Nav" },
     { "type": "image_picker", "id": "logo", "label": "Logo" },
