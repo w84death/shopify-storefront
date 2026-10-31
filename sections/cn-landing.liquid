@@ -887,7 +887,12 @@
           {% for block in section.blocks %}
             {% if block.type == 'expo_photo' and block.settings.image %}
               <figure {{ block.shopify_attributes }}>
-                <img src="{{ block.settings.image | image_url: width: 800 }}" width="800" height="600" alt="{{ block.settings.alt | escape }}" loading="lazy">
+                <img
+                  src="{{ block.settings.image | image_url: width: 480 }}"
+                  srcset="{{ block.settings.image | image_url: width: 400 }} 400w, {{ block.settings.image | image_url: width: 600 }} 600w, {{ block.settings.image | image_url: width: 800 }} 800w, {{ block.settings.image | image_url: width: 1000 }} 1000w"
+                  sizes="(min-width: 768px) 27vw, 88vw"
+                  width="480" height="360"
+                  alt="{{ block.settings.alt | escape }}" loading="lazy" decoding="async">
               </figure>
             {% endif %}
           {% endfor %}
@@ -1005,11 +1010,17 @@
     var lb = gl.querySelector('.gl-lightbox');
     if (!lb) return;
     var big = lb.querySelector('img');
+    function hiRes(el) { return el.getAttribute('src').replace(/width=\d+/, 'width=1600'); }
     function open(el) {
-      big.src = el.getAttribute('src').replace(/width=\d+/, 'width=1600');
+      big.src = hiRes(el);
       big.alt = el.alt;
       if (lb.showModal) { lb.showModal(); } else { lb.setAttribute('open', ''); }
     }
+    var preloaded = {};
+    gl.addEventListener('pointerover', function (e) {
+      var t = e.target.closest ? e.target.closest('.gl-expo img') : null;
+      if (t && !preloaded[t.src]) { preloaded[t.src] = 1; new Image().src = hiRes(t); }
+    });
     gl.addEventListener('click', function (e) {
       var t = e.target.closest('.gl-expo img');
       if (t) { open(t); return; }
