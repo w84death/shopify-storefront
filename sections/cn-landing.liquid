@@ -524,6 +524,15 @@
     border: 2px dashed var(--gl-line); border-radius: calc(var(--gl-radius) * .6);
     padding: 28px; text-align: center; color: var(--gl-muted); font-size: 14px; margin: 0;
   }
+  #shopify-section-{{ section.id }} .gl-expo img { cursor: zoom-in; }
+  #shopify-section-{{ section.id }} .gl-lightbox {
+    border: 0; padding: 0; background: transparent; max-width: none;
+  }
+  #shopify-section-{{ section.id }} .gl-lightbox::backdrop { background: rgba(4, 8, 16, .86); }
+  #shopify-section-{{ section.id }} .gl-lightbox img {
+    display: block; max-width: 92vw; max-height: 92vh; width: auto; height: auto;
+    margin: auto; border-radius: calc(var(--gl-radius) * .6); cursor: zoom-out;
+  }
   @media (max-width: 800px) {
     #shopify-section-{{ section.id }} .gl-hero-grid,
     #shopify-section-{{ section.id }} .gl-grid,
@@ -886,6 +895,7 @@
             <p class="gl-expo-ph">No photos yet — use “Add block” → Expo photo in the sidebar.</p>
           {% endif %}
         </div>
+        <dialog class="gl-lightbox" aria-label="Enlarged expo photo"><img alt=""></dialog>
       </section>
     {% endif %}
   {% endif %}
@@ -986,6 +996,30 @@
         if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(s); }
       });
     });
+  })();
+
+  (function () {
+    var gl = document.getElementById('gl-{{ section.id }}');
+    if (!gl || gl.dataset.lightbox) return;
+    gl.dataset.lightbox = '1';
+    var lb = gl.querySelector('.gl-lightbox');
+    if (!lb) return;
+    var big = lb.querySelector('img');
+    function open(el) {
+      big.src = el.getAttribute('src').replace(/width=\d+/, 'width=1600');
+      big.alt = el.alt;
+      if (lb.showModal) { lb.showModal(); } else { lb.setAttribute('open', ''); }
+    }
+    gl.addEventListener('click', function (e) {
+      var t = e.target.closest('.gl-expo img');
+      if (t) { open(t); return; }
+      if (e.target.closest('.gl-lightbox')) lb.close();
+    });
+    gl.addEventListener('keydown', function (e) {
+      var t = e.target.closest ? e.target.closest('.gl-expo img') : null;
+      if (t && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); open(t); }
+    });
+    gl.querySelectorAll('.gl-expo img').forEach(function (i) { i.tabIndex = 0; });
   })();
 </script>
 
