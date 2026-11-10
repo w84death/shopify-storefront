@@ -12,7 +12,7 @@
 {% endcomment %}
 
 {%- liquid
-  assign game_product = closest.product | default: product
+  assign game_product = section.settings.product | default: product
   assign game_description = game_product.metafields.custom.game_description
   assign game_manual = game_product.metafields.custom.game_manual
   assign game_history = game_product.metafields.custom.game_history
@@ -76,6 +76,11 @@
     "groups": ["header", "footer"]
   },
   "settings": [
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product"
+    },
     {
       "type": "text",
       "id": "description_heading",

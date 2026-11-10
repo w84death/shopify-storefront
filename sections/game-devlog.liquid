@@ -13,7 +13,7 @@
 {% endcomment %}
 
 {%- liquid
-  assign game_product = closest.product | default: product
+  assign game_product = section.settings.product | default: product
   assign devlog_tag = game_product.metafields.custom.blog_tag.value | default: game_product.handle | downcase | strip
   assign devlog_blog = section.settings.blog
   if devlog_blog == blank
@@ -206,6 +206,11 @@
     "groups": ["header", "footer"]
   },
   "settings": [
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product"
+    },
     {
       "type": "text",
       "id": "heading",
