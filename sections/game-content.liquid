@@ -13,9 +13,9 @@
 
 {%- liquid
   assign game_product = closest.product | default: product
-  assign game_description = game_product.metafields.custom.game_description.value
-  assign game_manual = game_product.metafields.custom.game_manual.value
-  assign game_history = game_product.metafields.custom.game_history.value
+  assign game_description = game_product.metafields.custom.game_description
+  assign game_manual = game_product.metafields.custom.game_manual
+  assign game_history = game_product.metafields.custom.game_history
 -%}
 
 {%- if game_description != blank or game_manual != blank or game_history != blank -%}
@@ -48,21 +48,21 @@
     {%- if game_description != blank -%}
       <div class="game-content__part">
         <h2 class="h2">{{ section.settings.description_heading }}</h2>
-        <div class="rte">{{ game_description }}</div>
+        <div class="rte">{{ game_description | metafield_tag }}</div>
       </div>
     {%- endif -%}
 
     {%- if game_manual != blank -%}
       <div class="game-content__part">
         <h2 class="h2">{{ section.settings.manual_heading }}</h2>
-        <div class="rte">{{ game_manual }}</div>
+        <div class="rte">{{ game_manual | metafield_tag }}</div>
       </div>
     {%- endif -%}
 
     {%- if game_history != blank -%}
       <div class="game-content__part">
         <h2 class="h2">{{ section.settings.history_heading }}</h2>
-        <div class="rte">{{ game_history }}</div>
+        <div class="rte">{{ game_history | metafield_tag }}</div>
       </div>
     {%- endif -%}
   </div>
