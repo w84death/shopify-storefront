@@ -16,7 +16,12 @@
   assign game_description = game_product.metafields.custom.game_description
   assign game_manual = game_product.metafields.custom.game_manual
   assign game_history = game_product.metafields.custom.game_history
+  assign dbg_desc_state = 'BLANK'
+  if game_description != blank
+    assign dbg_desc_state = 'SET'
+  endif
 -%}
+<!-- game-content-probe v3 | global={{ product.handle }} | closest={{ closest.product.handle }} | setting={{ section.settings.product.handle }} | desc={{ dbg_desc_state }} | descjson={{ game_description | json | size }} -->
 
 {%- if game_description != blank or game_manual != blank or game_history != blank -%}
   {%- if section.settings.background_color != blank -%}
