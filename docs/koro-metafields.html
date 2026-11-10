@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>KORO — metafield content (paste-ready)</title>
+<style>
+  body { font-family: system-ui, sans-serif; max-width: 52rem; margin: 2rem auto; padding: 0 1rem; line-height: 1.5; }
+  .field { border: 2px dashed #999; padding: 1rem 1.5rem; margin: 2rem 0; background: #fafafa; }
+  .field > h2 { margin-top: 0; color: #b3541e; }
+  .hint { color: #666; font-size: 0.9rem; }
+  .paste h3, .paste h4 { margin-bottom: 0.25rem; }
+</style>
+</head>
+<body>
+<h1>KORO — game page metafield content</h1>
+<p class="hint">Open this file in a browser. For each dashed block: select everything <em>inside</em> the block,
+copy it, and paste into the matching product metafield on the KORO product in Shopify admin
+(Products → KORO → metafields). Formatting survives the paste; raw HTML does not.
+Rich text metafields can't hold images, so screenshots from the original post are links.</p>
+
+<div class="field">
+  <h2>1. About the game → <code>custom.game_description</code></h2>
+  <div class="paste">
+<p>KORO is a simple puzzle/logic game for Game Boy Color. Manage marbles on a 9x9 grid. Put five or more (same color) in a row to clean a line. Any other move will bring three new marbles (random color, position). Clean as many lines as possible until the board is full and no more moves possible.</p>
+<p>No timers, no lives, no hurry — just you, eighty-one squares, and a board that never empties on its own. It is the third iteration of a lineage born in Moscow in 1992 — this is its history.</p>
+  </div>
+</div>
+
+<div class="field">
+  <h2>2. Micro manual → <code>custom.game_manual</code></h2>
+  <div class="paste">
+<p><strong>DRAFT — review against the printed manual before publishing.</strong></p>
+<h4>Goal</h4>
+<p>Clear as many lines as you can. The game ends when the board is full and no move can clear a line.</p>
+<h4>Rules</h4>
+<ul>
+<li>Marbles sit on a 9&times;9 grid. Move one marble per turn.</li>
+<li>Five or more marbles of the same color in a row are cleared from the board.</li>
+<li>Every move that doesn't clear a line adds three new marbles in random spots.</li>
+<li>Clear 24 lines to earn the title of Koro Master.</li>
+</ul>
+<h4>Controls</h4>
+<ul>
+<li>D-pad — move the cursor</li>
+<li>A — pick up / drop a marble</li>
+<li>B — cancel a pick-up</li>
+</ul>
+  </div>
+</div>
+
+<div class="field">
+  <h2>3. History &amp; references → <code>custom.game_history</code></h2>
+  <div class="paste">
+<h3>History</h3>
+<h4>1992 — Цветные линии (Color Lines)</h4>
+<p>The initial Russian version, named Цветные линии (Color Lines). Colloquially known in Russian as Шарики ("Shariki", i.e. "Balls"). Made by Oleg Demin in 1992 for MS-DOS.</p>
+<p><a href="https://cdn.shopify.com/s/files/1/1049/6344/0974/files/screenshot-2026-11-04_23-42-30_240x240.png?v=1793832172">[screenshot]</a></p>
+<p>The game was published by <a href="https://en.wikipedia.org/wiki/Color_Lines">Gamos Ltd</a>, a Russian software company, and Wikipedia credits it to a team — Oleg Demin alongside Gennady Denisov and Igor Ivkin. It established the rules every version since has copied: <a href="https://www.mobygames.com/game/9862/color-lines">three randomly colored balls per turn</a> on a 9x9 board, five-in-a-row clears, survive as long as you can. It became the template for an entire family of "Lines" games by different authors — the ancestor of everything below.</p>
+<h4>1995 — Kulki</h4>
+<p>Second iteration was named Kulki (Balls), developed by Jarosław Lewandowski in 1995 for Windows. It became very popular in Poland. Some people play that version to this day.</p>
+<p><p><a href="https://cdn.shopify.com/s/files/1/1049/6344/0974/files/kulki_1.jpg?v=1793832087">[screenshot]</a></p></p>
+<p>And "very popular" is underselling it: in Polish, <em>kulki</em> simply means "balls", and <a href="https://pl.wikipedia.org/wiki/Kulki_%28gra_komputerowa%29">Polish Wikipedia</a> lists Lewandowski as producer and publisher of this direct variant of Demin's game — same rules, now in a small Windows window. It was released as freeware, and one Polish software archive alone still counts <a href="https://www.instalki.pl/download/gry/producent/jaroslaw-lewandowski">around 290,000 downloads</a> of its roughly 191 kB executable.</p>
+<h4>2026 — KORO</h4>
+<p>I found out that there is no modern recreation and nothing even close for the Game Boy. This game is a perfect match for a handheld. So I made the third iteration for it KORO in 2026.</p>
+<p><a href="https://cdn.shopify.com/s/files/1/1049/6344/0974/files/Screenshot_2026-07-21_204608_240x240.png?v=1785157893">[screenshot]</a></p>
+<p>Why such a perfect match? The rules were practically designed for a handheld from day one. The game is fully turn-based — nothing to time, nothing to react to — so you can drop it into your pocket mid-move and finish it on the bus tomorrow. A 9x9 board sits naturally on the Game Boy Color's 160x144 screen, and the whole game asks for exactly what a handheld offers: a D-pad, two buttons, and time to kill.</p>
+<p>Thirty-four years after a Moscow DOS program started it all, the lineage now fits into 138 grams of hardware that runs ten hours.</p>
+<h3>The hardware it was made for</h3>
+<p>KORO is dedicated to the <a href="https://en.wikipedia.org/wiki/Game_Boy_Color">Game Boy Color</a>, Nintendo's 1998 handheld — launched in Japan on October 21, 1998, in North America on November 18 and in Europe on November 23. The Game Boy family went on to sell 118.69 million units.</p>
+  </div>
+</div>
+
+<p class="hint">The devlog tag (<code>custom.blog_tag</code>) for KORO should be: <code>koro</code>.
+Then tag devlog posts with <code>koro</code> (the tag matches case-insensitively).</p>
+</body>
+</html>
