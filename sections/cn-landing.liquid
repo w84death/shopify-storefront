@@ -395,6 +395,11 @@
   #shopify-section-{{ section.id }} .gl-play h3,
   #shopify-section-{{ section.id }} .gl-play .gl-eyebrow { color: var(--gl-bg); }
   #shopify-section-{{ section.id }} .gl-play .gl-sub { color: color-mix(in srgb, var(--gl-bg) 75%, #888); }
+  /* Play panel is dark — labels stay dark ink on the light pills */
+  #shopify-section-{{ section.id }} .gl-play .gl-btn-primary,
+  #shopify-section-{{ section.id }} .gl-play .gl-btn-ghost {
+    color: #000 !important;
+  }
   #shopify-section-{{ section.id }} .gl-play-frame {
     min-height: 180px; border-radius: 16px; overflow: hidden;
     background: #111; display: grid; place-items: center;
