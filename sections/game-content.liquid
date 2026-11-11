@@ -19,16 +19,21 @@
 -%}
 
 {%- if game_description != blank or game_manual != blank or game_history != blank -%}
-  {%- if section.settings.background_color != blank -%}
-    {%- render 'contrast-override', background_color: section.settings.background_color, section_id: section.id -%}
-  {%- endif -%}
-
   {% style %}
+    /* House palette from cn-pages.css — matches the game-devlog section. */
+    #shopify-section-{{ section.id }} {
+      --cn-paper: #f6f1e3;
+      --cn-navy: #1f2a44;
+      background: var(--cn-paper);
+      color: var(--cn-navy);
+    }
     #shopify-section-{{ section.id }} .game-content__part {
       max-width: 46rem;
     }
     #shopify-section-{{ section.id }} .game-content__part > .h2 {
       margin: 0;
+      font-family: "Fredoka", "WDXL Lubrifont JP N", "Anonymous Pro", ui-monospace, monospace;
+      color: var(--cn-navy);
     }
   {% endstyle %}
 
@@ -36,7 +41,6 @@
     class="
       section
       section--{{ section.settings.section_width }}
-      {% if section.settings.background_color != blank %}color-custom-{{ section.id }}{% endif %}
       spacing-style
       gap-style
     "
